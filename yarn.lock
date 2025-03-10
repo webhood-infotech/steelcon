@@ -1280,6 +1280,11 @@ lucide-react@^0.479.0:
   resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.479.0.tgz#7321f979a389ec5dd86747b2deb6444cf0922f8d"
   integrity sha512-aBhNnveRhorBOK7uA4gDjgaf+YlHMdMhQ/3cupk6exM10hWlEU+2QtWYOfhXhjAsmdb6LeKR+NZnow4UxRRiTQ==
 
+lucide@^0.479.0:
+  version "0.479.0"
+  resolved "https://registry.yarnpkg.com/lucide/-/lucide-0.479.0.tgz#06548f190c37d6fc98e9e89fc29e341e4d2a713c"
+  integrity sha512-TsoBbi2sUM1GHTYPH+KuT5KFqBDZ7HBiWfFA8RbbQXwXJBw9r9k/sguR61YXH/IV9pRqDEM6lNsyb8S9uQn/1g==
+
 minimatch@^3.1.2:
   version "3.1.2"
   resolved "https://registry.npmjs.org/minimatch/-/minimatch-3.1.2.tgz"

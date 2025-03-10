@@ -1,6 +1,6 @@
 import React from "react";
-import loginImge from "../../../assets/image-login.jpg";
-
+import loginImge from "../../../assets/images/image-login.jpg";
+import { Star } from "lucide-react";
 const Login = () => {
   return (
     <div className="max-w-[1410px] h-screen py-24 px-20">
@@ -67,7 +67,13 @@ const Login = () => {
               </p>
               <div class="flex items-start justify-between mt-[32px]">
                 <p class="font-semibold text-4xl text-white">Alisa Hester</p>
-                <span class="text-white">★★★★★</span>
+                <span class="flex gap-1 ">
+                  <Star className="fill-current" />
+                  <Star className="fill-current" />
+                  <Star className="fill-current" />
+                  <Star className="fill-current" />
+                  <Star className="fill-current" />
+                </span>
               </div>
               <div className="flex items-center justify-between mt-[16px]">
                 <div className="flex flex-col items-start gap-[4px]">

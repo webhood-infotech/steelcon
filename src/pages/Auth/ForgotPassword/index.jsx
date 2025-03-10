@@ -1,14 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import arrow from "../../../assets/icon/arrow.png";
-import key from "../../../assets/images/key-01.png";
-
+import key from "../../../assets/images/Featured icon.png";
 const ForgotPassword = () => {
   return (
     <div className="flex h-screen items-center justify-center p-4">
       <div className="min-w-[360px] p-6 ">
         <div className="flex flex-col items-center gap-[24px]">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#DBE6F0]  backdrop-blur-md">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EDF2F8] ">
             <img src={key} alt="key" />
           </div>
           <div className="flex flex-col gap-[12px] ">
@@ -29,7 +28,6 @@ const ForgotPassword = () => {
               className="w-full p-2 border rounded-md border-[#D0D5DD] placeholder-[#667085]"
             />
           </div>
-
           <button className="w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg">
             Reset password
           </button>
