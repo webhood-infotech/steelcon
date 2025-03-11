@@ -17,22 +17,22 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
-  {
-    path: "/forgotpassword",
-    element: <ForgotPassword />,
-  },
-  {
-    path: "/checkemail",
-    element: <CheckEmail />,
-  },
-  {
-    path: "/resetpassword",
-    element: <ResetPassword />,
-  },
-  {
-    path: "/setpassword",
-    element: <SetPassword />,
-  },
+  // {
+  //   path: "/forgotpassword",
+  //   element: <ForgotPassword />,
+  // },
+  // {
+  //   path: "/checkemail",
+  //   element: <CheckEmail />,
+  // },
+  // {
+  //   path: "/resetpassword",
+  //   element: <ResetPassword />,
+  // },
+  // {
+  //   path: "/setpassword",
+  //   element: <SetPassword />,
+  // },
 ]);
 
 export default router;
