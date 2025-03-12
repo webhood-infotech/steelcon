@@ -4,14 +4,13 @@ import ForgotPassword from "@/pages/Auth/ForgotPassword";
 import Login from "@/pages/Auth/Login";
 import ResetPassword from "@/pages/Auth/ResetPassword";
 import SetPassword from "@/pages/Auth/SetPassword";
-import DashBoard from "@/pages/DashBoard";
+import Dashboard from "@/pages/DashBoard";
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <DashBoard />,
+    element: <Dashboard />,
   },
   {
     path: "/login",
@@ -32,6 +31,10 @@ const router = createBrowserRouter([
   // {
   //   path: "/setpassword",
   //   element: <SetPassword />,
+  // },
+  // {
+  //   path: "/dashboard",
+  //   element: <Dashboard />,
   // },
 ]);
 

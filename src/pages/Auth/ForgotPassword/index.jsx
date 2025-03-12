@@ -28,7 +28,7 @@ const ForgotPassword = () => {
               className="w-full p-2 border rounded-md border-[#D0D5DD] placeholder-[#667085]"
             />
           </div>
-          <button className="w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg">
+          <button className="cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg">
             Reset password
           </button>
         </div>

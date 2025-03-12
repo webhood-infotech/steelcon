@@ -20,7 +20,7 @@ const CheckEmail = () => {
           </div>
         </div>
         <div className="mt-8 ">
-          <button className=" cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg">
+          <button className="cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg">
             Open email app
           </button>
         </div>

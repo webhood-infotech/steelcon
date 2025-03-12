@@ -50,7 +50,7 @@ const Login = () => {
                   </a>
                 </div>
 
-                <button className="w-full bg-[#305679] text-base text-white p-2 font-semibold rounded">
+                <button className="cursor-pointer w-full bg-[#305679] text-base text-white p-2 font-semibold rounded">
                   Sign in
                 </button>
               </div>
