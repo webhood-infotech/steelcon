@@ -25,18 +25,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-
 export function NavUser({ user }) {
   const { isMobile } = useSidebar();
-
   return (
-    <SidebarMenu>
+    <SidebarMenu className="">
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="gap-2 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className=" active:bg-[#305679] active:text-white my-2 hover:!bg-transparent !text-white gap-2 data-[state=open]:bg-!transparent data-[state=open]:text-white "
             >
               <Avatar className="h-9 w-9 rounded">
                 <AvatarImage src={user.image} alt={user.image} className="" />
@@ -69,6 +67,7 @@ export function NavUser({ user }) {
                 </div>
               </div>
             </DropdownMenuLabel>
+
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>

@@ -1,11 +1,79 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import arrow from "../../../assets/icon/arrow.png";
 import key from "../../../assets/images/Featured icon.png";
+
 const ForgotPassword = () => {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setError(""); // Clear any previous errors when user types
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Reset states
+    setError("");
+
+    // Validate email
+    if (!email.trim()) {
+      setError("Email is required");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        "https://steelconbackend.vercel.app/api/route/forgot-password-post",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      // Success
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/checkemail"); // Redirect to login after 3 seconds
+      });
+    } catch (err) {
+      setError(
+        err.message || "Failed to send reset instructions. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex h-screen items-center justify-center p-4">
-      <div className="min-w-[360px] p-6 ">
+      <div className="w-[360px] ">
         <div className="flex flex-col items-center gap-[24px]">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#EDF2F8] ">
             <img src={key} alt="key" />
@@ -15,23 +83,34 @@ const ForgotPassword = () => {
               Forgot password?
             </h2>
             <p className="text-base font-normal text-[#475467] ">
-              No worries, we’ll send you reset instructions.
+              No worries, we'll send you reset instructions.
             </p>
           </div>
         </div>
-        <div className="mt-8 flex flex-col gap-[24px]">
+
+        <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-[24px]">
           <div className="flex flex-col gap-[6px]">
             <label className="text-sm font-medium text-[#344054]">Email</label>
             <input
-              type="text"
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
               placeholder="Enter your email"
               className="w-full p-2 border rounded-md border-[#D0D5DD] placeholder-[#667085]"
             />
+            {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
           </div>
-          <button className="cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg">
-            Reset password
+          <button
+            type="submit"
+            disabled={loading}
+            className={`cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg ${
+              loading ? "opacity-70" : ""
+            }`}
+          >
+            {loading ? "Sending..." : "Reset password"}
           </button>
-        </div>
+        </form>
+
         <div className="mt-8 flex gap-2 items-center justify-center">
           <img src={arrow} className="w-[12px] h-[12px]" alt="arrow" />
           <Link

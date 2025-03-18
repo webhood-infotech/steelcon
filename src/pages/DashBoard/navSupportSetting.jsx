@@ -12,10 +12,10 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-export function NavMain({ items }) {
+export function NavSupportSetting({ items }) {
   return (
-    <SidebarGroup>
-      <SidebarMenu className="mt-0 gap-0 ">
+    <SidebarGroup className="pb-6 border-b-[1px] border-b-[#305679] ">
+      <SidebarMenu className="gap-0">
         {items.map((item) => (
           <Collapsible
             key={item.title}
@@ -43,11 +43,11 @@ export function NavMain({ items }) {
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <SidebarMenuSub className="px-0 border-0 mx-0">
+                <SidebarMenuSub className="px-0 border-0 mx-0 ">
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem className="w-full " key={subItem.title}>
                       <SidebarMenuSubButton
-                        className="active:bg-[#305679] active:text-white text-white text-base font-semibold hover:text-white hover:bg-[#305679] h-auto py-2 px-2 "
+                        className="active:bg-[#305679] active:text-white  text-white text-base font-semibold hover:text-white hover:bg-[#305679] h-auto py-2 px-2 "
                         asChild
                       >
                         <a href={subItem.url}>

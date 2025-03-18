@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const ResetPassword = () => {
   return (
     <div className="flex h-screen items-center justify-center p-4">
-      <div className="max-w-[360px] p-6">
+      <div className="w-[360px] p-6">
         <div className="flex flex-col items-center gap-[24px]">
           <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#DBE6F0]  backdrop-blur-md">
             <img src={check} alt="check" />

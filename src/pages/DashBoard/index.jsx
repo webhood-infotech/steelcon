@@ -13,19 +13,22 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "./appSidebar";
-
+import DashboardHeader from "../DashbordOverview/DashboardHeader";
+import OverviewCard from "../DashbordOverview/OverviewCard";
 export default function Dashboard() {
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex bg-amber-300 h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
+        <header className="flex shrink-0  items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <div className="flex  items-center gap-2 px-4 ">
+            <SidebarTrigger className="ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
-            {/* <Breadcrumb>
+            <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
+                <DashboardHeader />
+                <OverviewCard />
+                {/* <BreadcrumbItem className="w-[100%] hidden md:block">
                   <BreadcrumbLink href="#">
                     Building Your Application
                   </BreadcrumbLink>
@@ -33,9 +36,9 @@ export default function Dashboard() {
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
                   <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
+                </BreadcrumbItem> */}
               </BreadcrumbList>
-            </Breadcrumb> */}
+            </Breadcrumb>
           </div>
         </header>
         {/* <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

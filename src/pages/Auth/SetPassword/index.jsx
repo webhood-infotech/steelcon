@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 
 const SetPassword = () => {
   return (
-    <div className="flex h-screen items-center justify-center p-4">
-      <div className="max-w-[360px] p-6 ">
-        <div className="flex flex-col items-center gap-[24px]">
+    <div className="flex h-screen items-center justify-center ">
+      <div className="w-[360px] p-6 ">
+        <div className="flex flex-col items-center gap-[22px]">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#DBE6F0]  backdrop-blur-md">
             <img src={key} alt="key" />
           </div>

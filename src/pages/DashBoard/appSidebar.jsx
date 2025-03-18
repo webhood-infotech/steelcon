@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { NavMain } from "./navMain";
 import { NavUser } from "./navUser";
+import { NavSupportSetting } from "./navSupportSetting";
 
 // This is sample data.
 const data = {
@@ -328,19 +329,70 @@ const data = {
       ],
     },
   ],
+  navSupportSetting: [
+    {
+      title: "Support Request",
+      url: "#",
+      image: "/src/assets/sidebarImages/life-buoy-01.png",
+      isActive: true,
+      items: [
+        {
+          title: "Overview",
+          url: "#",
+        },
+        {
+          title: "Notifications",
+          url: "#",
+        },
+        {
+          title: "Analytics",
+          url: "#",
+        },
+        {
+          title: "Report",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Settings",
+      url: "#",
+      image: "/src/assets/sidebarImages/settings-01 (1).png",
+      isActive: true,
+      items: [
+        {
+          title: "Overview",
+          url: "#",
+        },
+        {
+          title: "Notifications",
+          url: "#",
+        },
+        {
+          title: "Analytics",
+          url: "#",
+        },
+        {
+          title: "Report",
+          url: "#",
+        },
+      ],
+    },
+  ],
 };
 export function AppSidebar({ ...props }) {
   return (
-    <Sidebar className="w-xs " collapsible="icon" {...props}>
-      <SidebarHeader className="pl-6  ">
+    <Sidebar className="w-xs" collapsible="icon" {...props}>
+      <SidebarHeader className="pl-6">
         <img
           src={logo}
           alt="Company Logo"
-          className="h-[48px] w-[133px] object-contain mt-8 "
+          className="h-[48px] w-[133px] object-contain mt-8"
         />
       </SidebarHeader>
-      <SidebarContent className="pl-2 mt-0">
+      <SidebarContent className="pl-2 mt-0 pt-0">
         <NavMain items={data.navMain} />
+        <NavSupportSetting items={data.navSupportSetting} />
       </SidebarContent>
       <SidebarFooter className="px-4">
         <NavUser user={data.user} />
