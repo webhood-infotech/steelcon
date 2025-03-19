@@ -20,16 +20,18 @@ const ResetPassword = () => {
             </p>
           </div>
         </div>
-        <div className="mt-8 ">
-          <button className=" cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg">
-            Continue
-          </button>
+        <div className="mt-8">
+          <a href="/">
+            <button className=" cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg">
+              Continue
+            </button>
+          </a>
         </div>
         <div className="mt-8 flex gap-2 items-center justify-center">
           <img src={arrow} className="w-[12px] h-[12px] mt-1" alt="arrow" />
           <Link
             to="/login"
-            className="text-sm text-[#475467] font-semibold hover:underline"
+            className="text-sm text-[#475467] font-semibold hover:underline hover:decoration-[#475467]"
           >
             Back to log in
           </Link>

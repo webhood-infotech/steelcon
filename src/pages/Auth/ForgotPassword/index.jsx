@@ -12,7 +12,7 @@ const ForgotPassword = () => {
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-    setError(""); // Clear any previous errors when user types
+    setError("");
   };
 
   const validateEmail = (email) => {
@@ -23,10 +23,8 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Reset states
     setError("");
 
-    // Validate email
     if (!email.trim()) {
       setError("Email is required");
       return;
@@ -60,7 +58,7 @@ const ForgotPassword = () => {
       // Success
       setSuccess(true);
       setTimeout(() => {
-        navigate("/checkemail"); // Redirect to login after 3 seconds
+        navigate("/checkemail", { state: { email } });
       });
     } catch (err) {
       setError(
@@ -87,7 +85,6 @@ const ForgotPassword = () => {
             </p>
           </div>
         </div>
-
         <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-[24px]">
           <div className="flex flex-col gap-[6px]">
             <label className="text-sm font-medium text-[#344054]">Email</label>
@@ -110,7 +107,6 @@ const ForgotPassword = () => {
             {loading ? "Sending..." : "Reset password"}
           </button>
         </form>
-
         <div className="mt-8 flex gap-2 items-center justify-center">
           <img src={arrow} className="w-[12px] h-[12px]" alt="arrow" />
           <Link

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import key from "../../../assets/images/Featured icon.png";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 // import arrow from "../../../assets/icon/arrow.png";
 // import { Link } from "react-router-dom";
 
-const ConfirmPassword = () => {
+const CreatePassword = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -19,7 +19,14 @@ const ConfirmPassword = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const {username} = useSelector((state) => state.auth.user);
+  const { username } = useSelector((state) => state.auth.user);
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      username: username,
+    }));
+  }, [username]); // Dependency array
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -150,7 +157,7 @@ const ConfirmPassword = () => {
               <input
                 type="text"
                 name="username"
-                value={formData.username || username}
+                value={formData.username}
                 onChange={handleChange}
                 placeholder="Enter your username"
                 className={`w-full p-2 border rounded-md ${
@@ -232,4 +239,4 @@ const ConfirmPassword = () => {
   );
 };
 
-export default ConfirmPassword;
+export default CreatePassword;

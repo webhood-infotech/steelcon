@@ -1,6 +1,6 @@
 // src/routes/router.js
 import CheckEmail from "@/pages/Auth/CheckEmail";
-import ConfirmPassword from "@/pages/Auth/ConfirmPassword";
+import CreatePassword from "@/pages/Auth/CreatePassword";
 import ForgotPassword from "@/pages/Auth/ForgotPassword";
 import Login from "@/pages/Auth/Login";
 import ResetPassword from "@/pages/Auth/ResetPassword";
@@ -22,8 +22,8 @@ const router = createBrowserRouter([
     element: <ForgotPassword />,
   },
   {
-    path: "/confirmpassword",
-    element: <ConfirmPassword />,
+    path: "/createpassword",
+    element: <CreatePassword />,
   },
   {
     path: "/checkemail",

@@ -79,7 +79,7 @@ const Login = () => {
           }
         }
         if (response.data.isFirstUser === true) {
-          navigate("/ConfirmPassword");
+          navigate("/createpassword");
         } else {
           navigate("/");
         }
@@ -93,7 +93,7 @@ const Login = () => {
     }
   };
   return (
-    <div className="max-w-[1280px] mx-auto mt-7 px-20  ">
+    <div className="max-w-[1280px] mx-auto mt-7 px-20">
       <div className="flex justify-center gap-[128px]">
         <div className="max-w-[576px] flex justify-center items-center">
           <form
@@ -106,7 +106,6 @@ const Login = () => {
                 Welcome back! Please enter your details.
               </p>
             </div>
-
             <div className="flex flex-col gap-[20px]">
               {apiError && (
                 <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -169,7 +168,6 @@ const Login = () => {
                   Forgot password
                 </a>
               </div>
-
               <button
                 type="submit"
                 disabled={isLoading}

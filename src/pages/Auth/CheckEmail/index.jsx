@@ -1,40 +1,88 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import mail from "../../../assets/images/checkemail.png";
-import { Link } from "react-router-dom";
 import arrow from "../../../assets/icon/arrow.png";
+import { useLocation } from "react-router-dom";
 const CheckEmail = () => {
+  const location = useLocation();
+  const email = location.state?.email;
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  console.log(email, "errfer");
+  const handleClick = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        "https://steelconbackend.vercel.app/api/route/forgot-password-post",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/checkemail");
+      }, 2000);
+    } catch (err) {
+      setError(
+        err.message || "Failed to send reset instructions. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex h-screen items-center justify-center p-4">
-      <div className="w-[360px] ">
-        <div className="flex flex-col items-center gap-[24px]">
-          <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#DBE6F0]  backdrop-blur-md">
+      <div className="w-[360px]">
+        <div className="flex flex-col items-center gap-6">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#DBE6F0] backdrop-blur-md">
             <img src={mail} alt="email" />
           </div>
-          <div className="flex flex-col gap-[12px] ">
-            <h2 className="text-3xl font-semibold text-center text-[#101828]">
+          <div className="flex flex-col gap-3 text-center">
+            <h2 className="text-3xl font-semibold text-[#101828]">
               Check your email
             </h2>
-            <p className="text-base text-center font-normal text-[#475467] ">
-              We sent a password reset link to olivia@untitledui.com
+            <p className="text-base font-normal text-[#475467]">
+              We sent a password reset link to {email}
             </p>
           </div>
         </div>
-        <div className="mt-3">
-          <div className="  text-base text-[#475467] text-center font-bold">
-            Open gmail account to reset your password
-          </div>
+
+        <div className="mt-3 text-center text-base font-bold text-[#475467]">
+          Open your Gmail account to reset your password
         </div>
+
         <div className="flex items-center justify-center mt-4 gap-1">
-          <p className="font-sm font-normal">Didn’t receive the email?</p>
-          <Link className="font-sm font-semibold text-[#213B54] hover:underline">
-            Click to resend
-          </Link>
+          <p className="text-sm font-normal">Didn’t receive the email?</p>
+          <button
+            onClick={handleClick}
+            className="text-sm font-semibold text-[#213B54] hover:underline"
+            disabled={loading}
+          >
+            {loading ? "Resending..." : "Click to resend"}
+          </button>
         </div>
-        <div className="mt-5 flex gap-2 items-center justify-center">
-          <img src={arrow} className="w-[12px] h-[12px] mt-1" alt="arrow" />
+
+        {error && (
+          <p className="mt-2 text-sm text-red-500 text-center">{error}</p>
+        )}
+
+        <div className="mt-5 flex items-center justify-center gap-2">
+          <img src={arrow} className="w-3 h-3 mt-1" alt="arrow" />
           <Link
             to="/login"
-            className="text-sm text-[#475467] font-semibold hover:underline"
+            className="text-sm font-semibold text-[#475467] hover:underline"
           >
             Back to log in
           </Link>
