@@ -92,6 +92,7 @@ const Login = () => {
       setApiError(errorMessage);
     }
   };
+  
   return (
     <div className="max-w-[1280px] mx-auto mt-7 px-20">
       <div className="flex justify-center gap-[128px]">
