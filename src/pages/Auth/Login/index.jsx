@@ -3,6 +3,8 @@ import loginImge from "../../../assets/images/image-login.jpg";
 import { Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/authSlice";
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -13,9 +15,9 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState("");
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    console.log(name, value, type, checked);
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
@@ -65,6 +67,7 @@ const Login = () => {
         }
       );
       setIsLoading(false);
+      dispatch(setUser(response?.data));
       if (response.data) {
         if (response.data.token) {
           localStorage.setItem("token", response.data.token);
@@ -83,16 +86,10 @@ const Login = () => {
       }
     } catch (error) {
       setIsLoading(false);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        setApiError(error.response.data.message);
-      } else {
-        setApiError("An error occurred. Please try again later.");
-      }
-      console.error("Login error:", error);
+      const errorMessage =
+        error?.response?.data?.err ||
+        "An error occurred. Please try again later.";
+      setApiError(errorMessage);
     }
   };
   return (
@@ -109,7 +106,13 @@ const Login = () => {
                 Welcome back! Please enter your details.
               </p>
             </div>
+
             <div className="flex flex-col gap-[20px]">
+              {apiError && (
+                <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                  {apiError}
+                </div>
+              )}
               <div className="flex flex-col gap-[6px]">
                 <label className="text-sm font-medium text-[#344054]">
                   Username/Email
@@ -192,11 +195,9 @@ const Login = () => {
               <div class="flex items-start justify-between mt-[28px]">
                 <p class="font-semibold text-4xl text-white">Alisa Hester</p>
                 <span class="flex gap-1 ">
-                  <Star className="fill-current" />
-                  <Star className="fill-current" />
-                  <Star className="fill-current" />
-                  <Star className="fill-current" />
-                  <Star className="fill-current" />
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star key={index} className="fill-current" />
+                  ))}
                 </span>
               </div>
               <div className="flex items-center justify-between mt-[16px]">

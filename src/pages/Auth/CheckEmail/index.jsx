@@ -5,7 +5,7 @@ import arrow from "../../../assets/icon/arrow.png";
 const CheckEmail = () => {
   return (
     <div className="flex h-screen items-center justify-center p-4">
-      <div className="max-w-[360px] p-6">
+      <div className="w-[360px] ">
         <div className="flex flex-col items-center gap-[24px]">
           <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#DBE6F0]  backdrop-blur-md">
             <img src={mail} alt="email" />
@@ -19,18 +19,18 @@ const CheckEmail = () => {
             </p>
           </div>
         </div>
-        <div className="mt-8 ">
-          <button className="cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg">
-            Open email app
-          </button>
+        <div className="mt-3">
+          <div className="  text-base text-[#475467] text-center font-bold">
+            Open gmail account to reset your password
+          </div>
         </div>
-        <div className="flex items-center justify-center mt-8 gap-1">
+        <div className="flex items-center justify-center mt-4 gap-1">
           <p className="font-sm font-normal">Didn’t receive the email?</p>
           <Link className="font-sm font-semibold text-[#213B54] hover:underline">
             Click to resend
           </Link>
         </div>
-        <div className="mt-8 flex gap-2 items-center justify-center">
+        <div className="mt-5 flex gap-2 items-center justify-center">
           <img src={arrow} className="w-[12px] h-[12px] mt-1" alt="arrow" />
           <Link
             to="/login"

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import key from "../../../assets/images/Featured icon.png";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 // import arrow from "../../../assets/icon/arrow.png";
 // import { Link } from "react-router-dom";
 
@@ -18,6 +19,7 @@ const ConfirmPassword = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const {username} = useSelector((state) => state.auth.user);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -148,7 +150,7 @@ const ConfirmPassword = () => {
               <input
                 type="text"
                 name="username"
-                value={formData.username}
+                value={formData.username || username}
                 onChange={handleChange}
                 placeholder="Enter your username"
                 className={`w-full p-2 border rounded-md ${
