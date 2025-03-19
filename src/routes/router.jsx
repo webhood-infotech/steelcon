@@ -8,10 +8,15 @@ import SetPassword from "@/pages/Auth/SetPassword";
 import Dashboard from "@/pages/DashBoard";
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
+import ProtectedRoute from "./protectRoutes";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Dashboard />,
+    element: (
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/login",
