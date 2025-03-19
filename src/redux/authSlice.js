@@ -6,7 +6,7 @@ const initialState = {
     name: null,
     email: null,
     resetPasswordToken: null,
-    isFirstUser: false,
+    isFirstUser: true,
     username: null,
     isAuthenticated: !!localStorage.getItem("token"),
   },
