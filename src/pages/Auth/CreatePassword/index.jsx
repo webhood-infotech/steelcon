@@ -19,7 +19,7 @@ const CreatePassword = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { username } = useSelector((state) => state.auth.user);
+  const { username, _id } = useSelector((state) => state.auth.user);
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
@@ -100,7 +100,7 @@ const CreatePassword = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId: "67d0ec4f77ec10853c822c3f",
+            userId: _id,
             userName: formData.username,
             newPassword: formData.confirmPassword,
           }),
