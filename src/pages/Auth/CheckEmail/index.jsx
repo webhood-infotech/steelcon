@@ -62,7 +62,6 @@ const CheckEmail = () => {
         <div className="mt-3 text-center text-base font-bold text-[#475467]">
           Open your Gmail account to reset your password
         </div>
-
         <div className="flex items-center justify-center mt-4 gap-1">
           <p className="text-sm font-normal">Didn’t receive the email?</p>
           <button

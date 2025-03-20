@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import key from "../../../assets/images/Featured icon.png";
 import arrow from "../../../assets/icon/arrow.png";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const SetPassword = () => {
   const [password, setPassword] = useState("");
@@ -11,6 +11,7 @@ const SetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Extract token from URL when component mounts
   useEffect(() => {
@@ -20,7 +21,7 @@ const SetPassword = () => {
       setToken(tokenFromUrl);
     }
   }, [location]);
-  console.log(token,"hbhu");
+  console.log(token, "hbhu");
 
   const validatePassword = (pass) => {
     return pass.length >= 8;
@@ -65,6 +66,7 @@ const SetPassword = () => {
       }
 
       setIsSuccess(true);
+      navigate("/resetpassword");
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
@@ -90,66 +92,49 @@ const SetPassword = () => {
             </p>
           </div>
         </div>
-
-        {!isSuccess ? (
-          <form
-            onSubmit={handleSubmit}
-            className="mt-8 flex flex-col gap-[24px]"
-          >
-            <div className="flex flex-col gap-[20px]">
-              <div className="flex flex-col gap-[6px]">
-                <label className="text-sm font-medium text-[#344054]">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-2 border rounded-md border-[#D0D5DD] placeholder-[#667085]"
-                />
-                <p className="text-sm font-normal text-[#475467]">
-                  Must be at least 8 characters.
-                </p>
-              </div>
-              <div className="flex flex-col gap-[6px]">
-                <label className="text-sm font-medium text-[#344054]">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full p-2 border rounded-md border-[#D0D5DD] placeholder-[#667085]"
-                />
-              </div>
+        <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-[24px]">
+          <div className="flex flex-col gap-[20px]">
+            <div className="flex flex-col gap-[6px]">
+              <label className="text-sm font-medium text-[#344054]">
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-2 border rounded-md border-[#D0D5DD] placeholder-[#667085]"
+              />
+              <p className="text-sm font-normal text-[#475467]">
+                Must be at least 8 characters.
+              </p>
             </div>
-
-            {error && (
-              <div className="text-red-500 text-sm text-center">{error}</div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg hover:bg-[#264863] transition-colors disabled:bg-[#9BA6B4] disabled:cursor-not-allowed"
-            >
-              {isLoading ? "Resetting..." : "Reset password"}
-            </button>
-          </form>
-        ) : (
-          <div className="mt-8">
-            <Link to="/login">
-              <button className="cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg">
-                Go to login
-              </button>
-            </Link>
+            <div className="flex flex-col gap-[6px]">
+              <label className="text-sm font-medium text-[#344054]">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full p-2 border rounded-md border-[#D0D5DD] placeholder-[#667085]"
+              />
+            </div>
           </div>
-        )}
-
+          {error && (
+            <div className="text-red-500 text-sm text-center">{error}</div>
+          )}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg hover:bg-[#264863] transition-colors disabled:bg-[#9BA6B4] disabled:cursor-not-allowed"
+          >
+            {isLoading ? "Resetting..." : "Reset password"}
+          </button>
+        </form>
         <div className="mt-8 flex gap-2 items-center justify-center">
-          <img src={arrow} className="w-[12px] h-[12px]" alt="arrow" />
+          <img src={arrow} className="w-[12px] h-[12px] mt-1" alt="arrow" />
           <Link
             to="/login"
             className="text-sm text-[#475467] font-semibold hover:underline"

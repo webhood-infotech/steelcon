@@ -108,7 +108,7 @@ const ForgotPassword = () => {
           </button>
         </form>
         <div className="mt-8 flex gap-2 items-center justify-center">
-          <img src={arrow} className="w-[12px] h-[12px]" alt="arrow" />
+          <img src={arrow} className="w-[12px] h-[12px] mt-1" alt="arrow" />
           <Link
             to="/login"
             className="text-sm text-[#475467] font-semibold hover:underline"

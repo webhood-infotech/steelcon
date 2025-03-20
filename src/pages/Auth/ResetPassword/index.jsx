@@ -1,6 +1,6 @@
 import React from "react";
 import arrow from "../../../assets/icon/arrow.png";
-import check from "../../../assets/images/Resetpassword.png";
+import correct from "../../../assets/images/correctPassword.png";
 import { Link } from "react-router-dom";
 const ResetPassword = () => {
   return (
@@ -8,7 +8,7 @@ const ResetPassword = () => {
       <div className="w-[360px] p-6">
         <div className="flex flex-col items-center gap-[24px]">
           <div className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#DBE6F0]  backdrop-blur-md">
-            <img src={check} alt="check" />
+            <img src={correct} alt="check" />
           </div>
           <div className="flex flex-col gap-[12px] ">
             <h2 className="text-3xl font-semibold text-center text-[#101828]">
@@ -40,5 +40,4 @@ const ResetPassword = () => {
     </div>
   );
 };
-
 export default ResetPassword;

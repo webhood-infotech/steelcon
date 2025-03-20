@@ -92,7 +92,7 @@ const Login = () => {
       setApiError(errorMessage);
     }
   };
-  
+
   return (
     <div className="max-w-[1280px] mx-auto mt-7 px-20">
       <div className="flex justify-center gap-[128px]">
@@ -156,7 +156,7 @@ const Login = () => {
                     name="remember"
                     checked={formData.rememberMe}
                     onChange={handleChange}
-                    className="mr-1 mt-0.5"
+                    className="mr-1 mt-0.5 h-[15px] w-[16px] rounded-lg border-[#D0D5DD]"
                   />
                   <span className="text-sm font-medium text-[#344054]">
                     Remember for 30 days
