@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import loginImge from "../../../assets/images/image-login.jpg";
-import { Star } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Star, Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/authSlice";
+
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -15,7 +16,9 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -28,6 +31,10 @@ const Login = () => {
         [name]: "",
       });
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const validateForm = () => {
@@ -48,6 +55,7 @@ const Login = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setApiError("");
@@ -135,16 +143,25 @@ const Login = () => {
                 <label className="text-sm font-medium text-[#344054]">
                   Password
                 </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className={`w-full p-2 border rounded-md ${
-                    errors.password ? "border-red-500" : "border-[#D0D5DD]"
-                  }`}
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    className={`w-full p-2 border rounded-md ${
+                      errors.password ? "border-red-500" : "border-[#D0D5DD]"
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
                 {errors.password && (
                   <p className="text-red-500 text-xs mt-1">{errors.password}</p>
                 )}
@@ -153,7 +170,7 @@ const Login = () => {
                 <label className="flex items-center">
                   <input
                     type="checkbox"
-                    name="remember"
+                    name="rememberMe"
                     checked={formData.rememberMe}
                     onChange={handleChange}
                     className="mr-1 mt-0.5 h-[15px] w-[16px] rounded-lg border-[#D0D5DD]"
@@ -162,12 +179,12 @@ const Login = () => {
                     Remember for 30 days
                   </span>
                 </label>
-                <a
-                  href="/forgotpassword"
+                <Link
+                  to="/forgotpassword"
                   className="font-semibold text-sm text-[#213B54]"
                 >
                   Forgot password
-                </a>
+                </Link>
               </div>
               <button
                 type="submit"
@@ -186,14 +203,16 @@ const Login = () => {
               alt="Testimonial"
               className=" w-[100%] object-cover h-[645px] "
             />
-            <div class="absolute backdrop-blur-[24px] bottom-0 left-0 w-full bg-white/30 bg-opacity-50 text-white px-[28px] py-[20px]">
-              <p class="text-3xl text-white font-semibold leading-[34px]">
-                “Untitled has saved us thousands of hours of work. We’re able to
-                spin up projects and features faster.”
+            <div className="absolute backdrop-blur-[24px] bottom-0 left-0 w-full bg-white/30 bg-opacity-50 text-white px-[28px] py-[20px]">
+              <p className="text-3xl text-white font-semibold leading-[34px]">
+                "Untitled has saved us thousands of hours of work. We're able to
+                spin up projects and features faster."
               </p>
-              <div class="flex items-start justify-between mt-[28px]">
-                <p class="font-semibold text-4xl text-white">Alisa Hester</p>
-                <span class="flex gap-1 ">
+              <div className="flex items-start justify-between mt-[28px]">
+                <p className="font-semibold text-4xl text-white">
+                  Alisa Hester
+                </p>
+                <span className="flex gap-1 ">
                   {Array.from({ length: 5 }).map((_, index) => (
                     <Star key={index} className="fill-current" />
                   ))}
@@ -201,7 +220,9 @@ const Login = () => {
               </div>
               <div className="flex items-center justify-between mt-[16px]">
                 <div className="flex flex-col items-start gap-[4px]">
-                  <p class="text-lg font-semibold">Product Manager,Hourglass</p>
+                  <p className="text-lg font-semibold">
+                    Product Manager,Hourglass
+                  </p>
                   <p className="text-base font-medium">Web Design Agency</p>
                 </div>
               </div>
@@ -212,4 +233,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

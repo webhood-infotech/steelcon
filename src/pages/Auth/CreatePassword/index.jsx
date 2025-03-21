@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import key from "../../../assets/images/Featured icon.png";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Eye, EyeOff } from "lucide-react";
 // import arrow from "../../../assets/icon/arrow.png";
 // import { Link } from "react-router-dom";
 
@@ -17,6 +18,8 @@ const CreatePassword = () => {
     confirmPassword: "",
     general: "",
   });
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { username, _id } = useSelector((state) => state.auth.user);
@@ -40,6 +43,12 @@ const CreatePassword = () => {
         [name]: "",
       }));
     }
+  };
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   // Validate username
@@ -174,40 +183,65 @@ const CreatePassword = () => {
               <label className="text-sm font-medium text-[#344054]">
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                className={`w-full p-2 border rounded-md ${
-                  errors.password ? "border-red-500" : "border-[#D0D5DD]"
-                } placeholder-[#667085]`}
-              />
-              {errors.password ? (
-                <p className="text-sm font-normal text-red-500">
-                  {errors.password}
-                </p>
-              ) : (
-                <p className="text-sm font-normal text-[#475467]">
-                  Must be at least 4 characters.
-                </p>
-              )}
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  className={`w-full p-2 border rounded-md ${
+                    errors.password ? "border-red-500" : "border-[#D0D5DD]"
+                  } placeholder-[#667085]`}
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className=" cursor-pointer absolute right-3 top-1/3 transform -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+                {errors.password ? (
+                  <p className="text-sm font-normal text-red-500">
+                    {errors.password}
+                  </p>
+                ) : (
+                  <p className="text-sm font-normal text-[#475467]">
+                    Must be at least 4 characters.
+                  </p>
+                )}
+              </div>
             </div>
             <div className="flex flex-col gap-[6px]">
               <label className="text-sm font-medium text-[#344054]">
                 Confirm Password
               </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="••••••••"
-                className={`w-full p-2 border rounded-md ${
-                  errors.confirmPassword ? "border-red-500" : "border-[#D0D5DD]"
-                } placeholder-[#667085]`}
-              />
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  className={`w-full p-2 border rounded-md ${
+                    errors.confirmPassword
+                      ? "border-red-500"
+                      : "border-[#D0D5DD]"
+                  } placeholder-[#667085]`}
+                />
+                <button
+                  type="button"
+                  onClick={toggleConfirmPasswordVisibility}
+                  className=" cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
+                </button>
+              </div>
+
               {errors.confirmPassword && (
                 <p className="text-sm font-normal text-red-500">
                   {errors.confirmPassword}
@@ -225,15 +259,6 @@ const CreatePassword = () => {
             {loading ? "Registering..." : "Continue"}
           </button>
         </form>
-        {/* <div className="mt-8 flex gap-2 items-center justify-center">
-          <img src={arrow} className="w-[12px] h-[12px]" alt="arrow" />
-          <Link
-            to="/login"
-            className="text-sm text-[#475467] font-semibold hover:underline"
-          >
-            Back to log in
-          </Link>
-        </div> */}
       </div>
     </div>
   );

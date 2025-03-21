@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import key from "../../../assets/images/Featured icon.png";
 import arrow from "../../../assets/icon/arrow.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 
 const SetPassword = () => {
   const [password, setPassword] = useState("");
@@ -12,6 +13,8 @@ const SetPassword = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Extract token from URL when component mounts
   useEffect(() => {
@@ -73,7 +76,12 @@ const SetPassword = () => {
       setIsLoading(false);
     }
   };
-
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="w-[360px] p-6">
@@ -98,13 +106,26 @@ const SetPassword = () => {
               <label className="text-sm font-medium text-[#344054]">
                 Password
               </label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 border rounded-md border-[#D0D5DD] placeholder-[#667085]"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-2 border rounded-md border-[#D0D5DD] placeholder-[#667085]"
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className=" cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
+                </button>
+              </div>
               <p className="text-sm font-normal text-[#475467]">
                 Must be at least 8 characters.
               </p>
@@ -113,13 +134,26 @@ const SetPassword = () => {
               <label className="text-sm font-medium text-[#344054]">
                 Confirm Password
               </label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full p-2 border rounded-md border-[#D0D5DD] placeholder-[#667085]"
-              />
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full p-2 border rounded-md border-[#D0D5DD] placeholder-[#667085]"
+                />
+                <button
+                  type="button"
+                  onClick={toggleConfirmPasswordVisibility}
+                  className=" cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
+                </button>
+              </div>
             </div>
           </div>
           {error && (
