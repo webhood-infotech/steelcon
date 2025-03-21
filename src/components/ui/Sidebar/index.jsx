@@ -10,9 +10,9 @@ const Sidebar = () => {
         <nav className="flex-1 mt-6">
           <ul className="space-y-1">
             <li className="bg-[#3b537f] rounded-lg">
-              <a href="#" className="flex items-center px-4 py-2">
+              <Link to="#" className="flex items-center px-4 py-2">
                 <span className="mr-3">📊</span> Dashboard
-              </a>
+              </Link>
             </li>
             {[
               ["📄", "View Policies"],

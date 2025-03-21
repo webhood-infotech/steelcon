@@ -12,6 +12,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { Link } from "react-router-dom";
 export function NavMain({ items }) {
   return (
     <SidebarGroup>
@@ -50,9 +51,9 @@ export function NavMain({ items }) {
                         className="active:bg-[#305679] active:text-white text-white text-base font-semibold hover:text-white hover:bg-[#305679] h-auto py-2 px-2 "
                         asChild
                       >
-                        <a href={subItem.url}>
+                        <Link to={subItem.url}>
                           <span className="pl-10">{subItem.title}</span>
-                        </a>
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

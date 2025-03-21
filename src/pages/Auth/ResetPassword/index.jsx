@@ -21,11 +21,11 @@ const ResetPassword = () => {
           </div>
         </div>
         <div className="mt-8">
-          <a href="/">
+          <Link to="/">
             <button className=" cursor-pointer w-full bg-[#305679] text-base text-white py-2.5 font-semibold rounded-lg">
               Continue
             </button>
-          </a>
+          </Link>
         </div>
         <div className="mt-8 flex gap-2 items-center justify-center">
           <img src={arrow} className="w-[12px] h-[12px] mt-1" alt="arrow" />
