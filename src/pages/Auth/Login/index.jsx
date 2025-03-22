@@ -42,8 +42,12 @@ const Login = () => {
 
     if (!formData.email.trim()) {
       newErrors.email = "Username/Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
+    } else if (
+      formData.email.includes("@") &&
+      !/\S+@\S+\.\S+/.test(formData.email)
+    ) {
+      newErrors.email =
+        "If using email format, please enter a valid email address";
     }
 
     if (!formData.password.trim()) {
@@ -75,7 +79,7 @@ const Login = () => {
         }
       );
       setIsLoading(false);
-      dispatch(setUser(response?.data));
+      dispatch(setUser(response?.data?.loggedInUser));
       if (response.data) {
         if (response.data.token) {
           localStorage.setItem("token", response.data.token);
@@ -86,7 +90,7 @@ const Login = () => {
             localStorage.removeItem("userEmail");
           }
         }
-        if (response.data.isFirstUser === true) {
+        if (response.data?.loggedInUser?.isFirstUser === true) {
           navigate("/createpassword");
         } else {
           navigate("/");
@@ -128,6 +132,7 @@ const Login = () => {
                 <input
                   type="text"
                   name="email"
+                  autosuggest=""
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleChange}
