@@ -2,7 +2,7 @@ import React from "react";
 import menu from "../../../assets/icon/menu.png";
 const DashboardHeader = () => {
   return (
-    <div className="container mx-auto">
+    <div className="w-full"> 
       <div className="p-8 pb-0 flex flex-col gap-8">
         <div className="font-semibold text-3xl text-[#101828]">Dashboard</div>
         <div className="flex justify-between items-center">

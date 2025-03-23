@@ -382,7 +382,7 @@ const data = {
 };
 export function AppSidebar({ ...props }) {
   return (
-    <Sidebar className="w-xs" collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="pl-6">
         <img
           src={logo}

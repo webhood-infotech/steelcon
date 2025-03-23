@@ -25,7 +25,7 @@ const OverviewCard = () => {
       {/* Cards Grid */}
       <div className="grid grid-cols-4 ">
         {cardData.map((card, index) => (
-          <div key={index} className="bg-white rounded-lg  px-5 ">
+          <div key={index} className=" rounded-lg  px-5 ">
             <div className="text-sm font-medium text-[#475467] mb-3">
               {card.title}
             </div>
