@@ -34,7 +34,7 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/",
       image: "/src/assets/sidebarImages/Icon (1).png",
       isActive: true,
       items: [
@@ -58,7 +58,7 @@ const data = {
     },
     {
       title: "View Policies",
-      url: "#",
+      url: "/view-policies",
       image: "/src/assets/sidebarImages/Icon (8).png",
       items: [
         {
@@ -77,7 +77,7 @@ const data = {
     },
     {
       title: "Manage Department",
-      url: "#",
+      url: "/manage-department",
       image: "/src/assets/sidebarImages/Icon (2).png",
       items: [
         {
@@ -100,7 +100,7 @@ const data = {
     },
     {
       title: "Manage Managers",
-      url: "#",
+      url: "/manage-managers",
       image: "/src/assets/sidebarImages/layers-three-01 (3).png",
       items: [
         {
@@ -390,7 +390,7 @@ export function AppSidebar({ ...props }) {
           className="h-[48px] w-[133px] object-contain mt-8"
         />
       </SidebarHeader>
-      <SidebarContent className="pl-2 mt-0 pt-0">
+      <SidebarContent className="pl-2 mt-0 pt-0 thin-scrollbar overflow-y-scroll">
         <NavMain items={data.navMain} />
         <NavSupportSetting items={data.navSupportSetting} />
       </SidebarContent>

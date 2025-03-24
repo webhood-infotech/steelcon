@@ -74,7 +74,7 @@ const Login = () => {
       const response = await axios.post(
         "https://steelconbackend.vercel.app/api/route/auth-post",
         {
-          email: formData.email,
+          identifier: formData.email,
           password: formData.password,
         }
       );
@@ -84,11 +84,11 @@ const Login = () => {
         if (response.data.token) {
           localStorage.setItem("token", response.data.token);
 
-          if (formData.rememberMe) {
-            localStorage.setItem("userEmail", formData.email);
-          } else {
-            localStorage.removeItem("userEmail");
-          }
+          // if (formData.rememberMe) {
+          //   localStorage.setItem("userEmail", formData.email);
+          // } else {
+          //   localStorage.removeItem("userEmail");
+          // }
         }
         if (response.data?.loggedInUser?.isFirstUser === true) {
           navigate("/createpassword");

@@ -25,7 +25,8 @@ export function NavMain({ items }) {
             className="group/collapsible"
           >
             <SidebarMenuItem>
-              <CollapsibleTrigger
+              <Link
+                to={item?.url}
                 className=" active:bg-[#305679] active:text-white hover:bg-[#305679] hover:text-white gap-[12px] data-[active=true]:bg-[#305679]  data-[active=true]:text-white data-[state=open]:hover:bg-[#305679] data-[state=open]:hover:text-white"
                 asChild
               >
@@ -42,8 +43,8 @@ export function NavMain({ items }) {
                   )}
                   <span>{item.title}</span>
                 </SidebarMenuButton>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
+              </Link>
+              {/* <CollapsibleContent>
                 <SidebarMenuSub className="px-0 border-0 mx-0">
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem className="w-full " key={subItem.title}>
@@ -58,7 +59,7 @@ export function NavMain({ items }) {
                     </SidebarMenuSubItem>
                   ))}
                 </SidebarMenuSub>
-              </CollapsibleContent>
+              </CollapsibleContent> */}
             </SidebarMenuItem>
           </Collapsible>
         ))}
