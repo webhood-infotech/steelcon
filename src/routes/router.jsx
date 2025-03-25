@@ -14,6 +14,8 @@ import DeafultLayout from "@/pages/DeafultLayout";
 import ManageDepartment from "@/pages/ManageDepartment";
 import MangeManagers from "@/pages/ManageManagers";
 import ManageTeam from "@/pages/ManageTeam";
+import AddNewDepartament from "@/pages/ManageDepartment/AddNewDepartament";
+import AddNewManagers from "@/pages/ManageManagers/AddNewManagers";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -70,6 +72,14 @@ const router = createBrowserRouter([
     element: (
       <DeafultLayout>
         <ManageTeam />
+      </DeafultLayout>
+    ),
+  },
+  {
+    path: "/add-new-managers",
+    element: (
+      <DeafultLayout>
+        <AddNewManagers />
       </DeafultLayout>
     ),
   },

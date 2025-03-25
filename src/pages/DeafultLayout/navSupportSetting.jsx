@@ -43,7 +43,7 @@ export function NavSupportSetting({ items }) {
                   <span>{item.title}</span>
                 </SidebarMenuButton>
               </CollapsibleTrigger>
-              <CollapsibleContent>
+              {/* <CollapsibleContent>
                 <SidebarMenuSub className="px-0 border-0 mx-0 ">
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem className="w-full " key={subItem.title}>
@@ -58,7 +58,7 @@ export function NavSupportSetting({ items }) {
                     </SidebarMenuSubItem>
                   ))}
                 </SidebarMenuSub>
-              </CollapsibleContent>
+              </CollapsibleContent> */}
             </SidebarMenuItem>
           </Collapsible>
         ))}

@@ -27,11 +27,11 @@ export function NavMain({ items }) {
             <SidebarMenuItem>
               <Link
                 to={item?.url}
-                className=" active:bg-[#305679] active:text-white hover:bg-[#305679] hover:text-white gap-[12px] data-[active=true]:bg-[#305679]  data-[active=true]:text-white data-[state=open]:hover:bg-[#305679] data-[state=open]:hover:text-white"
+                className="active:bg-[#305679] active:text-white hover:bg-[#305679] hover:text-white gap-[12px] data-[active=true]:bg-[#305679]  data-[active=true]:text-white data-[state=open]:hover:bg-[#305679] data-[state=open]:hover:text-white"
                 asChild
               >
                 <SidebarMenuButton
-                  className="text-base font-semibold hover:bg-[#305679] h-auto py-2 px-3 "
+                  className="active:bg-[#305679] active:text-white text-base font-semibold hover:bg-[#305679] hover:text-white h-auto py-2 px-3 "
                   tooltip={item.title}
                 >
                   {item.image && (
