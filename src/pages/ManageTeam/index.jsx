@@ -9,14 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import EditDepartment from "../ManageDepartment/EditDepartment";
 import AddNewDepartament from "../ManageDepartment/AddNewDepartament";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avatarImg from "../../assets/sidebarImages/Avatar.png";
-const ManageManagers = () => {
+import DeleteDepartment from "../ManageDepartment/DeleteDepartment";
+const ManageTeam = () => {
   const [departments, setDepartments] = useState([
     {
       id: "1",
@@ -24,6 +25,7 @@ const ManageManagers = () => {
       imageSrc: avatarImg,
       department: "L8 8HQ",
       JoiningDate: "9/18/16",
+      reportTo: "Vinayak",
       NumberOfTeam: "4",
       CurrentCTC: "Rs 40,000",
     },
@@ -33,6 +35,7 @@ const ManageManagers = () => {
       imageSrc: avatarImg,
       department: "Maintenance",
       JoiningDate: "9/23/16",
+      reportTo: "Vinayak",
       NumberOfTeam: "5",
       CurrentCTC: "Rs 40,000",
     },
@@ -42,6 +45,7 @@ const ManageManagers = () => {
       imageSrc: avatarImg,
       department: "Maintenance",
       JoiningDate: "10/28/12",
+      reportTo: "Vinayak",
       NumberOfTeam: "1",
       CurrentCTC: "Rs 40,000",
     },
@@ -52,6 +56,7 @@ const ManageManagers = () => {
 
       department: "Maintenance",
       JoiningDate: "6/21/19",
+      reportTo: "Vinayak",
       NumberOfTeam: "4",
       CurrentCTC: "Rs 1000",
     },
@@ -61,6 +66,7 @@ const ManageManagers = () => {
       imageSrc: avatarImg,
       department: "Operations",
       JoiningDate: "9/4/12",
+      reportTo: "Vinayak",
       NumberOfTeam: "1",
       CurrentCTC: "Rs 40,000",
     },
@@ -70,6 +76,7 @@ const ManageManagers = () => {
       imageSrc: avatarImg,
       department: "Engineering",
       JoiningDate: "5/27/15",
+      reportTo: "Vinayak",
       NumberOfTeam: "0",
       CurrentCTC: "2000",
     },
@@ -79,6 +86,7 @@ const ManageManagers = () => {
       imageSrc: avatarImg,
       department: "IT",
       JoiningDate: "5/27/15",
+      reportTo: "Vinayak",
       NumberOfTeam: "1",
       CurrentCTC: "2000",
     },
@@ -88,6 +96,7 @@ const ManageManagers = () => {
       imageSrc: avatarImg,
       department: "Human Resources",
       JoiningDate: "10/6/13",
+      reportTo: "Vinayak",
       NumberOfTeam: "3",
       CurrentCTC: "40000",
     },
@@ -97,6 +106,7 @@ const ManageManagers = () => {
       imageSrc: avatarImg,
       department: "Human Resources",
       JoiningDate: "8/15/17",
+      reportTo: "Vinayak",
       NumberOfTeam: "2",
       CurrentCTC: "37000",
     },
@@ -106,6 +116,7 @@ const ManageManagers = () => {
       imageSrc: avatarImg,
       department: "HSEQ",
       JoiningDate: "5/30/14",
+      reportTo: "Vinayak",
       NumberOfTeam: "5",
       CurrentCTC: "37000",
     },
@@ -166,19 +177,20 @@ const ManageManagers = () => {
         <Table>
           <TableHeader className="bg-[#F4F6F9] ">
             <TableRow className="">
-              <TableHead className="w-[300px] py-3 pl-5 text-xs text-[#475467] font-medium ">
-                Name
+              <TableHead className="w-[358px] py-3 pl-5 text-xs text-[#475467] font-medium ">
+                Team Member Name
               </TableHead>
-              <TableHead className="w-[167px] py-3 text-start text-xs text-[#475467] font-medium ">
+              <TableHead className="w-[163  px] py-3 text-start text-xs text-[#475467] font-medium ">
                 Department
               </TableHead>
               <TableHead className="w-[120px] py-3 text-start text-xs text-[#475467] font-medium ">
                 Joining Date
               </TableHead>
-              <TableHead className="w-[134px] py-3 text-start text-xs text-[#475467] font-medium ">
-                Number of team
+              <TableHead className="w-[164px] py-3 text-start text-xs text-[#475467] font-medium ">
+                Report to
               </TableHead>
-              <TableHead className="w-[120px] py-3 text-start text-xs text-[#475467] font-medium ">
+
+              <TableHead className="w-[136px] py-3 text-start text-xs text-[#475467] font-medium ">
                 Current CTC
               </TableHead>
               <TableHead className=" w-[123px] text-center py-3 pr-5 text-xs text-[#475467] font-medium ">
@@ -189,27 +201,44 @@ const ManageManagers = () => {
           <TableBody>
             {filteredDepartments.map((department) => (
               <TableRow key={department.id}>
-                <TableCell className="flex gap-4 items-center w-[300px] py-6 pl-5 text-sm font-medium  text-[#101828]">
+                <TableCell className="flex gap-4 items-center w-[358px] py-6 pl-5 text-sm font-medium  text-[#101828]">
                   <Avatar>
                     <AvatarImage src={department.imageSrc} alt="@shadcn" />
                     {/* <AvatarFallback>CN</AvatarFallback> */}
                   </Avatar>{" "}
                   {department.name}
                 </TableCell>
-                <TableCell className="w-[167px] py-6 text-start text-sm font-normal text-[#475467]">
+                <TableCell className="w-[163px] py-6 text-start text-sm font-normal text-[#475467]">
                   {department.department}
                 </TableCell>
                 <TableCell className="w-[120px] py-6 text-start text-sm font-normal text-[#475467]">
                   {department.JoiningDate}
                 </TableCell>
-                <TableCell className="w-[134px] py-6 text-start text-sm font-normal text-[#475467]">
-                  {department.NumberOfTeam}
+                <TableCell className="flex gap-4 items-center w-[164px] py-6 text-start text-sm font-normal text-[#475467]">
+                  <Avatar>
+                    <AvatarImage src={department.imageSrc} alt="@shadcn" />
+                  </Avatar>
+                  {department.reportTo}
                 </TableCell>
-                <TableCell className="w-[120px] py-6 text-start text-sm font-normal text-[#475467]">
+                <TableCell className="w-[136px] py-6 text-start text-sm font-normal text-[#475467]">
                   {department.CurrentCTC}
                 </TableCell>
                 <TableCell className="w-[123px] text-right pr-5">
                   <div className="flex justify-center gap-1">
+                    <Dialog>
+                      <DialogTrigger>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          // onClick={() => handleDelete(department.id)}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
+                        <DeleteDepartment />
+                      </DialogContent>
+                    </Dialog>
                     <Dialog>
                       <DialogTrigger>
                         <Button variant="ghost" size="icon">
@@ -233,4 +262,4 @@ const ManageManagers = () => {
   );
 };
 
-export default ManageManagers;
+export default ManageTeam;

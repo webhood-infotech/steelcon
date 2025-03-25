@@ -1,10 +1,12 @@
-import React from "react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-const AddNewDepartament = () => {
+import { Label } from "@radix-ui/react-dropdown-menu";
+import React from "react";
+
+const EditManageTeam = ({ departmentCode }) => {
+  console.log(departmentCode);
   return (
     <>
-      <div>
+      <div className="">
         <div className="flex flex-col gap-5">
           <div className="text-lg font-semibold text-[#101828]">
             Add New Department
@@ -12,16 +14,16 @@ const AddNewDepartament = () => {
           <div className="flex flex-col gap-[16px]">
             <div className="grid w-full max-w-sm items-center gap-2">
               <Label
-                htmlFor="email"
+                htmlFor="Name"
                 className="text-sm text-medium text-[#344054]"
               >
-                Email
+                Name
               </Label>
               <Input
-                type="email"
-                id="email"
-                placeholder="Email"
-                className=" border border-[#D0D5DD] py-2.5 px-3.5   placeholder:text-[#667085] placeholder:text-base placeholder:font-normal shadow focus:shadow"
+                type="name"
+                id="name"
+                placeholder="Name"
+                className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal shadow focus:shadow"
               />
             </div>
             <div className="grid w-full max-w-sm items-center gap-2">
@@ -34,16 +36,17 @@ const AddNewDepartament = () => {
               <Input
                 type="code"
                 id="code"
-                placeholder="code"
-                className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                placeholder={departmentCode}
+                className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal bg-gray-100"
+                disabled
               />
             </div>
           </div>
           <div className="flex justify-end gap-3 mt-5">
-            <div className=" cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
+            <div className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
               Cancel
             </div>
-            <div className=" cursor-pointer py-2.5 px-4.5 border border-[#305679] rounded-lg font-semibold text-base text-white bg-[#305679]">
+            <div className="cursor-pointer py-2.5 px-4.5 border border-[#305679] rounded-lg font-semibold text-base text-white bg-[#305679]">
               Submit
             </div>
           </div>
@@ -53,4 +56,4 @@ const AddNewDepartament = () => {
   );
 };
 
-export default AddNewDepartament;
+export default EditManageTeam;

@@ -13,15 +13,16 @@ import Dashboard from "@/pages/Dashbord";
 import DeafultLayout from "@/pages/DeafultLayout";
 import ManageDepartment from "@/pages/ManageDepartment";
 import MangeManagers from "@/pages/ManageManagers";
+import ManageTeam from "@/pages/ManageTeam";
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ProtectedRoute>
-        <DeafultLayout>
-          <Dashboard />
-        </DeafultLayout>
-      </ProtectedRoute>
+      // <ProtectedRoute>
+      <DeafultLayout>
+        <Dashboard />
+      </DeafultLayout>
+      // </ProtectedRoute>
     ),
   },
   {
@@ -61,6 +62,14 @@ const router = createBrowserRouter([
     element: (
       <DeafultLayout>
         <MangeManagers />
+      </DeafultLayout>
+    ),
+  },
+  {
+    path: "/manage-team",
+    element: (
+      <DeafultLayout>
+        <ManageTeam />
       </DeafultLayout>
     ),
   },

@@ -9,11 +9,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus } from "lucide-react";
+import { Edit3Icon, Plus } from "lucide-react";
 import { Eye } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import { Pencil } from "lucide-react";
 import AddNewDepartament from "./AddNewDepartament";
+import DeleteDepartment from "./DeleteDepartment";
+import EditDepartment from "./EditDepartment";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 const ManageDepartment = () => {
   const [departments, setDepartments] = useState([
     { id: "1", name: "Maintenance", code: "L8 8HQ" },
@@ -33,9 +36,9 @@ const ManageDepartment = () => {
       department.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       department.code.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  const handleDelete = (id) => {
-    setDepartments(departments.filter((dept) => dept.id !== id));
-  };
+  // const handleDelete = (id) => {
+  //   setDepartments(departments.filter((dept) => dept.id !== id));
+  // };
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
@@ -66,10 +69,17 @@ const ManageDepartment = () => {
               />
             </svg>
           </div>
-          <Button className="gap-2 bg-[#305679] py-4 font-semibold  text-white text-sm">
-            <Plus className="w-4" />
-            Add New
-          </Button>
+          <Dialog>
+            <DialogTrigger>
+              <Button className="gap-2 bg-[#305679] py-4 font-semibold  text-white text-sm">
+                <Plus className="w-4" />
+                Add New
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-white  w-[400px] rounded-2xl p-6">
+              <AddNewDepartament />
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <div className="rounded-md  border-b border-[#EAECF0]">
@@ -101,16 +111,30 @@ const ManageDepartment = () => {
                     <Button variant="ghost" size="icon">
                       <Eye className="h-3 w-3" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(department.id)}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <Pencil className="h-3 w-3" />
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          // onClick={() => handleDelete(department.id)}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
+                        <DeleteDepartment />
+                      </DialogContent>
+                    </Dialog>
+                    <Dialog>
+                      <DialogTrigger>
+                        <Button variant="ghost" size="icon">
+                          <Pencil className="h-3 w-3" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
+                        <EditDepartment departmentCode={department.code} />
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </TableCell>
               </TableRow>
@@ -118,7 +142,6 @@ const ManageDepartment = () => {
           </TableBody>
         </Table>
       </div>
-      <AddNewDepartament />
     </div>
   );
 };

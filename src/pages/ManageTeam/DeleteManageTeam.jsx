@@ -1,6 +1,6 @@
 import React from "react";
 
-const DeleteDepartment = () => {
+const DeleteManageTeam = () => {
   return (
     <>
       <div className=" bg-opacity-50 flex items-center justify-center ">
@@ -27,4 +27,4 @@ const DeleteDepartment = () => {
   );
 };
 
-export default DeleteDepartment;
+export default DeleteManageTeam;
