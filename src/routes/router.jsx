@@ -14,8 +14,10 @@ import DeafultLayout from "@/pages/DeafultLayout";
 import ManageDepartment from "@/pages/ManageDepartment";
 import MangeManagers from "@/pages/ManageManagers";
 import ManageTeam from "@/pages/ManageTeam";
-import AddNewDepartament from "@/pages/ManageDepartment/AddNewDepartament";
+import AddNewDepartament from "@/pages/ManageDepartment/AddNewDepartment";
 import AddNewManagers from "@/pages/ManageManagers/AddNewManagers";
+import AddNewTeamMember from "@/pages/ManageTeam/AddNewTeamMember";
+import DepartmentDesignation from "@/pages/DepartmentDesignation";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -80,6 +82,22 @@ const router = createBrowserRouter([
     element: (
       <DeafultLayout>
         <AddNewManagers />
+      </DeafultLayout>
+    ),
+  },
+  {
+    path: "/add-new-team-member",
+    element: (
+      <DeafultLayout>
+        <AddNewTeamMember />
+      </DeafultLayout>
+    ),
+  },
+  {
+    path: "/department-designation",
+    element: (
+      <DeafultLayout>
+        <DepartmentDesignation />
       </DeafultLayout>
     ),
   },

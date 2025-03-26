@@ -13,7 +13,7 @@ import { Plus } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import EditDepartment from "../ManageDepartment/EditDepartment";
-import AddNewDepartament from "../ManageDepartment/AddNewDepartament";
+import AddNewDepartament from "../ManageDepartment/AddNewDepartment";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avatarImg from "../../assets/sidebarImages/Avatar.png";
 const ManageManagers = () => {

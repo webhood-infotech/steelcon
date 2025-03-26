@@ -13,11 +13,12 @@ import { Edit3Icon, Plus } from "lucide-react";
 import { Eye } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import { Pencil } from "lucide-react";
-import AddNewDepartament from "./AddNewDepartment";
-import DeleteDepartment from "./DeleteDepartment";
-import EditDepartment from "./EditDepartment";
+
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-const ManageDepartment = () => {
+import DeleteDepartment from "./DeleteDepartament";
+import EditDepartment from "./EditDepartment";
+import AddNewDepartment from "./AddNewDepartment";
+const DepartmentDesignation = () => {
   const [departments, setDepartments] = useState([
     { id: "1", name: "Maintenance", code: "L8 8HQ" },
     { id: "2", name: "Human Resources", code: "CM7 5EY" },
@@ -43,7 +44,7 @@ const ManageDepartment = () => {
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
         <h1 className="text-3xl font-semibold text-[#101828] tracking-tight">
-          Manage Department
+          Department Designation
         </h1>
         <div className="flex items-center gap-4">
           <div className="relative">
@@ -77,7 +78,7 @@ const ManageDepartment = () => {
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-white  w-[400px] rounded-2xl p-6">
-              <AddNewDepartament />
+              <AddNewDepartment />
             </DialogContent>
           </Dialog>
         </div>
@@ -146,4 +147,4 @@ const ManageDepartment = () => {
   );
 };
 
-export default ManageDepartment;
+export default DepartmentDesignation;

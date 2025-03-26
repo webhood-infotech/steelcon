@@ -19,7 +19,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import EditDepartment from "../ManageDepartment/EditDepartment";
 import AddNewDepartament from "../ManageDepartment/AddNewDepartment";
 
-const AddNewManagers = () => {
+const AddNewTeamMember = () => {
   const [managers, setManagers] = useState([
     { id: "1", name: "Maintenance", code: "L8 8HQ" },
     { id: "2", name: "Human Resources", code: "CM7 5EY" },
@@ -56,7 +56,7 @@ const AddNewManagers = () => {
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-semibold text-[#101828] tracking-tight">
-          Add New Manager
+          Add New Employee
         </h1>
         <div className="flex items-center gap-4">
           <div className="relative">
@@ -152,7 +152,7 @@ const AddNewManagers = () => {
                   htmlFor="profileImage"
                   className="text-sm text-medium text-[#344054]"
                 >
-                  Profile Image
+                  Photograph
                 </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
                   {profileImage ? (
@@ -244,59 +244,9 @@ const AddNewManagers = () => {
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
-
-              <div className="space-y-2">
-                <Label
-                  htmlFor="workDays"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Work Days
-                </Label>
-                <Input
-                  id="workDays"
-                  placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="paidLeaves"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Paid Leaves
-                </Label>
-                <div className="flex items-center">
-                  <Input
-                    id="paidLeaves"
-                    placeholder="Enter"
-                    className=" flex-1 border border-[#D0D5DD] py-2.5 px-3.5 rounded-l-md rounded-r-none placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                  />
-                  <div className="bg-white border font-semibold text-base rounded-r-md px-3 py-1.5 ">
-                    Days
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="sickLeaves"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Sick Leaves
-                </Label>
-                <div className="flex items-center ">
-                  <Input
-                    id="sickLeaves"
-                    defaultValue="1.5"
-                    className=" flex-1 border border-[#D0D5DD] py-2.5 px-3.5 rounded-l-md rounded-r-none placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                  />
-                  <div className="bg-white border font-semibold text-base rounded-r-md px-3 py-1.5 ">
-                    Days
-                  </div>
-                </div>
-              </div>
               <div className="space-y-2">
                 <Label className="text-sm text-medium text-[#344054]">
-                  Authorise as an HR
+                  Authorise as an Manpower requester
                 </Label>
                 <RadioGroup
                   defaultValue="yes"
@@ -329,32 +279,6 @@ const AddNewManagers = () => {
                     </Label>
                   </div>
                 </RadioGroup>
-              </div>
-              <div className="space-y-3 col-span-2 max-w-[339px]">
-                <Label
-                  htmlFor="deduction"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Enter deduction amount during resignation
-                </Label>
-                <div className="flex items-center">
-                  <Select defaultValue="inr">
-                    <SelectTrigger className="w-24 rounded-l-md rounded-r-none border border-[#D0D5DD] border-r-0 py-2.5 px-3">
-                      <SelectValue placeholder="Currency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="inr">INR</SelectItem>
-                      <SelectItem value="usd">USD</SelectItem>
-                      <SelectItem value="eur">EUR</SelectItem>
-                      <SelectItem value="gbp">GBP</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Input
-                    id="deduction"
-                    placeholder="Enter"
-                    className="flex-1 border border-[#D0D5DD] border-l-0  py-2.5 px-3.5 rounded-l-none rounded-r-md placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                  />
-                </div>
               </div>
             </div>
           </CardContent>
@@ -517,139 +441,6 @@ const AddNewManagers = () => {
         </Card>
       </div>
       <div className="border border-b-[rgb(234_236_240_/_10%)]"></div>
-      <div className="w-full flex justify-between mt-5 ">
-        <div className=" min-w-[280px] flex flex-col gap-1">
-          <h2 className="text-sm font-medium text-[#344054]">
-            Banking Details
-          </h2>
-          <p className="text-xs font-normal text-[#475467]">
-            Update your finance details
-          </p>
-        </div>
-        <Card className="border-0 shadow-sm w-full">
-          <CardContent className="py-1 px-6">
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label
-                  htmlFor="Account Name"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Account Name
-                </Label>
-                <Input
-                  type="text"
-                  id="Account Name"
-                  placeholder="Enter your Account Name"
-                  defaultValue="Olivia"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="Bank Name"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Bank Name
-                </Label>
-                <Input
-                  id="Bank Name"
-                  placeholder="State Bank of India"
-                  defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="accountNumber"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Account Number
-                </Label>
-                <Input
-                  id="accountNumber"
-                  type="number"
-                  placeholder="xxxxxxxxxxxx"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal appearance-none"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="IFSC"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  IFSC
-                </Label>
-                <Input
-                  id="IFSC"
-                  type="IFSC"
-                  placeholder="xxxxxxxxxxxx"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal appearance-none"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label
-                  htmlFor="Branch Name"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Branch Name
-                </Label>
-                <Input
-                  id="Branch Name"
-                  type="Branch Name"
-                  placeholder="Enter Branch Name"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="Cancelled Cheque"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Cancelled Cheque
-                </Label>
-                <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
-                    <div className="relative w-full h-full">
-                      <img
-                        src={profileImage}
-                        alt="Profile"
-                        className="object-contain w-full h-full"
-                      />
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
-                      >
-                        ×
-                      </Button>
-                    </div>
-                  ) : (
-                    <>
-                      <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
-                      <input
-                        type="file"
-                        id="profileImage"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
-                      />
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
       <div className="w-full flex justify-between my-5 ">
         <div className=" min-w-[280px] flex flex-col gap-1">
           <h2 className="text-sm font-medium text-[#344054]">Salary Details</h2>
@@ -911,6 +702,139 @@ const AddNewManagers = () => {
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="w-full flex justify-between mt-5 ">
+        <div className=" min-w-[280px] flex flex-col gap-1">
+          <h2 className="text-sm font-medium text-[#344054]">
+            Banking Details
+          </h2>
+          <p className="text-xs font-normal text-[#475467]">
+            Update your finance details
+          </p>
+        </div>
+        <Card className="border-0 shadow-sm w-full">
+          <CardContent className="py-1 px-6">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="Account Name"
+                  className="text-sm text-medium text-[#344054]"
+                >
+                  Account Name
+                </Label>
+                <Input
+                  type="text"
+                  id="Account Name"
+                  placeholder="Enter your Account Name"
+                  defaultValue="Olivia"
+                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="Bank Name"
+                  className="text-sm text-medium text-[#344054]"
+                >
+                  Bank Name
+                </Label>
+                <Input
+                  id="Bank Name"
+                  placeholder="State Bank of India"
+                  defaultValue="Rhye"
+                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="accountNumber"
+                  className="text-sm text-medium text-[#344054]"
+                >
+                  Account Number
+                </Label>
+                <Input
+                  id="accountNumber"
+                  type="number"
+                  placeholder="xxxxxxxxxxxx"
+                  className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal appearance-none"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="IFSC"
+                  className="text-sm text-medium text-[#344054]"
+                >
+                  IFSC
+                </Label>
+                <Input
+                  id="IFSC"
+                  type="IFSC"
+                  placeholder="xxxxxxxxxxxx"
+                  className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal appearance-none"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label
+                  htmlFor="Branch Name"
+                  className="text-sm text-medium text-[#344054]"
+                >
+                  Branch Name
+                </Label>
+                <Input
+                  id="Branch Name"
+                  type="Branch Name"
+                  placeholder="Enter Branch Name"
+                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="Cancelled Cheque"
+                  className="text-sm text-medium text-[#344054]"
+                >
+                  Cancelled Cheque
+                </Label>
+                <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
+                  {profileImage ? (
+                    <div className="relative w-full h-full">
+                      <img
+                        src={profileImage}
+                        alt="Profile"
+                        className="object-contain w-full h-full"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-0 right-0"
+                        onClick={() => setProfileImage(null)}
+                      >
+                        ×
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                      <div className="text-sm font-medium">Click to upload</div>
+                      <div className="text-xs text-muted-foreground">
+                        or drag and drop
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        svg / png / jpg / gif / heic
+                      </div>
+                      <input
+                        type="file"
+                        id="profileImage"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        // onChange={handleImageUpload}
+                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
+                      />
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </CardContent>
@@ -1327,4 +1251,4 @@ const AddNewManagers = () => {
     </div>
   );
 };
-export default AddNewManagers;
+export default AddNewTeamMember;

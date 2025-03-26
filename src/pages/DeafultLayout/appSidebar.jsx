@@ -38,14 +38,15 @@ const data = {
       image: "/src/assets/sidebarImages/Icon (1).png",
       isActive: true,
     },
-    {
-      title: "View Policies",
-      url: "/view-policies",
-      image: "/src/assets/sidebarImages/Icon (8).png",
-    },
+
     {
       title: "Manage Department",
       url: "/manage-department",
+      image: "/src/assets/sidebarImages/Icon (2).png",
+    },
+    {
+      title: " Department Designation",
+      url: "/department-designation",
       image: "/src/assets/sidebarImages/Icon (2).png",
     },
     {
@@ -105,14 +106,12 @@ const data = {
       url: "#",
       image: "/src/assets/sidebarImages/life-buoy-01.png",
       isActive: true,
-      
     },
     {
       title: "Settings",
       url: "#",
       image: "/src/assets/sidebarImages/settings-01 (1).png",
       isActive: true,
-     
     },
   ],
 };
