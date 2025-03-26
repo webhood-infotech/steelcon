@@ -22,11 +22,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      // <ProtectedRoute>
-      <DeafultLayout>
-        <Dashboard />
-      </DeafultLayout>
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <DeafultLayout>
+          <Dashboard />
+        </DeafultLayout>
+      </ProtectedRoute>
     ),
   },
   {
@@ -56,9 +56,11 @@ const router = createBrowserRouter([
   {
     path: "/manage-department",
     element: (
-      <DeafultLayout>
-        <ManageDepartment />
-      </DeafultLayout>
+      <ProtectedRoute>
+        <DeafultLayout>
+          <ManageDepartment />
+        </DeafultLayout>
+      </ProtectedRoute>
     ),
   },
   {
