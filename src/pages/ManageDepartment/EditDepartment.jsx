@@ -1,9 +1,24 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 
-const EditDepartment = ({ departmentCode }) => {
-  console.log(departmentCode);
+const EditDepartment = ({ departmentCode, departmentId }) => {
+  const [departmentName, setDepartmentName] = useState("");
+  const handleEditDeperment = async () => {
+    // edit department
+    try {
+      const response = await axios.put(
+        `https://steelconbackend.vercel.app/api/admin/departments/${departmentId}`,
+        {
+          name: departmentName,
+        }
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <div className="">
@@ -20,6 +35,8 @@ const EditDepartment = ({ departmentCode }) => {
                 Name
               </Label>
               <Input
+                onChange={(e) => setDepartmentName(e.target.value)}
+                value={departmentName}
                 type="name"
                 id="name"
                 placeholder="Name"
@@ -46,7 +63,10 @@ const EditDepartment = ({ departmentCode }) => {
             <div className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
               Cancel
             </div>
-            <div className="cursor-pointer py-2.5 px-4.5 border border-[#305679] rounded-lg font-semibold text-base text-white bg-[#305679]">
+            <div
+              onClick={handleEditDeperment}
+              className="cursor-pointer py-2.5 px-4.5 border border-[#305679] rounded-lg font-semibold text-base text-white bg-[#305679]"
+            >
               Submit
             </div>
           </div>

@@ -1,6 +1,21 @@
+import axios from "axios";
 import React from "react";
 
-const DeleteDepartment = () => {
+const DeleteDepartment = ({ departmentId }) => {
+  console.log(departmentId);
+
+  const handleDeleteDepartment = async () => {
+    // delete department
+    try {
+      const response = await axios.delete(
+        `https://steelconbackend.vercel.app/api/admin/departments/${departmentId}`
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <div className=" bg-opacity-50 flex items-center justify-center ">
@@ -16,7 +31,10 @@ const DeleteDepartment = () => {
               <button className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
                 Cancel
               </button>
-              <button className="cursor-pointer py-2.5 px-4.5 border border-[#DC2626] rounded-lg font-semibold text-base text-white bg-[#DC2626]">
+              <button
+                onClick={handleDeleteDepartment}
+                className="cursor-pointer py-2.5 px-4.5 border border-[#DC2626] rounded-lg font-semibold text-base text-white bg-[#DC2626]"
+              >
                 Delete
               </button>
             </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,19 +17,24 @@ import AddNewDepartament from "./AddNewDepartment";
 import DeleteDepartment from "./DeleteDepartment";
 import EditDepartment from "./EditDepartment";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import axios from "axios";
 const ManageDepartment = () => {
-  const [departments, setDepartments] = useState([
-    { id: "1", name: "Maintenance", code: "L8 8HQ" },
-    { id: "2", name: "Human Resources", code: "CM7 5EY" },
-    { id: "3", name: "Manning", code: "CH66 2RD" },
-    { id: "4", name: "IT", code: "LL14 1ER" },
-    { id: "5", name: "Manning", code: "NE39 1JU" },
-    { id: "5", name: "Operations", code: "HG4 2TE" },
-    { id: "5", name: "HSEQ", code: "ME1 1YL" },
-    { id: "5", name: "Human Resources", code: "SN10 2RP" },
-    { id: "5", name: "HSEQ", code: "KT17 9NL" },
-    { id: "5", name: "Engineering", code: "BT78 4RH" },
-  ]);
+  const [departments, setDepartments] = useState([]);
+  useEffect(() => {
+    getAllDepartemts();
+  }, []);
+  const getAllDepartemts = async () => {
+    // fetch all departments
+    try {
+      const response = await axios(
+        "https://steelconbackend.vercel.app/api/admin/departments"
+      );
+      setDepartments(response.data?.data);
+      console.log(response.data.data);
+    } catch (err) {
+      console.error(err, "=====================");
+    }
+  };
   const [searchQuery, setSearchQuery] = useState("");
   const filteredDepartments = departments.filter(
     (department) =>
@@ -99,7 +104,7 @@ const ManageDepartment = () => {
           </TableHeader>
           <TableBody>
             {filteredDepartments.map((department) => (
-              <TableRow key={department.id}>
+              <TableRow key={department?._id}>
                 <TableCell className=" w-[784px] py-6 pl-5 text-sm font-medium  text-[#101828]">
                   {department.name}
                 </TableCell>
@@ -122,7 +127,7 @@ const ManageDepartment = () => {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
-                        <DeleteDepartment />
+                        <DeleteDepartment departmentId={department?._id} />
                       </DialogContent>
                     </Dialog>
                     <Dialog>
@@ -132,7 +137,10 @@ const ManageDepartment = () => {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
-                        <EditDepartment departmentCode={department.code} />
+                        <EditDepartment
+                          departmentCode={department.code}
+                          departmentId={department?._id}
+                        />
                       </DialogContent>
                     </Dialog>
                   </div>
