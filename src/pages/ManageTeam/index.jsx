@@ -134,7 +134,7 @@ const ManageTeam = () => {
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
         <h1 className="text-3xl font-semibold text-[#101828] tracking-tight">
-          Manage Department
+          Manage Employees
         </h1>
         <div className="flex items-center gap-4">
           <div className="relative">

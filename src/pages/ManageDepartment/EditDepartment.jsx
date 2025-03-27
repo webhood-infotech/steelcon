@@ -2,11 +2,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import axios from "axios";
 import React, { useState } from "react";
-
-const EditDepartment = ({ departmentCode, departmentId }) => {
+const EditDepartment = ({
+  departmentCode,
+  departmentId,
+  getAllDepartments,
+}) => {
   const [departmentName, setDepartmentName] = useState("");
   const handleEditDeperment = async () => {
-    // edit department
     try {
       const response = await axios.put(
         `https://steelconbackend.vercel.app/api/admin/departments/${departmentId}`,
@@ -14,6 +16,7 @@ const EditDepartment = ({ departmentCode, departmentId }) => {
           name: departmentName,
         }
       );
+      getAllDepartments();
       console.log(response.data);
     } catch (err) {
       console.log(err);

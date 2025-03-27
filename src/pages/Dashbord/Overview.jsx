@@ -1,4 +1,5 @@
 import React from "react";
+import AnnouncementsPage from "./AnnoucementPage";
 const cardData = [
   {
     title: "Employees",

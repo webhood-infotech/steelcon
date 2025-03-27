@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 
-const DeleteDepartment = ({ departmentId,getAllDepartments }) => {
+const DeleteDepartment = ({ departmentId, getAllDepartments }) => {
   console.log(departmentId);
 
   const handleDeleteDepartment = async () => {
@@ -17,7 +17,6 @@ const DeleteDepartment = ({ departmentId,getAllDepartments }) => {
       console.log(err);
     }
   };
-
   return (
     <>
       <div className=" bg-opacity-50 flex items-center justify-center ">

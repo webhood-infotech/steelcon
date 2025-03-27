@@ -18,6 +18,7 @@ import AddNewDepartament from "@/pages/ManageDepartment/AddNewDepartment";
 import AddNewManagers from "@/pages/ManageManagers/AddNewManagers";
 import AddNewTeamMember from "@/pages/ManageTeam/AddNewTeamMember";
 import DepartmentDesignation from "@/pages/DepartmentDesignation";
+import ManageAttendence from "@/pages/Attendence/ManagerAttendence";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -100,6 +101,14 @@ const router = createBrowserRouter([
     element: (
       <DeafultLayout>
         <DepartmentDesignation />
+      </DeafultLayout>
+    ),
+  },
+  {
+    path: "/manager-attendance",
+    element: (
+      <DeafultLayout>
+        <ManageAttendence />
       </DeafultLayout>
     ),
   },

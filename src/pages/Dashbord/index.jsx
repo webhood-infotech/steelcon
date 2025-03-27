@@ -1,6 +1,7 @@
 import React from "react";
 import menu from "../../assets/icon/menu.png";
 import Overview from "./Overview";
+import AnnouncementsPage from "./AnnoucementPage";
 const Dashboard = () => {
   return (
     <>
@@ -16,6 +17,7 @@ const Dashboard = () => {
         </div>
       </div>
       <Overview />
+      <AnnouncementsPage />
     </>
   );
 };

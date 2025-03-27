@@ -56,7 +56,7 @@ const data = {
     },
     {
       title: "Manage Team",
-      url: "#",
+      url: "/manage-team",
       image: "/src/assets/sidebarImages/Icon (3).png",
     },
     {

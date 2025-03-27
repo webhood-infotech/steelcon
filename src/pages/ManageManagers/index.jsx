@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,115 +15,57 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import EditDepartment from "../ManageDepartment/EditDepartment";
 import AddNewDepartament from "../ManageDepartment/AddNewDepartment";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import avatarImg from "../../assets/sidebarImages/Avatar.png";
-const ManageManagers = () => {
-  const [departments, setDepartments] = useState([
-    {
-      id: "1",
-      name: "Maintenance",
-      imageSrc: avatarImg,
-      department: "L8 8HQ",
-      JoiningDate: "9/18/16",
-      NumberOfTeam: "4",
-      CurrentCTC: "Rs 40,000",
-    },
-    {
-      id: "3",
-      name: "Manning",
-      imageSrc: avatarImg,
-      department: "Maintenance",
-      JoiningDate: "9/23/16",
-      NumberOfTeam: "5",
-      CurrentCTC: "Rs 40,000",
-    },
-    {
-      id: "4",
-      name: "IT",
-      imageSrc: avatarImg,
-      department: "Maintenance",
-      JoiningDate: "10/28/12",
-      NumberOfTeam: "1",
-      CurrentCTC: "Rs 40,000",
-    },
-    {
-      id: "4",
-      name: "IT",
-      imageSrc: avatarImg,
+import axios from "axios";
 
-      department: "Maintenance",
-      JoiningDate: "6/21/19",
-      NumberOfTeam: "4",
-      CurrentCTC: "Rs 1000",
-    },
-    {
-      id: "5",
-      name: "Manning",
-      imageSrc: avatarImg,
-      department: "Operations",
-      JoiningDate: "9/4/12",
-      NumberOfTeam: "1",
-      CurrentCTC: "Rs 40,000",
-    },
-    {
-      id: "5",
-      name: "Operations",
-      imageSrc: avatarImg,
-      department: "Engineering",
-      JoiningDate: "5/27/15",
-      NumberOfTeam: "0",
-      CurrentCTC: "2000",
-    },
-    {
-      id: "5",
-      name: "HSEQ",
-      imageSrc: avatarImg,
-      department: "IT",
-      JoiningDate: "5/27/15",
-      NumberOfTeam: "1",
-      CurrentCTC: "2000",
-    },
-    {
-      id: "5",
-      name: "Human Resources",
-      imageSrc: avatarImg,
-      department: "Human Resources",
-      JoiningDate: "10/6/13",
-      NumberOfTeam: "3",
-      CurrentCTC: "40000",
-    },
-    {
-      id: "5",
-      name: "HSEQ",
-      imageSrc: avatarImg,
-      department: "Human Resources",
-      JoiningDate: "8/15/17",
-      NumberOfTeam: "2",
-      CurrentCTC: "37000",
-    },
-    {
-      id: "5",
-      name: "Engineering",
-      imageSrc: avatarImg,
-      department: "HSEQ",
-      JoiningDate: "5/30/14",
-      NumberOfTeam: "5",
-      CurrentCTC: "37000",
-    },
-  ]);
+const ManageManagers = () => {
+  const [managers, setManagers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const filteredDepartments = departments.filter(
-    (department) =>
-      department.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      department.code.toLowerCase().includes(searchQuery.toLowerCase())
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchManagers = async () => {
+      try {
+        const response = await axios.get(
+          "https://steelconbackend.vercel.app/api/admin/managers"
+        );
+        setManagers(response.data?.data || []);
+        console.log(response.data.data);
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error fetching managers:", err);
+        setError(err.message);
+        setIsLoading(false);
+      }
+    };
+    fetchManagers();
+  }, []);
+  const getAvatarFallback = (firstName, lastName) => {
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  };
+  // Image error handler
+  const handleImageError = (e) => {
+    e.currentTarget.style.display = "none";
+  };
+  if (isLoading) {
+    return <div className="container mx-auto mt-8 px-3">Loading...</div>;
+  }
+  if (error) {
+    return (
+      <div className="container mx-auto mt-8 px-3 text-red-500">{error}</div>
+    );
+  }
+  const filteredManagers = managers.filter(
+    (manager) =>
+      manager.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      manager.department?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  // const handleDelete = (id) => {
-  //   setDepartments(departments.filter((dept) => dept.id !== id));
-  // };
+
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
         <h1 className="text-3xl font-semibold text-[#101828] tracking-tight">
-          Manage Department
+          Manage Managers
         </h1>
         <div className="flex items-center gap-4">
           <div className="relative">
@@ -176,7 +118,7 @@ const ManageManagers = () => {
                 Joining Date
               </TableHead>
               <TableHead className="w-[134px] py-3 text-start text-xs text-[#475467] font-medium ">
-                Number of team
+                Employee ID
               </TableHead>
               <TableHead className="w-[120px] py-3 text-start text-xs text-[#475467] font-medium ">
                 Current CTC
@@ -187,26 +129,32 @@ const ManageManagers = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredDepartments.map((department) => (
-              <TableRow key={department.id}>
+            {filteredManagers.map((manager) => (
+              <TableRow key={manager._id}>
                 <TableCell className="flex gap-4 items-center w-[300px] py-6 pl-5 text-sm font-medium  text-[#101828]">
                   <Avatar>
-                    <AvatarImage src={department.imageSrc} alt="@shadcn" />
-                    {/* <AvatarFallback>CN</AvatarFallback> */}
-                  </Avatar>{" "}
-                  {department.name}
+                    <AvatarImage
+                      src={manager.profileImg}
+                      alt={manager.firstName}
+                      onError={handleImageError}
+                    />
+                    <AvatarFallback>
+                      {getAvatarFallback(manager.firstName, manager.lastName)}
+                    </AvatarFallback>
+                  </Avatar>
+                  {manager.firstName} {manager.lastName}
                 </TableCell>
                 <TableCell className="w-[167px] py-6 text-start text-sm font-normal text-[#475467]">
-                  {department.department}
+                  {manager.department}
                 </TableCell>
                 <TableCell className="w-[120px] py-6 text-start text-sm font-normal text-[#475467]">
-                  {department.JoiningDate}
+                  {new Date(manager.joiningDate).toLocaleDateString()}
                 </TableCell>
                 <TableCell className="w-[134px] py-6 text-start text-sm font-normal text-[#475467]">
-                  {department.NumberOfTeam}
+                  {manager.empId}
                 </TableCell>
                 <TableCell className="w-[120px] py-6 text-start text-sm font-normal text-[#475467]">
-                  {department.CurrentCTC}
+                  ₹{manager.salary.ctc.toLocaleString()}
                 </TableCell>
                 <TableCell className="w-[123px] text-right pr-5">
                   <div className="flex justify-center gap-1">
@@ -217,9 +165,7 @@ const ManageManagers = () => {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
-                        <EditDepartment
-                          departmentCode={department.department}
-                        />
+                        <EditDepartment departmentCode={manager.department} />
                       </DialogContent>
                     </Dialog>
                   </div>

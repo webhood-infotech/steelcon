@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
 import { Plus, Upload, User } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import EditDepartment from "../ManageDepartment/EditDepartment";
@@ -32,7 +31,6 @@ const AddNewManagers = () => {
     { id: "9", name: "HSEQ", code: "KT17 9NL" },
     { id: "10", name: "Engineering", code: "BT78 4RH" },
   ]);
-
   const [searchQuery, setSearchQuery] = useState("");
   const filteredDepartments = managers.filter(
     (department) =>

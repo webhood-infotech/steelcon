@@ -33,8 +33,6 @@ const ManageDepartment = () => {
         "https://steelconbackend.vercel.app/api/admin/departments"
       );
       setDepartments(response.data?.data);
-      
-      
 
       console.log(response.data.data);
     } catch (err) {
@@ -129,7 +127,10 @@ const ManageDepartment = () => {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
-                        <DeleteDepartment departmentId={department?._id} getAllDepartments={getAllDepartments}  />
+                        <DeleteDepartment
+                          departmentId={department?._id}
+                          getAllDepartments={getAllDepartments}
+                        />
                       </DialogContent>
                     </Dialog>
                     <Dialog>
@@ -142,6 +143,7 @@ const ManageDepartment = () => {
                         <EditDepartment
                           departmentCode={department.code}
                           departmentId={department?._id}
+                          getAllDepartments={getAllDepartments}
                         />
                       </DialogContent>
                     </Dialog>
