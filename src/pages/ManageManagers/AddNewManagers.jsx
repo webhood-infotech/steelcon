@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,50 +7,209 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Plus, Upload, User } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import EditDepartment from "../ManageDepartment/EditDepartment";
-import AddNewDepartament from "../ManageDepartment/AddNewDepartment";
+import { Upload } from "lucide-react";
+import { toast } from "sonner";
 
 const AddNewManagers = () => {
-  const [managers, setManagers] = useState([
-    { id: "1", name: "Maintenance", code: "L8 8HQ" },
-    { id: "2", name: "Human Resources", code: "CM7 5EY" },
-    { id: "3", name: "Manning", code: "CH66 2RD" },
-    { id: "4", name: "IT", code: "LL14 1ER" },
-    { id: "5", name: "Manning", code: "NE39 1JU" },
-    { id: "6", name: "Operations", code: "HG4 2TE" },
-    { id: "7", name: "HSEQ", code: "ME1 1YL" },
-    { id: "8", name: "Human Resources", code: "SN10 2RP" },
-    { id: "9", name: "HSEQ", code: "KT17 9NL" },
-    { id: "10", name: "Engineering", code: "BT78 4RH" },
-  ]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const filteredDepartments = managers.filter(
-    (department) =>
-      department.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      department.code.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const [formData, setFormData] = useState({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    profileImg: "",
+    personalEmail: "",
+    personalMobile: "",
+    emergencyContact: { name: "", mobile: "" },
+    workDays: "",
+    paidLeaves: "",
+    sickLeaves: "",
+    isHR: false,
+    resignDeduction: "",
+    joiningDate: "",
+    designation: "",
+    department: "",
+    teamManager: "",
+    reportTo: "",
+    deptEmail: "",
+    workEmail: "",
+    password: "Temp@1234",
+    bank: {
+      accName: "",
+      bankName: "",
+      accNumber: "",
+      ifsc: "",
+      branch: "",
+      cancelledCheque: "",
+    },
+    salary: {
+      ctc: "",
+      autoTDS: true,
+      basicDA: "",
+      hra: "",
+      conveyance: "",
+      other: "",
+      arrears: "0",
+      profTax: "",
+      pf: "",
+      tds: "",
+      advance: "0",
+      totalDeductions: "",
+      netPay: "",
+      bonus: "",
+      gratuity: "",
+    },
+    aadharNo: "",
+    panNo: "",
+    uan: "",
+    esicNo: "",
+    documents: {
+      passportPhoto: "",
+      aadhar: "",
+      addressProof: "",
+      panCard: "",
+      qualification: "",
+      resume: "",
+      otherDocs: "",
+    },
+    remarks: "",
+  });
 
-  const [profileImage, setProfileImage] = useState("");
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e) => {
-  //       setProfileImage(e.target?.result as string);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
+  // Handle input changes
+  const handleChange = (e, nestedField = null) => {
+    const { name, value } = e.target;
+    if (nestedField) {
+      setFormData((prev) => ({
+        ...prev,
+        [nestedField]: {
+          ...prev[nestedField],
+          [name]: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  // Handle file uploads
+  const handleFileUpload = (e, fieldName, nestedField = null) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const fileData = event.target.result;
+        if (nestedField) {
+          setFormData((prev) => ({
+            ...prev,
+            [nestedField]: {
+              ...prev[nestedField],
+              [fieldName]: fileData,
+            },
+          }));
+        } else {
+          setFormData((prev) => ({
+            ...prev,
+            [fieldName]: fileData,
+          }));
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Validation function
+  const validateForm = () => {
+    let tempErrors = {};
+
+    // Personal Info
+    if (!formData.firstName) tempErrors.firstName = "First name is required";
+    if (!formData.lastName) tempErrors.lastName = "Last name is required";
+    if (!formData.personalEmail) tempErrors.personalEmail = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.personalEmail))
+      tempErrors.personalEmail = "Invalid email";
+    if (!formData.personalMobile)
+      tempErrors.personalMobile = "Mobile is required";
+    else if (!/^\d{10}$/.test(formData.personalMobile))
+      tempErrors.personalMobile = "Must be 10 digits";
+    if (!formData.emergencyContact.name)
+      tempErrors.emergencyContactName = "Required";
+    if (!formData.emergencyContact.mobile)
+      tempErrors.emergencyContactMobile = "Required";
+    else if (!/^\d{10}$/.test(formData.emergencyContact.mobile))
+      tempErrors.emergencyContactMobile = "Must be 10 digits";
+    if (!formData.workDays) tempErrors.workDays = "Required";
+    if (!formData.paidLeaves) tempErrors.paidLeaves = "Required";
+    if (!formData.sickLeaves) tempErrors.sickLeaves = "Required";
+    if (!formData.resignDeduction) tempErrors.resignDeduction = "Required";
+
+    // Company Details
+    if (!formData.designation) tempErrors.designation = "Required";
+    if (!formData.department) tempErrors.department = "Required";
+    if (!formData.teamManager) tempErrors.teamManager = "Required";
+    if (!formData.deptEmail) tempErrors.deptEmail = "Required";
+    else if (!/\S+@\S+\.\S+/.test(formData.deptEmail))
+      tempErrors.deptEmail = "Invalid email";
+
+    // Banking Details
+    if (!formData.bank.accName) tempErrors.accName = "Required";
+    if (!formData.bank.bankName) tempErrors.bankName = "Required";
+    if (!formData.bank.accNumber) tempErrors.accNumber = "Required";
+    if (!formData.bank.ifsc) tempErrors.ifsc = "Required";
+    if (!formData.bank.branch) tempErrors.branch = "Required";
+
+    // Salary Details
+    if (!formData.salary.ctc) tempErrors.ctc = "Required";
+    if (!formData.salary.basicDA) tempErrors.basicDA = "Required";
+    if (!formData.salary.hra) tempErrors.hra = "Required";
+    if (!formData.salary.conveyance) tempErrors.conveyance = "Required";
+
+    // Identification Details
+    if (!formData.aadharNo) tempErrors.aadharNo = "Required";
+    else if (!/^\d{12}$/.test(formData.aadharNo))
+      tempErrors.aadharNo = "Must be 12 digits";
+    if (!formData.panNo) tempErrors.panNo = "Required";
+    else if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(formData.panNo))
+      tempErrors.panNo = "Invalid PAN format";
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
+  };
+
+  // Submit handler
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // if (!validateForm()) {
+    //   toast.error("Please fill all required fields correctly");
+    //   return;
+    // }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "https://steelconbackend.vercel.app/api/admin/managers",
+        formData,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Manager added successfully");
+        setFormData({ ...formData }); // Reset form
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to add manager");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-8">
@@ -57,44 +217,25 @@ const AddNewManagers = () => {
           Add New Manager
         </h1>
         <div className="flex items-center gap-4">
-          <div className="relative">
-            <Input
-              type="search"
-              placeholder="Search"
-              className="w-[320px] pl-10 border border-[#D0D5DD] placeholder:font-normal placeholder:text-base placeholder:text-[#667085] "
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
-          <Dialog>
-            <DialogTrigger>
-              <Button className="gap-2 bg-[#305679] py-4 font-semibold  text-white text-sm">
-                <Plus className="w-4" />
-                Add New
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-white  w-[400px] rounded-2xl p-6">
-              <AddNewDepartament />
-            </DialogContent>
-          </Dialog>
+          <Button
+            className="gap-2 bg-white py-4 font-semibold border border-[#D0D5DD] text-[#344054] text-sm"
+            onClick={() => setFormData({ ...formData })}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="gap-2 bg-[#305679] py-4 font-semibold text-white text-sm"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? "Submitting..." : "Submit"}
+          </Button>
         </div>
       </div>
-      <div className="w-full flex justify-between mb-5 ">
-        <div className=" min-w-[280px] flex flex-col gap-1">
+
+      {/* Personal Info */}
+      <div className="w-full flex justify-between mb-5">
+        <div className="min-w-[280px] flex flex-col gap-1">
           <h2 className="text-sm font-medium text-[#344054]">Personal info</h2>
           <p className="text-xs font-normal text-[#475467]">
             Fill in the following details
@@ -104,59 +245,50 @@ const AddNewManagers = () => {
           <CardContent className="py-1 px-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label
-                  htmlFor="firstName"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  First name
-                </Label>
+                <Label htmlFor="firstName">First name</Label>
                 <Input
                   id="firstName"
-                  placeholder="Enter your First Name"
-                  defaultValue="Olivia"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder="Enter"
+                  className={errors.firstName ? "border-red-500" : ""}
                 />
+                {errors.firstName && (
+                  <p className="text-red-500 text-xs">{errors.firstName}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="middleName"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Middle Name
-                </Label>
+                <Label htmlFor="middleName">Middle Name</Label>
                 <Input
                   id="middleName"
-                  placeholder="Enter your Middle Name"
-                  defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  name="middleName"
+                  value={formData.middleName}
+                  onChange={handleChange}
+                  placeholder="Enter"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="lastName"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Last name
-                </Label>
+                <Label htmlFor="lastName">Last name</Label>
                 <Input
                   id="lastName"
-                  placeholder="Enter your Last Name"
-                  defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder="Enter"
+                  className={errors.lastName ? "border-red-500" : ""}
                 />
+                {errors.lastName && (
+                  <p className="text-red-500 text-xs">{errors.lastName}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="profileImage"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Profile Image
-                </Label>
+                <Label htmlFor="profileImage">Profile Image</Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.profileImg ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
+                        src={formData.profileImg}
                         alt="Profile"
                         className="object-contain w-full h-full"
                       />
@@ -164,7 +296,9 @@ const AddNewManagers = () => {
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({ ...prev, profileImg: "" }))
+                        }
                       >
                         ×
                       </Button>
@@ -172,140 +306,154 @@ const AddNewManagers = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
                       <input
                         type="file"
                         id="profileImage"
                         className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
+                        onChange={(e) => handleFileUpload(e, "profileImg")}
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
+                      <div className="text-sm font-medium">Click to upload</div>
+                      <div className="text-xs text-muted-foreground">
+                        or drag and drop
+                      </div>
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="email"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Personal Email
-                </Label>
+                <Label htmlFor="personalEmail">Personal Email</Label>
                 <Input
-                  id="email"
+                  id="personalEmail"
+                  name="personalEmail"
+                  value={formData.personalEmail}
+                  onChange={handleChange}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  className={errors.personalEmail ? "border-red-500" : ""}
                 />
+                {errors.personalEmail && (
+                  <p className="text-red-500 text-xs">{errors.personalEmail}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="mobile"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Personal Mobile No.
-                </Label>
+                <Label htmlFor="personalMobile">Personal Mobile No.</Label>
                 <Input
-                  id="mobile"
+                  id="personalMobile"
+                  name="personalMobile"
+                  value={formData.personalMobile}
+                  onChange={handleChange}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  className={errors.personalMobile ? "border-red-500" : ""}
                 />
+                {errors.personalMobile && (
+                  <p className="text-red-500 text-xs">
+                    {errors.personalMobile}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="emergencyName"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Emergency Contact Name
-                </Label>
+                <Label htmlFor="emergencyName">Emergency Contact Name</Label>
                 <Input
                   id="emergencyName"
+                  name="name"
+                  value={formData.emergencyContact.name}
+                  onChange={(e) => handleChange(e, "emergencyContact")}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  className={
+                    errors.emergencyContactName ? "border-red-500" : ""
+                  }
                 />
+                {errors.emergencyContactName && (
+                  <p className="text-red-500 text-xs">
+                    {errors.emergencyContactName}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="emergencyNo"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Emergency Contact No.
-                </Label>
+                <Label htmlFor="emergencyMobile">Emergency Contact No.</Label>
                 <Input
-                  id="emergencyNo"
+                  id="emergencyMobile"
+                  name="mobile"
+                  value={formData.emergencyContact.mobile}
+                  onChange={(e) => handleChange(e, "emergencyContact")}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  className={
+                    errors.emergencyContactMobile ? "border-red-500" : ""
+                  }
                 />
+                {errors.emergencyContactMobile && (
+                  <p className="text-red-500 text-xs">
+                    {errors.emergencyContactMobile}
+                  </p>
+                )}
               </div>
-
               <div className="space-y-2">
-                <Label
-                  htmlFor="workDays"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Work Days
-                </Label>
+                <Label htmlFor="workDays">Work Days</Label>
                 <Input
                   id="workDays"
+                  name="workDays"
+                  value={formData.workDays}
+                  onChange={handleChange}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  className={errors.workDays ? "border-red-500" : ""}
                 />
+                {errors.workDays && (
+                  <p className="text-red-500 text-xs">{errors.workDays}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="paidLeaves"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Paid Leaves
-                </Label>
+                <Label htmlFor="paidLeaves">Paid Leaves</Label>
                 <div className="flex items-center">
                   <Input
                     id="paidLeaves"
+                    name="paidLeaves"
+                    value={formData.paidLeaves}
+                    onChange={handleChange}
                     placeholder="Enter"
-                    className=" flex-1 border border-[#D0D5DD] py-2.5 px-3.5 rounded-l-md rounded-r-none placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                    className={`flex-1 rounded-r-none ${
+                      errors.paidLeaves ? "border-red-500" : ""
+                    }`}
                   />
-                  <div className="bg-white border font-semibold text-base rounded-r-md px-3 py-1.5 ">
+                  <div className="bg-white border font-semibold text-base rounded-r-md px-3 py-1.5">
                     Days
                   </div>
                 </div>
+                {errors.paidLeaves && (
+                  <p className="text-red-500 text-xs">{errors.paidLeaves}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="sickLeaves"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Sick Leaves
-                </Label>
-                <div className="flex items-center ">
+                <Label htmlFor="sickLeaves">Sick Leaves</Label>
+                <div className="flex items-center">
                   <Input
                     id="sickLeaves"
-                    defaultValue="1.5"
-                    className=" flex-1 border border-[#D0D5DD] py-2.5 px-3.5 rounded-l-md rounded-r-none placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                    name="sickLeaves"
+                    value={formData.sickLeaves}
+                    onChange={handleChange}
+                    placeholder="Enter"
+                    className={`flex-1 rounded-r-none ${
+                      errors.sickLeaves ? "border-red-500" : ""
+                    }`}
                   />
-                  <div className="bg-white border font-semibold text-base rounded-r-md px-3 py-1.5 ">
+                  <div className="bg-white border font-semibold text-base rounded-r-md px-3 py-1.5">
                     Days
                   </div>
                 </div>
+                {errors.sickLeaves && (
+                  <p className="text-red-500 text-xs">{errors.sickLeaves}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label className="text-sm text-medium text-[#344054]">
-                  Authorise as an HR
-                </Label>
+                <Label>Authorise as an HR</Label>
                 <RadioGroup
-                  defaultValue="yes"
+                  value={formData.isHR ? "yes" : "no"}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, isHR: value === "yes" }))
+                  }
                   className="flex items-center space-x-18 pt-2"
                 >
-                  <div className="flex  items-center space-x-2 ">
-                    <RadioGroupItem
-                      value="yes"
-                      id="hr-yes"
-                      className=" border-[#305679] text-[#305679] focus:ring-[#305679]"
-                    />
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="yes" id="hr-yes" />
                     <Label
                       htmlFor="hr-yes"
                       className="cursor-pointer text-sm font-normal text-[#667085]"
@@ -314,11 +462,7 @@ const AddNewManagers = () => {
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value="no"
-                      id="hr-no"
-                      className=" border-[#305679] text-[#305679] focus:ring-[#305679]"
-                    />
+                    <RadioGroupItem value="no" id="hr-no" />
                     <Label
                       htmlFor="hr-no"
                       className="cursor-pointer text-sm font-normal text-[#667085]"
@@ -329,16 +473,13 @@ const AddNewManagers = () => {
                 </RadioGroup>
               </div>
               <div className="space-y-3 col-span-2 max-w-[339px]">
-                <Label
-                  htmlFor="deduction"
-                  className="text-sm text-medium text-[#344054]"
-                >
+                <Label htmlFor="resignDeduction">
                   Enter deduction amount during resignation
                 </Label>
                 <div className="flex items-center">
-                  <Select defaultValue="inr">
+                  <Select value="inr">
                     <SelectTrigger className="w-24 rounded-l-md rounded-r-none border border-[#D0D5DD] border-r-0 py-2.5 px-3">
-                      <SelectValue placeholder="Currency" />
+                      <SelectValue placeholder="INR" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="inr">INR</SelectItem>
@@ -348,19 +489,30 @@ const AddNewManagers = () => {
                     </SelectContent>
                   </Select>
                   <Input
-                    id="deduction"
+                    id="resignDeduction"
+                    name="resignDeduction"
+                    value={formData.resignDeduction}
+                    onChange={handleChange}
                     placeholder="Enter"
-                    className="flex-1 border border-[#D0D5DD] border-l-0  py-2.5 px-3.5 rounded-l-none rounded-r-md placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                    className={`flex-1 border-l-0 rounded-l-none ${
+                      errors.resignDeduction ? "border-red-500" : ""
+                    }`}
                   />
                 </div>
+                {errors.resignDeduction && (
+                  <p className="text-red-500 text-xs">
+                    {errors.resignDeduction}
+                  </p>
+                )}
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
-      <div className="border border-b-[rgb(234_236_240_/_10%)]"></div>
+
+      {/* Company Details */}
       <div className="w-full flex justify-between my-5">
-        <div className=" min-w-[280px] flex flex-col gap-1">
+        <div className="min-w-[280px] flex flex-col gap-1">
           <h2 className="text-sm font-medium text-[#344054]">
             Company Details
           </h2>
@@ -372,151 +524,99 @@ const AddNewManagers = () => {
           <CardContent className="py-1 px-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label
-                  htmlFor="firstName"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Employee ID No
-                </Label>
+                <Label htmlFor="joiningDate">Joining Date</Label>
                 <Input
-                  id="firstName"
-                  placeholder="Enter your First Name"
-                  defaultValue="Olivia"
-                  className="border border-[#D0D5 DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  id="joiningDate"
+                  name="joiningDate"
+                  type="date"
+                  value={formData.joiningDate}
+                  onChange={handleChange}
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="middleName"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Middle Name
-                </Label>
+                <Label htmlFor="designation">Designation</Label>
                 <Input
-                  id="middleName"
-                  placeholder="Enter your Middle Name"
-                  defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="lastName"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Last name
-                </Label>
-                <Input
-                  id="lastName"
-                  placeholder="Enter your Last Name"
-                  defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="profileImage"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Profile Image
-                </Label>
-                <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
-                    <div className="relative w-full h-full">
-                      <img
-                        src={profileImage}
-                        alt="Profile"
-                        className="object-contain w-full h-full"
-                      />
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
-                      >
-                        ×
-                      </Button>
-                    </div>
-                  ) : (
-                    <>
-                      <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
-                      <input
-                        type="file"
-                        id="profileImage"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
-                      />
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="email"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Personal Email
-                </Label>
-                <Input
-                  id="email"
+                  id="designation"
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleChange}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  className={errors.designation ? "border-red-500" : ""}
+                />
+                {errors.designation && (
+                  <p className="text-red-500 text-xs">{errors.designation}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="department">Department</Label>
+                <Input
+                  id="department"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  placeholder="Enter"
+                  className={errors.department ? "border-red-500" : ""}
+                />
+                {errors.department && (
+                  <p className="text-red-500 text-xs">{errors.department}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="teamManager">Team Manager</Label>
+                <Input
+                  id="teamManager"
+                  name="teamManager"
+                  value={formData.teamManager}
+                  onChange={handleChange}
+                  placeholder="Enter"
+                  className={errors.teamManager ? "border-red-500" : ""}
+                />
+                {errors.teamManager && (
+                  <p className="text-red-500 text-xs">{errors.teamManager}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="reportTo">Report to (If applicable)</Label>
+                <Input
+                  id="reportTo"
+                  name="reportTo"
+                  value={formData.reportTo}
+                  onChange={handleChange}
+                  placeholder="Enter"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="mobile"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Report to (If applicable)
-                </Label>
+                <Label htmlFor="deptEmail">Department Email</Label>
                 <Input
-                  id="mobile"
+                  id="deptEmail"
+                  name="deptEmail"
+                  value={formData.deptEmail}
+                  onChange={handleChange}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  className={errors.deptEmail ? "border-red-500" : ""}
                 />
+                {errors.deptEmail && (
+                  <p className="text-red-500 text-xs">{errors.deptEmail}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="emergencyName"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Department Email
-                </Label>
+                <Label htmlFor="workEmail">Work Email (If applicable)</Label>
                 <Input
-                  id="emergencyName"
+                  id="workEmail"
+                  name="workEmail"
+                  value={formData.workEmail}
+                  onChange={handleChange}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="emergencyNo"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Work Email (If applicable)
-                </Label>
-                <Input
-                  id="emergencyNo"
-                  placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
-      <div className="border border-b-[rgb(234_236_240_/_10%)]"></div>
-      <div className="w-full flex justify-between mt-5 ">
-        <div className=" min-w-[280px] flex flex-col gap-1">
+
+      {/* Banking Details */}
+      <div className="w-full flex justify-between my-5">
+        <div className="min-w-[280px] flex flex-col gap-1">
           <h2 className="text-sm font-medium text-[#344054]">
             Banking Details
           </h2>
@@ -528,97 +628,95 @@ const AddNewManagers = () => {
           <CardContent className="py-1 px-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label
-                  htmlFor="Account Name"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Account Name
-                </Label>
+                <Label htmlFor="accName">Account Name</Label>
                 <Input
-                  type="text"
-                  id="Account Name"
-                  placeholder="Enter your Account Name"
-                  defaultValue="Olivia"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  id="accName"
+                  name="accName"
+                  value={formData.bank.accName}
+                  onChange={(e) => handleChange(e, "bank")}
+                  placeholder="Enter"
+                  className={errors.accName ? "border-red-500" : ""}
                 />
+                {errors.accName && (
+                  <p className="text-red-500 text-xs">{errors.accName}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Bank Name"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Bank Name
-                </Label>
+                <Label htmlFor="bankName">Bank Name</Label>
                 <Input
-                  id="Bank Name"
-                  placeholder="State Bank of India"
-                  defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  id="bankName"
+                  name="bankName"
+                  value={formData.bank.bankName}
+                  onChange={(e) => handleChange(e, "bank")}
+                  placeholder="Enter"
+                  className={errors.bankName ? "border-red-500" : ""}
                 />
+                {errors.bankName && (
+                  <p className="text-red-500 text-xs">{errors.bankName}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="accountNumber"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Account Number
-                </Label>
+                <Label htmlFor="accNumber">Account Number</Label>
                 <Input
-                  id="accountNumber"
-                  type="number"
-                  placeholder="xxxxxxxxxxxx"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal appearance-none"
+                  id="accNumber"
+                  name="accNumber"
+                  value={formData.bank.accNumber}
+                  onChange={(e) => handleChange(e, "bank")}
+                  placeholder="Enter"
+                  className={errors.accNumber ? "border-red-500" : ""}
                 />
+                {errors.accNumber && (
+                  <p className="text-red-500 text-xs">{errors.accNumber}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="IFSC"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  IFSC
-                </Label>
+                <Label htmlFor="ifsc">IFSC</Label>
                 <Input
-                  id="IFSC"
-                  type="IFSC"
-                  placeholder="xxxxxxxxxxxx"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal appearance-none"
+                  id="ifsc"
+                  name="ifsc"
+                  value={formData.bank.ifsc}
+                  onChange={(e) => handleChange(e, "bank")}
+                  placeholder="Enter"
+                  className={errors.ifsc ? "border-red-500" : ""}
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label
-                  htmlFor="Branch Name"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Branch Name
-                </Label>
-                <Input
-                  id="Branch Name"
-                  type="Branch Name"
-                  placeholder="Enter Branch Name"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
+                {errors.ifsc && (
+                  <p className="text-red-500 text-xs">{errors.ifsc}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Cancelled Cheque"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Cancelled Cheque
-                </Label>
+                <Label htmlFor="branch">Branch Name</Label>
+                <Input
+                  id="branch"
+                  name="branch"
+                  value={formData.bank.branch}
+                  onChange={(e) => handleChange(e, "bank")}
+                  placeholder="Enter"
+                  className={errors.branch ? "border-red-500" : ""}
+                />
+                {errors.branch && (
+                  <p className="text-red-500 text-xs">{errors.branch}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="cancelledCheque">Cancelled Cheque</Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.bank.cancelledCheque ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
-                        alt="Profile"
+                        src={formData.bank.cancelledCheque}
+                        alt="Cheque"
                         className="object-contain w-full h-full"
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            bank: { ...prev.bank, cancelledCheque: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -626,20 +724,19 @@ const AddNewManagers = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                      <input
+                        type="file"
+                        id="cancelledCheque"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        onChange={(e) =>
+                          handleFileUpload(e, "cancelledCheque", "bank")
+                        }
+                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
+                      />
                       <div className="text-sm font-medium">Click to upload</div>
                       <div className="text-xs text-muted-foreground">
                         or drag and drop
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
-                      <input
-                        type="file"
-                        id="profileImage"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
-                      />
                     </>
                   )}
                 </div>
@@ -648,8 +745,10 @@ const AddNewManagers = () => {
           </CardContent>
         </Card>
       </div>
-      <div className="w-full flex justify-between my-5 ">
-        <div className=" min-w-[280px] flex flex-col gap-1">
+
+      {/* Salary Details */}
+      <div className="w-full flex justify-between my-5">
+        <div className="min-w-[280px] flex flex-col gap-1">
           <h2 className="text-sm font-medium text-[#344054]">Salary Details</h2>
           <p className="text-xs font-normal text-[#475467]">
             Update your salary details
@@ -659,48 +758,44 @@ const AddNewManagers = () => {
           <CardContent className="py-1 px-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label
-                  htmlFor="Total CTC"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Total CTC
-                </Label>
+                <Label htmlFor="ctc">Total CTC</Label>
                 <Input
-                  id="Total CTC"
+                  id="ctc"
+                  name="ctc"
+                  value={formData.salary.ctc}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  // defaultValue="Olivia"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  className={errors.ctc ? "border-red-500" : ""}
                 />
+                {errors.ctc && (
+                  <p className="text-red-500 text-xs">{errors.ctc}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label className="text-sm text-medium text-[#344054]">
-                  Auto-TDS
-                </Label>
+                <Label>Auto-TDS</Label>
                 <RadioGroup
-                  defaultValue="yes"
+                  value={formData.salary.autoTDS ? "yes" : "no"}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      salary: { ...prev.salary, autoTDS: value === "yes" },
+                    }))
+                  }
                   className="flex items-center space-x-28 pt-2"
                 >
-                  <div className="flex  items-center space-x-2 ">
-                    <RadioGroupItem
-                      value="yes"
-                      id="hr-yes"
-                      className=" border-[#305679] text-[#305679] focus:ring-[#305679]"
-                    />
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="yes" id="autoTDS-yes" />
                     <Label
-                      htmlFor="hr-yes"
+                      htmlFor="autoTDS-yes"
                       className="cursor-pointer text-sm font-normal text-[#667085]"
                     >
                       Yes
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value="no"
-                      id="hr-no"
-                      className=" border-[#305679] text-[#305679] focus:ring-[#305679]"
-                    />
+                    <RadioGroupItem value="no" id="autoTDS-no" />
                     <Label
-                      htmlFor="hr-no"
+                      htmlFor="autoTDS-no"
                       className="cursor-pointer text-sm font-normal text-[#667085]"
                     >
                       No
@@ -709,214 +804,155 @@ const AddNewManagers = () => {
                 </RadioGroup>
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Basic+DA"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Basic+DA
-                </Label>
+                <Label htmlFor="basicDA">Basic+DA</Label>
                 <Input
-                  id="Basic+DA"
+                  id="basicDA"
+                  name="basicDA"
+                  value={formData.salary.basicDA}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  // defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  className={errors.basicDA ? "border-red-500" : ""}
+                />
+                {errors.basicDA && (
+                  <p className="text-red-500 text-xs">{errors.basicDA}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="hra">House Rent Allowance</Label>
+                <Input
+                  id="hra"
+                  name="hra"
+                  value={formData.salary.hra}
+                  onChange={(e) => handleChange(e, "salary")}
+                  placeholder="Enter"
+                  className={errors.hra ? "border-red-500" : ""}
+                />
+                {errors.hra && (
+                  <p className="text-red-500 text-xs">{errors.hra}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="conveyance">TPT / Conveyance</Label>
+                <Input
+                  id="conveyance"
+                  name="conveyance"
+                  value={formData.salary.conveyance}
+                  onChange={(e) => handleChange(e, "salary")}
+                  placeholder="Enter"
+                  className={errors.conveyance ? "border-red-500" : ""}
+                />
+                {errors.conveyance && (
+                  <p className="text-red-500 text-xs">{errors.conveyance}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="other">Other</Label>
+                <Input
+                  id="other"
+                  name="other"
+                  value={formData.salary.other}
+                  onChange={(e) => handleChange(e, "salary")}
+                  placeholder="Enter"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="House Rent Allowance"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  House Rent Allowance
-                </Label>
+                <Label htmlFor="arrears">Arrear Salary</Label>
                 <Input
-                  id="House Rent Allowance"
+                  id="arrears"
+                  name="arrears"
+                  value={formData.salary.arrears}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  // defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="TPT / Conveyances"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  TPT / Conveyance
-                </Label>
+                <Label htmlFor="profTax">Professional Tax</Label>
                 <Input
-                  id="TPT / Conveyance"
+                  id="profTax"
+                  name="profTax"
+                  value={formData.salary.profTax}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Other"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Other
-                </Label>
+                <Label htmlFor="pf">Provident Fund</Label>
                 <Input
-                  id="Other"
+                  id="pf"
+                  name="pf"
+                  value={formData.salary.pf}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Arrear Salary"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Arrear Salary
-                </Label>
+                <Label htmlFor="tds">TDS</Label>
                 <Input
-                  id="Arrear Salary"
+                  id="tds"
+                  name="tds"
+                  value={formData.salary.tds}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Professional Tax"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Professional Tax
-                </Label>
+                <Label htmlFor="advance">Advance</Label>
                 <Input
-                  id="Professional Tax"
+                  id="advance"
+                  name="advance"
+                  value={formData.salary.advance}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label
-                  htmlFor="Provident Fund"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Provident Fund
-                </Label>
-                <Input
-                  id="Provident Fund"
-                  placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="TDS"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  TDS
-                </Label>
-                <div className="flex items-center">
-                  <Input
-                    id="TDS"
-                    placeholder="Enter"
-                    className=" flex-1 border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="Advance"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Advance
-                </Label>
-                <div className="flex items-center ">
-                  <Input
-                    id="Advance"
-                    defaultValue="1.5"
-                    className=" flex-1 border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="Total Deductions"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Total Deductions
-                </Label>
+                <Label htmlFor="totalDeductions">Total Deductions</Label>
                 <Input
-                  id="Total Deductions"
+                  id="totalDeductions"
+                  name="totalDeductions"
+                  value={formData.salary.totalDeductions}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Net Amount"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Net Amount
-                </Label>
+                <Label htmlFor="netPay">Net Amount</Label>
                 <Input
-                  id="Net Amount"
+                  id="netPay"
+                  name="netPay"
+                  value={formData.salary.netPay}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-              <div className="space-y-3  min-w-[339px] ">
-                <Label
-                  htmlFor="deduction"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Enter deduction amount during resignation
-                </Label>
-                <div className="flex items-center">
-                  <Select defaultValue="inr">
-                    <SelectTrigger className="w-24 rounded-l-md rounded-r-none border border-[#D0D5DD] border-r-0 py-2.5 px-3">
-                      <SelectValue placeholder="Currency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="inr">INR</SelectItem>
-                      <SelectItem value="usd">USD</SelectItem>
-                      <SelectItem value="eur">EUR</SelectItem>
-                      <SelectItem value="gbp">GBP</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Input
-                    id="deduction"
-                    placeholder="Enter"
-                    className="flex-1 border border-[#D0D5DD] border-l-0  py-2.5 px-3.5 rounded-l-none rounded-r-md placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="Bonus ( Variable Pay )"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Bonus ( Variable Pay )
-                </Label>
-                <Input
-                  id="Bonus ( Variable Pay )"
-                  placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Gratuity"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Gratuity
-                </Label>
+                <Label htmlFor="bonus">Bonus (Variable Pay)</Label>
                 <Input
-                  id="Gratuity"
+                  id="bonus"
+                  name="bonus"
+                  value={formData.salary.bonus}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="gratuity">Gratuity</Label>
+                <Input
+                  id="gratuity"
+                  name="gratuity"
+                  value={formData.salary.gratuity}
+                  onChange={(e) => handleChange(e, "salary")}
+                  placeholder="Enter"
                 />
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
-      <div className="border border-b-[rgb(234_236_240_/_10%)]"></div>
-      <div className="w-full flex justify-between my-5 ">
-        <div className=" min-w-[280px] flex flex-col gap-1">
+
+      {/* Identification Details */}
+      <div className="w-full flex justify-between my-5">
+        <div className="min-w-[280px] flex flex-col gap-1">
           <h2 className="text-sm font-medium text-[#344054]">
             Identification Details
           </h2>
@@ -928,80 +964,73 @@ const AddNewManagers = () => {
           <CardContent className="py-1 px-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label
-                  htmlFor="Aadhar Card Number"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Aadhar Card Number
-                </Label>
+                <Label htmlFor="aadharNo">Aadhar Card Number</Label>
                 <Input
-                  id="Aadhar Card Number"
+                  id="aadharNo"
+                  name="aadharNo"
+                  value={formData.aadharNo}
+                  onChange={handleChange}
                   placeholder="Enter"
-                  // defaultValue="Olivia"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  className={errors.aadharNo ? "border-red-500" : ""}
+                />
+                {errors.aadharNo && (
+                  <p className="text-red-500 text-xs">{errors.aadharNo}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="panNo">PAN</Label>
+                <Input
+                  id="panNo"
+                  name="panNo"
+                  value={formData.panNo}
+                  onChange={handleChange}
+                  placeholder="Enter"
+                  className={errors.panNo ? "border-red-500" : ""}
+                />
+                {errors.panNo && (
+                  <p className="text-red-500 text-xs">{errors.panNo}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="uan">Provident Fund (UAN)</Label>
+                <Input
+                  id="uan"
+                  name="uan"
+                  value={formData.uan}
+                  onChange={handleChange}
+                  placeholder="Enter"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="PAN"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  PAN
-                </Label>
+                <Label htmlFor="esicNo">ESIC No.</Label>
                 <Input
-                  id="PAN"
+                  id="esicNo"
+                  name="esicNo"
+                  value={formData.esicNo}
+                  onChange={handleChange}
                   placeholder="Enter"
-                  // defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Provident Fund (UAN)"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Provident Fund (UAN)
-                </Label>
-                <Input
-                  id="Provident Fund (UAN)"
-                  placeholder="Enter"
-                  // defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="ESIC No."
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  ESIC No.
-                </Label>
-                <Input
-                  id="ESIC No."
-                  placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="Passport Size Photograph (File Attachment)"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Passport Size Photograph (File Attachment)
-                </Label>
+                <Label htmlFor="passportPhoto">Passport Size Photograph</Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.passportPhoto ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
-                        alt="Profile"
+                        src={formData.documents.passportPhoto}
+                        alt="Photo"
                         className="object-contain w-full h-full"
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, passportPhoto: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1009,44 +1038,43 @@ const AddNewManagers = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                      <input
+                        type="file"
+                        id="passportPhoto"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        onChange={(e) =>
+                          handleFileUpload(e, "passportPhoto", "documents")
+                        }
+                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
+                      />
                       <div className="text-sm font-medium">Click to upload</div>
                       <div className="text-xs text-muted-foreground">
                         or drag and drop
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
-                      <input
-                        type="file"
-                        id="profileImage"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
-                      />
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Proof of Identity – Aadhar (File Attachment)"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Proof of Identity – Aadhar (File Attachment)
-                </Label>
+                <Label htmlFor="aadhar">Proof of Identity – Aadhar</Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.aadhar ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
-                        alt="Profile"
+                        src={formData.documents.aadhar}
+                        alt="Aadhar"
                         className="object-contain w-full h-full"
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, aadhar: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1054,46 +1082,43 @@ const AddNewManagers = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                      <input
+                        type="file"
+                        id="aadhar"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        onChange={(e) =>
+                          handleFileUpload(e, "aadhar", "documents")
+                        }
+                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
+                      />
                       <div className="text-sm font-medium">Click to upload</div>
                       <div className="text-xs text-muted-foreground">
                         or drag and drop
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
-                      <input
-                        type="file"
-                        id="profileImage"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
-                      />
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Proof of Permanent or Current Address – Passport / Driving License / Voter ID / Ration Card / Utility Bill / Rental Agreement Copy"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Proof of Permanent or Current Address – Passport / Driving
-                  License / Voter ID / Ration Card / Utility Bill / Rental
-                  Agreement Copy
-                </Label>
+                <Label htmlFor="addressProof">Proof of Address</Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.addressProof ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
-                        alt="Profile"
+                        src={formData.documents.addressProof}
+                        alt="Address"
                         className="object-contain w-full h-full"
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, addressProof: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1101,44 +1126,43 @@ const AddNewManagers = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                      <input
+                        type="file"
+                        id="addressProof"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        onChange={(e) =>
+                          handleFileUpload(e, "addressProof", "documents")
+                        }
+                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
+                      />
                       <div className="text-sm font-medium">Click to upload</div>
                       <div className="text-xs text-muted-foreground">
                         or drag and drop
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
-                      <input
-                        type="file"
-                        id="profileImage"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
-                      />
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="PAN"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  PAN
-                </Label>
+                <Label htmlFor="panCard">PAN</Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.panCard ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
-                        alt="Profile"
+                        src={formData.documents.panCard}
+                        alt="PAN"
                         className="object-contain w-full h-full"
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, panCard: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1146,46 +1170,43 @@ const AddNewManagers = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                      <input
+                        type="file"
+                        id="panCard"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        onChange={(e) =>
+                          handleFileUpload(e, "panCard", "documents")
+                        }
+                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
+                      />
                       <div className="text-sm font-medium">Click to upload</div>
                       <div className="text-xs text-muted-foreground">
                         or drag and drop
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
-                      <input
-                        type="file"
-                        id="profileImage"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
-                      />
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Proof of Qualification – Latest Consolidated Mark Statements / Degree Certificate / Any relevant course certificate or Diploma"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Proof of Qualification – Latest Consolidated Mark Statements /
-                  Degree Certificate / Any relevant course certificate or
-                  Diploma
-                </Label>
+                <Label htmlFor="qualification">Proof of Qualification</Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.qualification ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
-                        alt="Profile"
+                        src={formData.documents.qualification}
+                        alt="Qualification"
                         className="object-contain w-full h-full"
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, qualification: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1193,44 +1214,43 @@ const AddNewManagers = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                      <input
+                        type="file"
+                        id="qualification"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        onChange={(e) =>
+                          handleFileUpload(e, "qualification", "documents")
+                        }
+                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
+                      />
                       <div className="text-sm font-medium">Click to upload</div>
                       <div className="text-xs text-muted-foreground">
                         or drag and drop
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
-                      <input
-                        type="file"
-                        id="profileImage"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
-                      />
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Copy of Latest CV / Resume"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Copy of Latest CV / Resume
-                </Label>
+                <Label htmlFor="resume">Copy of Latest CV / Resume</Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.resume ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
-                        alt="Profile"
+                        src={formData.documents.resume}
+                        alt="Resume"
                         className="object-contain w-full h-full"
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, resume: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1238,44 +1258,43 @@ const AddNewManagers = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                      <input
+                        type="file"
+                        id="resume"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        onChange={(e) =>
+                          handleFileUpload(e, "resume", "documents")
+                        }
+                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
+                      />
                       <div className="text-sm font-medium">Click to upload</div>
                       <div className="text-xs text-muted-foreground">
                         or drag and drop
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
-                      <input
-                        type="file"
-                        id="profileImage"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
-                      />
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="Other Relevant Documents"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Other Relevant Documents
-                </Label>
+                <Label htmlFor="otherDocs">Other Relevant Documents</Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.otherDocs ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
-                        alt="Profile"
+                        src={formData.documents.otherDocs}
+                        alt="Docs"
                         className="object-contain w-full h-full"
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, otherDocs: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1283,20 +1302,19 @@ const AddNewManagers = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+                      <input
+                        type="file"
+                        id="otherDocs"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        onChange={(e) =>
+                          handleFileUpload(e, "otherDocs", "documents")
+                        }
+                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
+                      />
                       <div className="text-sm font-medium">Click to upload</div>
                       <div className="text-xs text-muted-foreground">
                         or drag and drop
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
-                      <input
-                        type="file"
-                        id="profileImage"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
-                      />
                     </>
                   )}
                 </div>
@@ -1305,7 +1323,9 @@ const AddNewManagers = () => {
           </CardContent>
         </Card>
       </div>
-      <div className="w-full flex justify-between my-5 ">
+
+      {/* Remarks */}
+      <div className="w-full flex justify-between my-5">
         <div className="min-w-[280px] flex flex-col gap-1">
           <label className="text-sm font-medium text-[#344054]">
             Any Additional Information /Remarks
@@ -1317,7 +1337,10 @@ const AddNewManagers = () => {
         <div className="border rounded-lg p-5 w-full shadow-sm">
           <label className="text-sm font-medium text-[#344054]">Remarks</label>
           <textarea
-            className="mt-2 w-full h-38 border rounded-md p-3  text-gray-800"
+            className="mt-2 w-full h-38 border rounded-md p-3 text-gray-800"
+            name="remarks"
+            value={formData.remarks}
+            onChange={handleChange}
             placeholder="Enter"
           />
         </div>
@@ -1325,4 +1348,5 @@ const AddNewManagers = () => {
     </div>
   );
 };
+
 export default AddNewManagers;

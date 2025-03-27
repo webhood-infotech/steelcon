@@ -3,14 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Eye } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
-// interface Employee {
-//   id: number
-//   name: string
-//   avatar: string
-//   presentDays: number
-//   workingDays: number
-//   department: string
-// }
+
 
 export default function ManageAttendence() {
   const employees= [

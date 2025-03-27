@@ -13,15 +13,16 @@ import { Plus } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import EditDepartment from "../ManageDepartment/EditDepartment";
-import AddNewDepartament from "../ManageDepartment/AddNewDepartment";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
+import AddNewManagers from "./AddNewManagers";
 
 const ManageManagers = () => {
   const [managers, setManagers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAddNewManager, setShowAddNewManager] = useState(false);
 
   useEffect(() => {
     const fetchManagers = async () => {
@@ -60,7 +61,9 @@ const ManageManagers = () => {
       manager.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       manager.department?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
+  if (showAddNewManager) {
+    return <AddNewManagers />;
+  }
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
@@ -91,17 +94,14 @@ const ManageManagers = () => {
               />
             </svg>
           </div>
-          <Dialog>
-            <DialogTrigger>
-              <Button className="gap-2 bg-[#305679] py-4 font-semibold  text-white text-sm">
-                <Plus className="w-4" />
-                Add New
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-white  w-[400px] rounded-2xl p-6">
-              <AddNewDepartament />
-            </DialogContent>
-          </Dialog>
+
+          <Button
+            onClick={() => setShowAddNewManager(true)}
+            className="gap-2 bg-[#305679] py-4 font-semibold  text-white text-sm"
+          >
+            <Plus className="w-4" />
+            Add New
+          </Button>
         </div>
       </div>
       <div className="rounded-md  border-b border-[#EAECF0]">
