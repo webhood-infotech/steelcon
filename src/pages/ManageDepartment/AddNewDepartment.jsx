@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { DialogClose } from "@/components/ui/dialog";
 
-const AddNewDepartment = () => {
+const AddNewDepartment = ({ getAllDepartments }) => {
   const [departmentName, setDepartmentName] = useState("");
   const [departmentCode, setDepartmentCode] = useState("");
   const [errors, setErrors] = useState({ name: "", code: "" });
@@ -43,6 +43,7 @@ const AddNewDepartment = () => {
       setDepartmentName("");
       setDepartmentCode("");
       setErrors({ name: "", code: "" });
+      getAllDepartments();
 
       console.log(response.data);
     } catch (err) {

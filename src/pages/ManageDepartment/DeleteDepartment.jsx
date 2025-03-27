@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 
-const DeleteDepartment = ({ departmentId }) => {
+const DeleteDepartment = ({ departmentId,getAllDepartments }) => {
   console.log(departmentId);
 
   const handleDeleteDepartment = async () => {
@@ -10,6 +10,8 @@ const DeleteDepartment = ({ departmentId }) => {
       const response = await axios.delete(
         `https://steelconbackend.vercel.app/api/admin/departments/${departmentId}`
       );
+      getAllDepartments();
+
       console.log(response.data);
     } catch (err) {
       console.log(err);

@@ -20,30 +20,32 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import axios from "axios";
 const ManageDepartment = () => {
   const [departments, setDepartments] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
-    getAllDepartemts();
+    getAllDepartments();
   }, []);
-  const getAllDepartemts = async () => {
+
+  const getAllDepartments = async () => {
     // fetch all departments
     try {
       const response = await axios(
         "https://steelconbackend.vercel.app/api/admin/departments"
       );
       setDepartments(response.data?.data);
+      
+      
+
       console.log(response.data.data);
     } catch (err) {
       console.error(err, "=====================");
     }
   };
-  const [searchQuery, setSearchQuery] = useState("");
   const filteredDepartments = departments.filter(
     (department) =>
-      department.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      department.code.toLowerCase().includes(searchQuery.toLowerCase())
+      department.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      department.code?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  // const handleDelete = (id) => {
-  //   setDepartments(departments.filter((dept) => dept.id !== id));
-  // };
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
@@ -82,7 +84,7 @@ const ManageDepartment = () => {
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-white  w-[400px] rounded-2xl p-6">
-              <AddNewDepartament />
+              <AddNewDepartament getAllDepartments={getAllDepartments} />
             </DialogContent>
           </Dialog>
         </div>
@@ -127,7 +129,7 @@ const ManageDepartment = () => {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
-                        <DeleteDepartment departmentId={department?._id} />
+                        <DeleteDepartment departmentId={department?._id} getAllDepartments={getAllDepartments}  />
                       </DialogContent>
                     </Dialog>
                     <Dialog>
