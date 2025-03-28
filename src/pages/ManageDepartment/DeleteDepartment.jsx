@@ -1,7 +1,11 @@
 import axios from "axios";
 import React from "react";
 
-const DeleteDepartment = ({ departmentId, getAllDepartments }) => {
+const DeleteDepartment = ({
+  departmentId,
+  getAllDepartments,
+  closeDeleteDialog,
+}) => {
   console.log(departmentId);
 
   const handleDeleteDepartment = async () => {
@@ -11,6 +15,7 @@ const DeleteDepartment = ({ departmentId, getAllDepartments }) => {
         `https://steelconbackend.vercel.app/api/admin/departments/${departmentId}`
       );
       getAllDepartments();
+      closeDeleteDialog();
 
       console.log(response.data);
     } catch (err) {
@@ -19,7 +24,7 @@ const DeleteDepartment = ({ departmentId, getAllDepartments }) => {
   };
   return (
     <>
-      <div className=" bg-opacity-50 flex items-center justify-center ">
+      <div className="flex items-center justify-center">
         <div className="">
           <div className="flex flex-col gap-5 ">
             <div className="text-lg font-semibold text-[#101828]">

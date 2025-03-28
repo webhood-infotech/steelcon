@@ -4,10 +4,11 @@ import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { DialogClose } from "@/components/ui/dialog";
 
-const AddNewDepartment = ({ getAllDepartments }) => {
+const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
   const [departmentName, setDepartmentName] = useState("");
   const [departmentCode, setDepartmentCode] = useState("");
   const [errors, setErrors] = useState({ name: "", code: "" });
+  const [loading, setLoading] = useState(false);
 
   const validateInputs = () => {
     let newErrors = { name: "", code: "" };
@@ -31,6 +32,7 @@ const AddNewDepartment = ({ getAllDepartments }) => {
     if (!validateInputs()) return;
 
     try {
+      setLoading(true);
       const response = await axios.post(
         "https://steelconbackend.vercel.app/api/admin/departments",
         {
@@ -43,14 +45,15 @@ const AddNewDepartment = ({ getAllDepartments }) => {
       setDepartmentName("");
       setDepartmentCode("");
       setErrors({ name: "", code: "" });
+      closeAddNewDialog();
       getAllDepartments();
-
+      setLoading(false);
       console.log(response.data);
     } catch (err) {
       console.error("Error submitting department:", err);
+      setLoading(false);
     }
   };
-
   return (
     <div>
       <div className="flex flex-col gap-5">
@@ -106,6 +109,7 @@ const AddNewDepartment = ({ getAllDepartments }) => {
           </DialogClose>
           <button
             onClick={handleSubmit}
+            disabled={loading}
             className="cursor-pointer py-2.5 px-4 border border-[#305679] rounded-lg font-semibold text-base text-white bg-[#305679]"
           >
             Submit

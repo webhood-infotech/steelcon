@@ -62,7 +62,12 @@ const ManageManagers = () => {
       manager.department?.toLowerCase().includes(searchQuery.toLowerCase())
   );
   if (showAddNewManager) {
-    return <AddNewManagers />;
+    return (
+      <AddNewManagers
+        showAddNewManager={showAddNewManager}
+        setShowAddNewManager={setShowAddNewManager}
+      />
+    );
   }
   return (
     <div className="container mx-auto mt-8 px-3">
@@ -156,19 +161,14 @@ const ManageManagers = () => {
                 <TableCell className="w-[120px] py-6 text-start text-sm font-normal text-[#475467]">
                   ₹{manager.salary.ctc.toLocaleString()}
                 </TableCell>
-                <TableCell className="w-[123px] text-right pr-5">
-                  <div className="flex justify-center gap-1">
-                    <Dialog>
-                      <DialogTrigger>
-                        <Button variant="ghost" size="icon">
-                          <Pencil className="h-3 w-3" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
-                        <EditDepartment departmentCode={manager.department} />
-                      </DialogContent>
-                    </Dialog>
-                  </div>
+                <TableCell className="w-[123px] text-right pr-5 flex justify-center">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setShowAddNewManager(true)}
+                  >
+                    <Pencil className="h-3 w-3" />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

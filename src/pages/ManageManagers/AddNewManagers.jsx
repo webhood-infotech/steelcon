@@ -15,7 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Upload } from "lucide-react";
 import { toast } from "sonner";
 
-const AddNewManagers = () => {
+const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -187,10 +187,10 @@ const AddNewManagers = () => {
   // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (!validateForm()) {
-    //   toast.error("Please fill all required fields correctly");
-    //   return;
-    // }
+    if (!validateForm()) {
+      toast.error("Please fill all required fields correctly");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -219,7 +219,10 @@ const AddNewManagers = () => {
         <div className="flex items-center gap-4">
           <Button
             className="gap-2 bg-white py-4 font-semibold border border-[#D0D5DD] text-[#344054] text-sm"
-            onClick={() => setFormData({ ...formData })}
+            onClick={() => {
+              setFormData({ ...formData });
+              setShowAddNewManager(false);
+            }}
           >
             Cancel
           </Button>

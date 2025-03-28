@@ -22,6 +22,7 @@ import {
 import { NavMain } from "./navMain";
 import { NavUser } from "./navUser";
 import { NavSupportSetting } from "./navSupportSetting";
+import { Link } from "react-router-dom";
 
 // This is sample data.
 const data = {
@@ -119,11 +120,13 @@ export function AppSidebar({ ...props }) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="pl-6">
-        <img
-          src={logo}
-          alt="Company Logo"
-          className="h-[48px] w-[133px] object-contain mt-8"
-        />
+        <Link to="/">
+          <img
+            src={logo}
+            alt="Company Logo"
+            className="h-[48px] w-[133px] object-contain mt-8"
+          />
+        </Link>
       </SidebarHeader>
       <SidebarContent className="pl-2 mt-0 pt-0 thin-scrollbar overflow-y-scroll">
         <NavMain items={data.navMain} />

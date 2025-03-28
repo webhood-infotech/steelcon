@@ -21,11 +21,16 @@ import axios from "axios";
 const ManageDepartment = () => {
   const [departments, setDepartments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openAddNew, setOpenAddNew] = useState(false);
 
   useEffect(() => {
     getAllDepartments();
   }, []);
-
+  const closeDeleteDialog = () => setOpenDelete(false);
+  const closeEditDialog = () => setOpenEdit(false);
+  const closeAddNewDialog = () => setOpenAddNew(false);
   const getAllDepartments = async () => {
     // fetch all departments
     try {
@@ -74,15 +79,18 @@ const ManageDepartment = () => {
               />
             </svg>
           </div>
-          <Dialog>
-            <DialogTrigger>
+          <Dialog open={openAddNew} onOpenChange={setOpenAddNew}>
+            <DialogTrigger asChild>
               <Button className="gap-2 bg-[#305679] py-4 font-semibold  text-white text-sm">
                 <Plus className="w-4" />
                 Add New
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-white  w-[400px] rounded-2xl p-6">
-              <AddNewDepartament getAllDepartments={getAllDepartments} />
+              <AddNewDepartament
+                getAllDepartments={getAllDepartments}
+                closeAddNewDialog={closeAddNewDialog}
+              />
             </DialogContent>
           </Dialog>
         </div>
@@ -116,11 +124,12 @@ const ManageDepartment = () => {
                     <Button variant="ghost" size="icon">
                       <Eye className="h-3 w-3" />
                     </Button>
-                    <Dialog>
-                      <DialogTrigger>
+                    <Dialog open={openDelete} onOpenChange={setOpenDelete}>
+                      <DialogTrigger asChild>
                         <Button
                           variant="ghost"
                           size="icon"
+                          onClick={() => setOpenDelete(true)}
                           // onClick={() => handleDelete(department.id)}
                         >
                           <Trash2 className="h-3 w-3" />
@@ -129,13 +138,18 @@ const ManageDepartment = () => {
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
                         <DeleteDepartment
                           departmentId={department?._id}
+                          closeDeleteDialog={closeDeleteDialog}
                           getAllDepartments={getAllDepartments}
                         />
                       </DialogContent>
                     </Dialog>
-                    <Dialog>
-                      <DialogTrigger>
-                        <Button variant="ghost" size="icon">
+                    <Dialog open={openEdit} onOpenChange={setOpenEdit}>
+                      <DialogTrigger asChild>
+                        <Button
+                          onClick={() => setOpenEdit(true)}
+                          variant="ghost"
+                          size="icon"
+                        >
                           <Pencil className="h-3 w-3" />
                         </Button>
                       </DialogTrigger>
@@ -144,6 +158,7 @@ const ManageDepartment = () => {
                           departmentCode={department.code}
                           departmentId={department?._id}
                           getAllDepartments={getAllDepartments}
+                          closeEditDialog={closeEditDialog}
                         />
                       </DialogContent>
                     </Dialog>

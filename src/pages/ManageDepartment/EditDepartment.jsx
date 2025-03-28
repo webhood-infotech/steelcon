@@ -6,6 +6,7 @@ const EditDepartment = ({
   departmentCode,
   departmentId,
   getAllDepartments,
+  closeEditDialog,
 }) => {
   const [departmentName, setDepartmentName] = useState("");
   const handleEditDeperment = async () => {
@@ -17,6 +18,8 @@ const EditDepartment = ({
         }
       );
       getAllDepartments();
+      closeEditDialog();
+
       console.log(response.data);
     } catch (err) {
       console.log(err);

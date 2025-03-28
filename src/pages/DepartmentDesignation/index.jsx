@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,37 +9,61 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit3Icon, Plus } from "lucide-react";
-import { Eye } from "lucide-react";
-import { Trash2 } from "lucide-react";
-import { Pencil } from "lucide-react";
+import { Plus, Trash2, Pencil } from "lucide-react";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import DeleteDepartment from "./DeleteDepartament";
 import EditDepartment from "./EditDepartment";
 import AddNewDepartment from "./AddNewDepartment";
+import axios from "axios";
+
+// interface Department {
+//   _id: string;
+//   designation: string;
+//   code: string;
+// }
+
 const DepartmentDesignation = () => {
-  const [departments, setDepartments] = useState([
-    { id: "1", name: "Maintenance", code: "L8 8HQ" },
-    { id: "2", name: "Human Resources", code: "CM7 5EY" },
-    { id: "3", name: "Manning", code: "CH66 2RD" },
-    { id: "4", name: "IT", code: "LL14 1ER" },
-    { id: "5", name: "Manning", code: "NE39 1JU" },
-    { id: "5", name: "Operations", code: "HG4 2TE" },
-    { id: "5", name: "HSEQ", code: "ME1 1YL" },
-    { id: "5", name: "Human Resources", code: "SN10 2RP" },
-    { id: "5", name: "HSEQ", code: "KT17 9NL" },
-    { id: "5", name: "Engineering", code: "BT78 4RH" },
-  ]);
+  const [departments, setDepartments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Added state for dialog open/close
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openAddNew, setOpenAddNew] = useState(false);
+
+  useEffect(() => {
+    getAllDepartments();
+  }, []);
+
+  const closeDeleteDialog = () => setOpenDelete(false);
+  const closeEditDialog = () => setOpenEdit(false);
+  const closeAddNewDialog = () => setOpenAddNew(false);
+
+  const getAllDepartments = async () => {
+    try {
+      const response = await axios.get(
+        "https://steelconbackend.vercel.app/api/admin/designations"
+      );
+      setDepartments(response.data?.data || []);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+      // Optionally, set an error state to show user-friendly message
+      // setError("Failed to load departments");
+    }
+  };
+
   const filteredDepartments = departments.filter(
     (department) =>
-      department.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      department.code.toLowerCase().includes(searchQuery.toLowerCase())
+      department && // Add null check for the entire department object
+      department.designation && // Ensure name exists
+      department.code && // Ensure code exists
+      (department.designation
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+        department.code.toLowerCase().includes(searchQuery.toLowerCase()))
   );
-  // const handleDelete = (id) => {
-  //   setDepartments(departments.filter((dept) => dept.id !== id));
-  // };
+
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
@@ -70,7 +94,7 @@ const DepartmentDesignation = () => {
               />
             </svg>
           </div>
-          <Dialog>
+          <Dialog open={openAddNew} onOpenChange={setOpenAddNew}>
             <DialogTrigger>
               <Button className="gap-2 bg-[#305679] py-4 font-semibold  text-white text-sm">
                 <Plus className="w-4" />
@@ -78,7 +102,10 @@ const DepartmentDesignation = () => {
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-white  w-[400px] rounded-2xl p-6">
-              <AddNewDepartment />
+              <AddNewDepartment
+                getAllDepartments={getAllDepartments}
+                closeAddNewDialog={closeAddNewDialog}
+              />
             </DialogContent>
           </Dialog>
         </div>
@@ -88,7 +115,7 @@ const DepartmentDesignation = () => {
           <TableHeader className="bg-[#F4F6F9] ">
             <TableRow className="">
               <TableHead className=" w-[784px] py-3 pl-5 text-xs text-[#475467] font-medium ">
-                Name
+                Designation
               </TableHead>
               <TableHead className="w-[120px] py-3 text-start text-xs text-[#475467] font-medium ">
                 Code
@@ -99,41 +126,46 @@ const DepartmentDesignation = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredDepartments.map((department) => (
-              <TableRow key={department.id}>
+            {filteredDepartments.map((department,index) => (
+              <TableRow key={index}>
                 <TableCell className=" w-[784px] py-6 pl-5 text-sm font-medium  text-[#101828]">
-                  {department.name}
+                  {department.designation}
                 </TableCell>
                 <TableCell className="w-[120px] py-6 text-start text-sm font-normal text-[#475467]">
                   {department.code}
                 </TableCell>
                 <TableCell className="w-[120px] text-right pr-5">
-                  <div className="flex justify-end gap-1">
-                    <Button variant="ghost" size="icon">
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                    <Dialog>
+                  <div className="flex justify-center gap-1">
+                    <Dialog open={openDelete} onOpenChange={setOpenDelete}>
                       <DialogTrigger>
                         <Button
+                          // onClick={() => setOpenDelete(true)}
                           variant="ghost"
                           size="icon"
-                          // onClick={() => handleDelete(department.id)}
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
-                        <DeleteDepartment />
+                        <DeleteDepartment
+                          departmentId={department?._id}
+                          closeDeleteDialog={closeDeleteDialog}
+                          getAllDepartments={getAllDepartments}
+                        />
                       </DialogContent>
                     </Dialog>
-                    <Dialog>
+                    <Dialog open={openEdit} onOpenChange={setOpenEdit}>
                       <DialogTrigger>
                         <Button variant="ghost" size="icon">
                           <Pencil className="h-3 w-3" />
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
-                        <EditDepartment departmentCode={department.code} />
+                        <EditDepartment
+                          departmentCode={department.code}
+                          getAllDepartments={getAllDepartments}
+                          closeEditDialog={closeEditDialog}
+                        />
                       </DialogContent>
                     </Dialog>
                   </div>
