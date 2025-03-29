@@ -67,41 +67,49 @@ const router = createBrowserRouter([
   {
     path: "/manage-managers",
     element: (
-      <DeafultLayout>
-        <MangeManagers />
-      </DeafultLayout>
+      <ProtectedRoute>
+        <DeafultLayout>
+          <MangeManagers />
+        </DeafultLayout>
+      </ProtectedRoute>
     ),
   },
   {
     path: "/manage-team",
     element: (
-      <DeafultLayout>
-        <ManageTeam />
-      </DeafultLayout>
+      <ProtectedRoute>
+        <DeafultLayout>
+          <ManageTeam />
+        </DeafultLayout>
+      </ProtectedRoute>
     ),
   },
-  {
-    path: "/add-new-managers",
-    element: (
-      <DeafultLayout>
-        <AddNewManagers />
-      </DeafultLayout>
-    ),
-  },
-  {
-    path: "/add-new-team-member",
-    element: (
-      <DeafultLayout>
-        <AddNewTeamMember />
-      </DeafultLayout>
-    ),
-  },
+  // {
+  //   path: "/add-new-managers",
+  //   element: (
+  //     <ProtectedRoute>
+  //       <DeafultLayout>
+  //         <AddNewManagers />
+  //       </DeafultLayout>
+  //     </ProtectedRoute>
+  //   ),
+  // },
+  // {
+  //   path: "/add-new-team-member",
+  //   element: (
+  //     <DeafultLayout>
+  //       <AddNewTeamMember />
+  //     </DeafultLayout>
+  //   ),
+  // },
   {
     path: "/department-designation",
     element: (
-      <DeafultLayout>
-        <DepartmentDesignation />
-      </DeafultLayout>
+      <ProtectedRoute>
+        <DeafultLayout>
+          <DepartmentDesignation />
+        </DeafultLayout>
+      </ProtectedRoute>
     ),
   },
   {

@@ -14,23 +14,119 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { Plus, Upload, User } from "lucide-react";
 
-const AddNewTeamMember = () => {
-  
-
-  
+const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    profileImg: "",
+    personalEmail: "",
+    personalMobile: "",
+    emergencyContact: { name: "", mobile: "" },
+    workDays: "",
+    paidLeaves: "",
+    sickLeaves: "",
+    isHR: false,
+    resignDeduction: "",
+    joiningDate: "",
+    designation: "",
+    department: "",
+    teamManager: "",
+    reportTo: "",
+    deptEmail: "",
+    workEmail: "",
+    password: "Temp@1234",
+    bank: {
+      accName: "",
+      bankName: "",
+      accNumber: "",
+      ifsc: "",
+      branch: "",
+      cancelledCheque: "",
+    },
+    salary: {
+      ctc: "",
+      autoTDS: true,
+      basicDA: "",
+      hra: "",
+      conveyance: "",
+      other: "",
+      arrears: "0",
+      profTax: "",
+      pf: "",
+      tds: "",
+      advance: "0",
+      totalDeductions: "",
+      netPay: "",
+      bonus: "",
+      gratuity: "",
+    },
+    aadharNo: "",
+    panNo: "",
+    uan: "",
+    esicNo: "",
+    documents: {
+      passportPhoto: "",
+      aadhar: "",
+      addressProof: "",
+      panCard: "",
+      qualification: "",
+      resume: "",
+      otherDocs: "",
+    },
+    remarks: "",
+  });
 
   const [profileImage, setProfileImage] = useState("");
+  const [errors, setErrors] = useState({});
+  // Handle input changes
+  const handleChange = (e, nestedField = null) => {
+    const { name, value } = e.target;
+    if (nestedField) {
+      setFormData((prev) => ({
+        ...prev,
+        [nestedField]: {
+          ...prev[nestedField],
+          [name]: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
 
-  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e) => {
-  //       setProfileImage(e.target?.result as string);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
+  // Handle file uploads
+  const handleFileUpload = (e, fieldName, nestedField = null) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        // const fileData = event.target.result;
+        const fileData =
+          "https://gratisography.com/wp-content/uploads/2025/03/gratisography-cruising-cat-800x525.jpg";
+
+        if (nestedField) {
+          setFormData((prev) => ({
+            ...prev,
+            [nestedField]: {
+              ...prev[nestedField],
+              [fieldName]: fileData,
+            },
+          }));
+        } else {
+          setFormData((prev) => ({
+            ...prev,
+            [fieldName]: fileData,
+          }));
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-8">
@@ -39,16 +135,15 @@ const AddNewTeamMember = () => {
         </h1>
         <div className="flex items-center gap-4">
           <Button
-            className="gap-2 bg-white py-4 font-semibold border border-[#D0D5DD] text-[#344054] text-sm hover:text-white"
+            className="gap-2 bg-white py-4 font-semibold border border-[#D0D5DD] text-[#344054] text-sm hover:bg-[#344054] hover:text-white"
             onClick={() => {
-              // setShowAddNewManager(false);
+              setFormData({ ...formData });
+              setShowAddNewEmployee(false);
             }}
           >
             Cancel
           </Button>
-          <Button
-            className="gap-2 bg-[#305679] py-4 font-semibold text-white text-sm"
-          >
+          <Button className="gap-2 bg-[#305679] py-4 font-semibold text-white text-sm">
             Submit
           </Button>
         </div>
@@ -73,9 +168,14 @@ const AddNewTeamMember = () => {
                 <Input
                   id="firstName"
                   placeholder="Enter your First Name"
-                  defaultValue="Olivia"
+                  // defaultValue=""
+                  value={formData.firstName}
+                  onChange={handleChange}
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.firstName && (
+                  <p className="text-red-500 text-xs">{errors.firstName}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
@@ -86,8 +186,10 @@ const AddNewTeamMember = () => {
                 </Label>
                 <Input
                   id="middleName"
-                  placeholder="Enter your Middle Name"
-                  defaultValue="Rhye"
+                  name="middleName"
+                  value={formData.middleName}
+                  onChange={handleChange}
+                  placeholder="Enter middle name"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
@@ -100,10 +202,15 @@ const AddNewTeamMember = () => {
                 </Label>
                 <Input
                   id="lastName"
-                  placeholder="Enter your Last Name"
-                  defaultValue="Rhye"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.lastName && (
+                  <p className="text-red-500 text-xs">{errors.lastName}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
@@ -113,10 +220,10 @@ const AddNewTeamMember = () => {
                   Photograph
                 </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.profileImg ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
+                        src={formData.profileImg}
                         alt="Profile"
                         className="object-contain w-full h-full"
                       />
@@ -124,7 +231,9 @@ const AddNewTeamMember = () => {
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({ ...prev, profileImg: "" }))
+                        }
                       >
                         ×
                       </Button>
@@ -132,18 +241,24 @@ const AddNewTeamMember = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                       <input
                         type="file"
                         id="profileImage"
                         className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
+                        onChange={(e) => handleFileUpload(e, "profileImg")}
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
                     </>
@@ -152,20 +267,31 @@ const AddNewTeamMember = () => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="email"
+                  htmlFor="personalEmail"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Personal Email
                 </Label>
                 <Input
-                  id="email"
+                  id="personalEmail"
+                  name="personalEmail"
+                  value={formData.personalEmail}
+                  onChange={handleChange}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.personalEmail && (
+                  <p className="text-red-500 text-xs">{errors.personalEmail}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="mobile"
+                  htmlFor="personalMobile"
+                  id="personalMobile"
+                  name="personalMobile"
+                  value={formData.personalMobile}
+                  onChange={handleChange}
+                  placeholder="Enter"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Personal Mobile No.
@@ -175,6 +301,11 @@ const AddNewTeamMember = () => {
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.personalMobile && (
+                  <p className="text-red-500 text-xs">
+                    {errors.personalMobile}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
@@ -185,22 +316,38 @@ const AddNewTeamMember = () => {
                 </Label>
                 <Input
                   id="emergencyName"
+                  name="name"
+                  value={formData.emergencyContact.name}
+                  onChange={(e) => handleChange(e, "emergencyContact")}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.emergencyContactName && (
+                  <p className="text-red-500 text-xs">
+                    {errors.emergencyContactName}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="emergencyNo"
+                  htmlFor="emergencyMobile"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Emergency Contact No.
                 </Label>
                 <Input
-                  id="emergencyNo"
+                  id="emergencyMobile"
+                  name="mobile"
+                  value={formData.emergencyContact.mobile}
+                  onChange={(e) => handleChange(e, "emergencyContact")}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.emergencyContactMobile && (
+                  <p className="text-red-500 text-xs">
+                    {errors.emergencyContactMobile}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label className="text-sm text-medium text-[#344054]">
@@ -271,16 +418,17 @@ const AddNewTeamMember = () => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="middleName"
-                  className="text-sm text-medium text-[#344054]"
+                  htmlFor="joiningDate"
+                  className="text-[#344054] font-medium font-sm"
                 >
-                  Middle Name
+                  Joining Date
                 </Label>
                 <Input
-                  id="middleName"
-                  placeholder="Enter your Middle Name"
-                  defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  id="joiningDate"
+                  name="joiningDate"
+                  type="date"
+                  value={formData.joiningDate}
+                  onChange={handleChange}
                 />
               </div>
               <div className="space-y-2">
@@ -288,95 +436,87 @@ const AddNewTeamMember = () => {
                   htmlFor="lastName"
                   className="text-sm text-medium text-[#344054]"
                 >
-                  Last name
+                  Designation
                 </Label>
-                <Input
-                  id="lastName"
-                  placeholder="Enter your Last Name"
-                  defaultValue="Rhye"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
+                <select
+                  id="designation"
+                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                >
+                  <option value="">Software Engineer</option>
+                  <option value="Engineering"> AI Engineering</option>
+                  <option value="Engineering"> MLA Engineering</option>
+                  <option value="Marketing"> Product Marketing Manager</option>
+                  <option value="Sales">Technical Project Manager</option>
+                  <option value="HR">Data Analytics Manager</option>
+                  <option value="Sales">Human Resources Manager</option>
+                  <option value="Sales">Quality Assurance Supervisor</option>
+                  <option value="Sales">Research Associate</option>
+                  <option value="Sales">Financial Analyst</option>
+                </select>
+                {errors.designation && (
+                  <p className="text-red-500 text-xs">{errors.designation}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
                   htmlFor="profileImage"
                   className="text-sm text-medium text-[#344054]"
                 >
-                  Profile Image
+                  Department
                 </Label>
-                <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
-                    <div className="relative w-full h-full">
-                      <img
-                        src={profileImage}
-                        alt="Profile"
-                        className="object-contain w-full h-full"
-                      />
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
-                      >
-                        ×
-                      </Button>
-                    </div>
-                  ) : (
-                    <>
-                      <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
-                      </div>
-                      <input
-                        type="file"
-                        id="profileImage"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
-                      />
-                    </>
-                  )}
-                </div>
+                <select
+                  id="department"
+                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                >
+                  <option value="">Software Engineer</option>
+                  <option value="Engineering"> Marketing</option>
+                  <option value="Engineering"> Sales</option>
+                  <option value="Marketing">Operations</option>
+                  <option value="Sales">Research & Development </option>
+                  <option value="HR">Customer Service</option>
+                  <option value="Sales">Legal</option>
+                  <option value="Sales">Quality Assurance</option>
+                  <option value="Sales">Business Development</option>
+                  <option value="Sales">Product Management</option>
+                </select>
+                {errors.department && (
+                  <p className="text-red-500 text-xs">{errors.department}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="email"
+                  htmlFor="reportToManager"
                   className="text-sm text-medium text-[#344054]"
                 >
-                  Personal Email
+                  Report to Manager
                 </Label>
-                <Input
-                  id="email"
-                  placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
+                <select
+                  id="reportToManager"
+                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                >
+                  <option value="">Ram</option>
+                  <option value="Engineering">Guy Hawkins</option>
+                  <option value="Engineering"> Marvin McKinney</option>
+                  <option value="Marketing">Albert Flores</option>
+                  <option value="Sales">Darlene Robertson</option>
+                  <option value="HR">Darlene Robertson</option>
+                  <option value="Sales">Eleanor Pena</option>
+                </select>
+                {errors.teamManager && (
+                  <p className="text-red-500 text-xs">
+                    {errors.reporttomanager}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
                   htmlFor="mobile"
                   className="text-sm text-medium text-[#344054]"
                 >
-                  Report to (If applicable)
-                </Label>
-                <Input
-                  id="mobile"
-                  placeholder="Enter"
-                  className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="emergencyName"
-                  className="text-sm text-medium text-[#344054]"
-                >
                   Department Email
                 </Label>
                 <Input
-                  id="emergencyName"
+                  id="mobile"
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
@@ -776,12 +916,18 @@ const AddNewTeamMember = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                       <input
                         type="file"
@@ -893,12 +1039,18 @@ const AddNewTeamMember = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                       <input
                         type="file"
@@ -938,12 +1090,18 @@ const AddNewTeamMember = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                       <input
                         type="file"
@@ -985,12 +1143,18 @@ const AddNewTeamMember = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                       <input
                         type="file"
@@ -1030,12 +1194,18 @@ const AddNewTeamMember = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                       <input
                         type="file"
@@ -1077,12 +1247,18 @@ const AddNewTeamMember = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                       <input
                         type="file"
@@ -1122,12 +1298,18 @@ const AddNewTeamMember = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                       <input
                         type="file"
@@ -1167,12 +1349,18 @@ const AddNewTeamMember = () => {
                   ) : (
                     <>
                       <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
-                      </div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        svg / png / jpg / gif / heic
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                       <input
                         type="file"

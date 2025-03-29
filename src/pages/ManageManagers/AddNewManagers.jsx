@@ -106,7 +106,10 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        const fileData = event.target.result;
+        // const fileData = event.target.result;
+        const fileData =
+          "https://gratisography.com/wp-content/uploads/2025/03/gratisography-cruising-cat-800x525.jpg";
+
         if (nestedField) {
           setFormData((prev) => ({
             ...prev,
@@ -125,6 +128,7 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
       reader.readAsDataURL(file);
     }
   };
+  console.log(formData);
 
   // Validation function
   const validateForm = () => {
@@ -209,6 +213,7 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
       setLoading(false);
     }
   };
+  console.log(formData);
 
   return (
     <div className="container mx-auto mt-8 px-3">
@@ -218,7 +223,7 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
         </h1>
         <div className="flex items-center gap-4">
           <Button
-            className="gap-2 bg-white py-4 font-semibold border border-[#D0D5DD] text-[#344054] text-sm"
+            className="gap-2 bg-white py-4 font-semibold border border-[#D0D5DD] text-[#344054] text-sm hover:bg-[#344054] hover:text-white"
             onClick={() => {
               setFormData({ ...formData });
               setShowAddNewManager(false);
@@ -235,7 +240,6 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
           </Button>
         </div>
       </div>
-
       {/* Personal Info */}
       <div className="w-full flex justify-between mb-5">
         <div className="min-w-[280px] flex flex-col gap-1">
@@ -248,7 +252,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
           <CardContent className="py-1 px-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="firstName">First name</Label>
+                <Label
+                  htmlFor="firstName"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  First name
+                </Label>
                 <Input
                   id="firstName"
                   name="firstName"
@@ -262,7 +271,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="middleName">Middle Name</Label>
+                <Label
+                  htmlFor="middleName"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Middle Name
+                </Label>
                 <Input
                   id="middleName"
                   name="middleName"
@@ -272,7 +286,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName">Last name</Label>
+                <Label
+                  htmlFor="lastName"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Last name
+                </Label>
                 <Input
                   id="lastName"
                   name="lastName"
@@ -286,7 +305,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="profileImage">Profile Image</Label>
+                <Label
+                  htmlFor="profileImage"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Profile Image
+                </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
                   {formData.profileImg ? (
                     <div className="relative w-full h-full">
@@ -316,16 +340,30 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                         onChange={(e) => handleFileUpload(e, "profileImg")}
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="personalEmail">Personal Email</Label>
+                <Label
+                  htmlFor="personalEmail"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Personal Email
+                </Label>
                 <Input
                   id="personalEmail"
                   name="personalEmail"
@@ -355,7 +393,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="emergencyName">Emergency Contact Name</Label>
+                <Label
+                  htmlFor="emergencyName"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Emergency Contact Name
+                </Label>
                 <Input
                   id="emergencyName"
                   name="name"
@@ -373,7 +416,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="emergencyMobile">Emergency Contact No.</Label>
+                <Label
+                  htmlFor="emergencyMobile"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Emergency Contact No.
+                </Label>
                 <Input
                   id="emergencyMobile"
                   name="mobile"
@@ -391,7 +439,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="workDays">Work Days</Label>
+                <Label
+                  htmlFor="workDays"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Work Days
+                </Label>
                 <Input
                   id="workDays"
                   name="workDays"
@@ -405,7 +458,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="paidLeaves">Paid Leaves</Label>
+                <Label
+                  htmlFor="paidLeaves"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Paid Leaves
+                </Label>
                 <div className="flex items-center">
                   <Input
                     id="paidLeaves"
@@ -426,7 +484,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="sickLeaves">Sick Leaves</Label>
+                <Label
+                  htmlFor="sickLeaves"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Sick Leaves
+                </Label>
                 <div className="flex items-center">
                   <Input
                     id="sickLeaves"
@@ -447,7 +510,9 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label>Authorise as an HR</Label>
+                <Label className="text-[#344054] font-medium font-sm">
+                  Authorise as an HR
+                </Label>
                 <RadioGroup
                   value={formData.isHR ? "yes" : "no"}
                   onValueChange={(value) =>
@@ -475,8 +540,11 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                   </div>
                 </RadioGroup>
               </div>
-              <div className="space-y-3 col-span-2 max-w-[339px]">
-                <Label htmlFor="resignDeduction">
+              <div className="space-y-3 col-span-2 max-w-[389px]">
+                <Label
+                  htmlFor="resignDeduction"
+                  className="text-[#344054] font-medium font-sm"
+                >
                   Enter deduction amount during resignation
                 </Label>
                 <div className="flex items-center">
@@ -527,7 +595,31 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
           <CardContent className="py-1 px-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="joiningDate">Joining Date</Label>
+                <Label
+                  htmlFor="employeeId"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Employee ID No
+                </Label>
+                <Input
+                  id="employeeId"
+                  name="lastName"
+                  // value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder="Enter"
+                  className={errors.lastName ? "border-red-500" : ""}
+                />
+                {errors.lastName && (
+                  <p className="text-red-500 text-xs">{errors.lastName}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="joiningDate"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Joining Date
+                </Label>
                 <Input
                   id="joiningDate"
                   name="joiningDate"
@@ -537,49 +629,102 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="designation">Designation</Label>
-                <Input
+                <Label
+                  htmlFor="designation"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Designation
+                </Label>
+                <select
                   id="designation"
                   name="designation"
                   value={formData.designation}
                   onChange={handleChange}
-                  placeholder="Enter"
-                  className={errors.designation ? "border-red-500" : ""}
-                />
+                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                >
+                  <option value="">Select Department</option>
+                  <option value="Software Engineer">Software Engineer</option>
+                  <option value="Engineering">AI Engineering</option>
+                  <option value="Engineering">MLA Engineering</option>
+                  <option value="Marketing">Product Marketing Manager</option>
+                  <option value="Sales">Technical Project Manager</option>
+                  <option value="HR">Data Analytics Manager</option>
+                  <option value="Sales">Human Resources Manager</option>
+                  <option value="Sales">Quality Assurance Supervisor</option>
+                  <option value="Sales">Research Associate</option>
+                  <option value="Sales">Financial Analyst</option>
+                </select>
                 {errors.designation && (
                   <p className="text-red-500 text-xs">{errors.designation}</p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="department">Department</Label>
-                <Input
+                <Label
+                  htmlFor="department"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Department
+                </Label>
+                <select
                   id="department"
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
-                  placeholder="Enter"
-                  className={errors.department ? "border-red-500" : ""}
-                />
+                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                >
+                  <option value="">Select Department</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Sales">Sales</option>
+                  <option value="Operations">Operations</option>
+                  <option value="Research & Development">
+                    Research & Development
+                  </option>
+                  <option value="Customer Service">Customer Service</option>
+                  <option value="Legal">Legal</option>
+                  <option value="Quality Assurance">Quality Assurance</option>
+                  <option value="Business Development">
+                    Business Development
+                  </option>
+                  <option value="Product Management">Product Management</option>
+                </select>
                 {errors.department && (
                   <p className="text-red-500 text-xs">{errors.department}</p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="teamManager">Team Manager</Label>
-                <Input
+                <Label
+                  htmlFor="teamManager"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Team Manager
+                </Label>
+                <select
                   id="teamManager"
                   name="teamManager"
                   value={formData.teamManager}
                   onChange={handleChange}
-                  placeholder="Enter"
-                  className={errors.teamManager ? "border-red-500" : ""}
-                />
+                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                >
+                  <option value="">Select Name</option>
+                  <option value="Ram">Ram</option>
+                  <option value="Guy Hawkins">Guy Hawkins</option>
+                  <option value="Marvin McKinney">Marvin McKinney</option>
+                  <option value="Albert Flores">Albert Flores</option>
+                  <option value="Darlene Robertson">Darlene Robertson</option>
+                  <option value="Eleanor Pena">Eleanor Pena</option>
+                </select>
                 {errors.teamManager && (
                   <p className="text-red-500 text-xs">{errors.teamManager}</p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="reportTo">Report to (If applicable)</Label>
+                <Label
+                  htmlFor="reportTo"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Report to (If applicable)
+                </Label>
                 <Input
                   id="reportTo"
                   name="reportTo"
@@ -589,7 +734,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="deptEmail">Department Email</Label>
+                <Label
+                  htmlFor="deptEmail"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Department Email
+                </Label>
                 <Input
                   id="deptEmail"
                   name="deptEmail"
@@ -603,7 +753,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="workEmail">Work Email (If applicable)</Label>
+                <Label
+                  htmlFor="workEmail"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Work Email (If applicable)
+                </Label>
                 <Input
                   id="workEmail"
                   name="workEmail"
@@ -631,7 +786,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
           <CardContent className="py-1 px-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="accName">Account Name</Label>
+                <Label
+                  htmlFor="accName"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Account Name
+                </Label>
                 <Input
                   id="accName"
                   name="accName"
@@ -645,7 +805,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="bankName">Bank Name</Label>
+                <Label
+                  htmlFor="bankName"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Bank Name
+                </Label>
                 <Input
                   id="bankName"
                   name="bankName"
@@ -659,7 +824,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="accNumber">Account Number</Label>
+                <Label
+                  htmlFor="accNumber"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Account Number
+                </Label>
                 <Input
                   id="accNumber"
                   name="accNumber"
@@ -673,7 +843,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="ifsc">IFSC</Label>
+                <Label
+                  htmlFor="ifsc"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  IFSC
+                </Label>
                 <Input
                   id="ifsc"
                   name="ifsc"
@@ -687,7 +862,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="branch">Branch Name</Label>
+                <Label
+                  htmlFor="branch"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Branch Name
+                </Label>
                 <Input
                   id="branch"
                   name="branch"
@@ -701,7 +881,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="cancelledCheque">Cancelled Cheque</Label>
+                <Label
+                  htmlFor="cancelledCheque"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Cancelled Cheque
+                </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
                   {formData.bank.cancelledCheque ? (
                     <div className="relative w-full h-full">
@@ -736,9 +921,18 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                         }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                     </>
                   )}
@@ -761,7 +955,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
           <CardContent className="py-1 px-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="ctc">Total CTC</Label>
+                <Label
+                  htmlFor="ctc"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Total CTC
+                </Label>
                 <Input
                   id="ctc"
                   name="ctc"
@@ -775,7 +974,9 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label>Auto-TDS</Label>
+                <Label className="text-[#344054] font-medium font-sm">
+                  Auto-TDS
+                </Label>
                 <RadioGroup
                   value={formData.salary.autoTDS ? "yes" : "no"}
                   onValueChange={(value) =>
@@ -807,7 +1008,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 </RadioGroup>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="basicDA">Basic+DA</Label>
+                <Label
+                  htmlFor="basicDA"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Basic+DA
+                </Label>
                 <Input
                   id="basicDA"
                   name="basicDA"
@@ -821,7 +1027,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="hra">House Rent Allowance</Label>
+                <Label
+                  htmlFor="hra"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  House Rent Allowance
+                </Label>
                 <Input
                   id="hra"
                   name="hra"
@@ -835,7 +1046,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="conveyance">TPT / Conveyance</Label>
+                <Label
+                  htmlFor="conveyance"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  TPT / Conveyance
+                </Label>
                 <Input
                   id="conveyance"
                   name="conveyance"
@@ -849,7 +1065,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="other">Other</Label>
+                <Label
+                  htmlFor="other"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Other
+                </Label>
                 <Input
                   id="other"
                   name="other"
@@ -859,7 +1080,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="arrears">Arrear Salary</Label>
+                <Label
+                  htmlFor="arrears"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Arrear Salary
+                </Label>
                 <Input
                   id="arrears"
                   name="arrears"
@@ -869,7 +1095,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="profTax">Professional Tax</Label>
+                <Label
+                  htmlFor="profTax"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Professional Tax
+                </Label>
                 <Input
                   id="profTax"
                   name="profTax"
@@ -879,7 +1110,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="pf">Provident Fund</Label>
+                <Label
+                  htmlFor="pf"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Provident Fund
+                </Label>
                 <Input
                   id="pf"
                   name="pf"
@@ -889,7 +1125,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="tds">TDS</Label>
+                <Label
+                  htmlFor="tds"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  TDS
+                </Label>
                 <Input
                   id="tds"
                   name="tds"
@@ -899,7 +1140,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="advance">Advance</Label>
+                <Label
+                  htmlFor="advance"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Advance
+                </Label>
                 <Input
                   id="advance"
                   name="advance"
@@ -909,7 +1155,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="totalDeductions">Total Deductions</Label>
+                <Label
+                  htmlFor="totalDeductions"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Total Deductions
+                </Label>
                 <Input
                   id="totalDeductions"
                   name="totalDeductions"
@@ -919,7 +1170,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="netPay">Net Amount</Label>
+                <Label
+                  htmlFor="netPay"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Net Amount
+                </Label>
                 <Input
                   id="netPay"
                   name="netPay"
@@ -929,7 +1185,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="bonus">Bonus (Variable Pay)</Label>
+                <Label
+                  htmlFor="bonus"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Bonus (Variable Pay)
+                </Label>
                 <Input
                   id="bonus"
                   name="bonus"
@@ -939,7 +1200,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="gratuity">Gratuity</Label>
+                <Label
+                  htmlFor="gratuity"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Gratuity
+                </Label>
                 <Input
                   id="gratuity"
                   name="gratuity"
@@ -967,7 +1233,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
           <CardContent className="py-1 px-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="aadharNo">Aadhar Card Number</Label>
+                <Label
+                  htmlFor="aadharNo"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Aadhar Card Number
+                </Label>
                 <Input
                   id="aadharNo"
                   name="aadharNo"
@@ -981,7 +1252,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="panNo">PAN</Label>
+                <Label
+                  htmlFor="panNo"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  PAN
+                </Label>
                 <Input
                   id="panNo"
                   name="panNo"
@@ -995,7 +1271,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="uan">Provident Fund (UAN)</Label>
+                <Label
+                  htmlFor="uan"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Provident Fund (UAN)
+                </Label>
                 <Input
                   id="uan"
                   name="uan"
@@ -1005,7 +1286,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="esicNo">ESIC No.</Label>
+                <Label
+                  htmlFor="esicNo"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  ESIC No.
+                </Label>
                 <Input
                   id="esicNo"
                   name="esicNo"
@@ -1015,7 +1301,12 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="passportPhoto">Passport Size Photograph</Label>
+                <Label
+                  htmlFor="passportPhoto"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Passport Size Photograph
+                </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
                   {formData.documents.passportPhoto ? (
                     <div className="relative w-full h-full">
@@ -1050,16 +1341,30 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                         }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="aadhar">Proof of Identity – Aadhar</Label>
+                <Label
+                  htmlFor="aadhar"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Proof of Identity – Aadhar
+                </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
                   {formData.documents.aadhar ? (
                     <div className="relative w-full h-full">
@@ -1094,16 +1399,30 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                         }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="addressProof">Proof of Address</Label>
+                <Label
+                  htmlFor="addressProof"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Proof of Address
+                </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
                   {formData.documents.addressProof ? (
                     <div className="relative w-full h-full">
@@ -1138,16 +1457,30 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                         }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="panCard">PAN</Label>
+                <Label
+                  htmlFor="panCard"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  PAN
+                </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
                   {formData.documents.panCard ? (
                     <div className="relative w-full h-full">
@@ -1182,16 +1515,30 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                         }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="qualification">Proof of Qualification</Label>
+                <Label
+                  htmlFor="qualification"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Proof of Qualification
+                </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
                   {formData.documents.qualification ? (
                     <div className="relative w-full h-full">
@@ -1226,16 +1573,30 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                         }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="resume">Copy of Latest CV / Resume</Label>
+                <Label
+                  htmlFor="resume"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Copy of Latest CV / Resume
+                </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
                   {formData.documents.resume ? (
                     <div className="relative w-full h-full">
@@ -1270,16 +1631,30 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                         }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                     </>
                   )}
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="otherDocs">Other Relevant Documents</Label>
+                <Label
+                  htmlFor="otherDocs"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Other Relevant Documents
+                </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
                   {formData.documents.otherDocs ? (
                     <div className="relative w-full h-full">
@@ -1314,9 +1689,18 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
                         }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
-                      <div className="text-sm font-medium">Click to upload</div>
-                      <div className="text-xs text-muted-foreground">
-                        or drag and drop
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="text-sm font-medium">
+                            Click to upload
+                          </div>
+                          <div className="text-xs font-normal text-[#475467]">
+                            or drag and drop
+                          </div>
+                        </div>
+                        <div className="text-normal text-center text-sm text-[#475467]">
+                          svg / .png / .jpg / .gif / .heic
+                        </div>
                       </div>
                     </>
                   )}

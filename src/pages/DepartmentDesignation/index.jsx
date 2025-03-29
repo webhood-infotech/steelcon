@@ -26,24 +26,26 @@ import axios from "axios";
 const DepartmentDesignation = () => {
   const [departments, setDepartments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [editingDepartmentId, setEditingDepartmentId] = useState(null);
   // Added state for dialog open/close
-  const [openDelete, setOpenDelete] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
+  const [deletingDepartmentId, setDeletingDepartmentId] = useState(null);
   const [openAddNew, setOpenAddNew] = useState(false);
 
   useEffect(() => {
     getAllDepartments();
   }, []);
 
-  const closeDeleteDialog = () => setOpenDelete(false);
-  const closeEditDialog = () => setOpenEdit(false);
   const closeAddNewDialog = () => setOpenAddNew(false);
+  const openEditDialog = (departmentId) => setEditingDepartmentId(departmentId);
+  const closeEditDialog = () => setEditingDepartmentId(null);
+  const openDeleteDialog = (departmentId) =>
+    setDeletingDepartmentId(departmentId);
+  const closeDeleteDialog = () => setDeletingDepartmentId(null);
 
   const getAllDepartments = async () => {
     try {
       const response = await axios.get(
-        "https://steelconbackend.vercel.app/api/admin/designations"
+        `https://steelconbackend.vercel.app/api/admin/designations/`
       );
       setDepartments(response.data?.data || []);
     } catch (err) {
@@ -63,6 +65,7 @@ const DepartmentDesignation = () => {
         .includes(searchQuery.toLowerCase()) ||
         department.code.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+  console.log(filteredDepartments);
 
   return (
     <div className="container mx-auto mt-8 px-3">
@@ -126,7 +129,7 @@ const DepartmentDesignation = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredDepartments.map((department,index) => (
+            {filteredDepartments.map((department, index) => (
               <TableRow key={index}>
                 <TableCell className=" w-[784px] py-6 pl-5 text-sm font-medium  text-[#101828]">
                   {department.designation}
@@ -136,7 +139,14 @@ const DepartmentDesignation = () => {
                 </TableCell>
                 <TableCell className="w-[120px] text-right pr-5">
                   <div className="flex justify-center gap-1">
-                    <Dialog open={openDelete} onOpenChange={setOpenDelete}>
+                    <Dialog
+                      open={deletingDepartmentId === department._id}
+                      onOpenChange={(open) =>
+                        open
+                          ? openDeleteDialog(department._id)
+                          : closeDeleteDialog()
+                      }
+                    >
                       <DialogTrigger>
                         <Button
                           // onClick={() => setOpenDelete(true)}
@@ -154,7 +164,14 @@ const DepartmentDesignation = () => {
                         />
                       </DialogContent>
                     </Dialog>
-                    <Dialog open={openEdit} onOpenChange={setOpenEdit}>
+                    <Dialog
+                      open={editingDepartmentId === department._id}
+                      onOpenChange={(open) =>
+                        open
+                          ? openEditDialog(department._id)
+                          : closeEditDialog()
+                      }
+                    >
                       <DialogTrigger>
                         <Button variant="ghost" size="icon">
                           <Pencil className="h-3 w-3" />
@@ -165,6 +182,7 @@ const DepartmentDesignation = () => {
                           departmentCode={department.code}
                           getAllDepartments={getAllDepartments}
                           closeEditDialog={closeEditDialog}
+                          departmentId={department?._id}
                         />
                       </DialogContent>
                     </Dialog>

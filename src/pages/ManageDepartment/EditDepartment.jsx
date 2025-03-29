@@ -74,7 +74,7 @@ const EditDepartment = ({
             </div>
           </div>
           <div className="flex justify-end gap-3 mt-5">
-            <button className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
+            <button onClick={closeEditDialog} className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
               Cancel
             </button>
             <button

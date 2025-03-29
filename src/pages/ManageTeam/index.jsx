@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,121 +19,67 @@ import avatarImg from "../../assets/sidebarImages/Avatar.png";
 import DeleteDepartment from "../ManageDepartment/DeleteDepartment";
 import AddNewTeamMember from "./AddNewTeamMember";
 const ManageTeam = () => {
-  const [departments, setDepartments] = useState([
-    {
-      id: "1",
-      name: "Maintenance",
-      imageSrc: avatarImg,
-      department: "L8 8HQ",
-      JoiningDate: "9/18/16",
-      reportTo: "Vinayak",
-      NumberOfTeam: "4",
-      CurrentCTC: "Rs 40,000",
-    },
-    {
-      id: "3",
-      name: "Manning",
-      imageSrc: avatarImg,
-      department: "Maintenance",
-      JoiningDate: "9/23/16",
-      reportTo: "Vinayak",
-      NumberOfTeam: "5",
-      CurrentCTC: "Rs 40,000",
-    },
-    {
-      id: "4",
-      name: "IT",
-      imageSrc: avatarImg,
-      department: "Maintenance",
-      JoiningDate: "10/28/12",
-      reportTo: "Vinayak",
-      NumberOfTeam: "1",
-      CurrentCTC: "Rs 40,000",
-    },
-    {
-      id: "4",
-      name: "IT",
-      imageSrc: avatarImg,
-
-      department: "Maintenance",
-      JoiningDate: "6/21/19",
-      reportTo: "Vinayak",
-      NumberOfTeam: "4",
-      CurrentCTC: "Rs 1000",
-    },
-    {
-      id: "5",
-      name: "Manning",
-      imageSrc: avatarImg,
-      department: "Operations",
-      JoiningDate: "9/4/12",
-      reportTo: "Vinayak",
-      NumberOfTeam: "1",
-      CurrentCTC: "Rs 40,000",
-    },
-    {
-      id: "5",
-      name: "Operations",
-      imageSrc: avatarImg,
-      department: "Engineering",
-      JoiningDate: "5/27/15",
-      reportTo: "Vinayak",
-      NumberOfTeam: "0",
-      CurrentCTC: "2000",
-    },
-    {
-      id: "5",
-      name: "HSEQ",
-      imageSrc: avatarImg,
-      department: "IT",
-      JoiningDate: "5/27/15",
-      reportTo: "Vinayak",
-      NumberOfTeam: "1",
-      CurrentCTC: "2000",
-    },
-    {
-      id: "5",
-      name: "Human Resources",
-      imageSrc: avatarImg,
-      department: "Human Resources",
-      JoiningDate: "10/6/13",
-      reportTo: "Vinayak",
-      NumberOfTeam: "3",
-      CurrentCTC: "40000",
-    },
-    {
-      id: "5",
-      name: "HSEQ",
-      imageSrc: avatarImg,
-      department: "Human Resources",
-      JoiningDate: "8/15/17",
-      reportTo: "Vinayak",
-      NumberOfTeam: "2",
-      CurrentCTC: "37000",
-    },
-    {
-      id: "5",
-      name: "Engineering",
-      imageSrc: avatarImg,
-      department: "HSEQ",
-      JoiningDate: "5/30/14",
-      reportTo: "Vinayak",
-      NumberOfTeam: "5",
-      CurrentCTC: "37000",
-    },
-  ]);
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [openAddNewTeam, setOpenAddNewTeam] = useState(false);
-  const filteredDepartments = departments.filter(
-    (department) =>
-      department.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      department.code.toLowerCase().includes(searchQuery.toLowerCase())
+  const [openDelete, setOpenDelete] = useState(false);
+  const [showAddNewEmployee, setShowAddNewEmployee] = useState(false);
+  const filteredEmployees = employees.filter(
+    (employee) =>
+      employee.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      employee.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (employee.department &&
+        employee.department.toLowerCase().includes(searchQuery.toLowerCase()))
   );
   // const handleDelete = (id) => {
   //   setDepartments(departments.filter((dept) => dept.id !== id));
   // };
-  if (openAddNewTeam) {
-    return <AddNewTeamMember />;
+  // Fetch employees from API
+  const fetchEmployees = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        "https://steelconbackend.vercel.app/api/admin/employees"
+      );
+      const result = await response.json();
+      console.log(result);
+
+      if (result.success) {
+        setEmployees(result.data);
+      } else {
+        setError("Failed to fetch employees");
+      }
+    } catch (err) {
+      setError("Error connecting to the server");
+      console.error("Error fetching employees:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+  const closeDeleteDialog = () => setOpenDelete(false);
+
+  // Format currency
+  const formatCurrency = (amount) => {
+    if (!amount && amount !== 0) return "N/A";
+    return `Rs ${amount.toLocaleString()}`;
+  };
+  // Format date from ISO to MM/DD/YY
+  const formatDate = (isoDate) => {
+    if (!isoDate) return "N/A";
+    const date = new Date(isoDate);
+    return `${date.getMonth() + 1}/${date.getDate()}/${String(
+      date.getFullYear()
+    ).slice(2)}`;
+  };
+  console.log(showAddNewEmployee);
+
+  if (showAddNewEmployee) {
+    return <AddNewTeamMember setShowAddNewEmployee={setShowAddNewEmployee} />;
   }
   return (
     <div className="container mx-auto mt-8 px-3">
@@ -166,7 +112,7 @@ const ManageTeam = () => {
             </svg>
           </div>
           <Button
-            onClick={() => setOpenAddNewTeam(true)}
+            onClick={() => setShowAddNewEmployee(true)}
             className="gap-2 bg-[#305679] py-4 font-semibold  text-white text-sm"
           >
             <Plus className="w-4" />
@@ -200,34 +146,47 @@ const ManageTeam = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredDepartments.map((department) => (
-              <TableRow key={department.id}>
+            {filteredEmployees.map((employee) => (
+              <TableRow key={employee._id}>
                 <TableCell className="flex gap-4 items-center w-[358px] py-6 pl-5 text-sm font-medium  text-[#101828]">
                   <Avatar>
-                    <AvatarImage src={department.imageSrc} alt="@shadcn" />
-                    {/* <AvatarFallback>CN</AvatarFallback> */}
+                    <AvatarImage
+                      src={employee?.profileImg}
+                      alt={`${employee.firstName} ${employee.lastName}`}
+                    />
+                    <AvatarFallback>
+                      {employee?.firstName?.charAt(0) +
+                        employee?.lastName?.charAt(0)}
+                    </AvatarFallback>
                   </Avatar>{" "}
-                  {department.name}
+                  {`${employee.firstName} ${
+                    employee.middleName ? employee.middleName + " " : ""
+                  }${employee.lastName}`}
                 </TableCell>
                 <TableCell className="w-[163px] py-6 text-start text-sm font-normal text-[#475467]">
-                  {department.department}
+                  {employee?.department}
                 </TableCell>
                 <TableCell className="w-[120px] py-6 text-start text-sm font-normal text-[#475467]">
-                  {department.JoiningDate}
+                  {formatDate(employee.joiningDate)}
                 </TableCell>
                 <TableCell className="flex gap-4 items-center w-[164px] py-6 text-start text-sm font-normal text-[#475467]">
                   <Avatar>
-                    <AvatarImage src={department.imageSrc} alt="@shadcn" />
+                    <AvatarImage
+                      alt={employee.teamManager || "Manager"}
+                      src={avatarImg}
+                    />
                   </Avatar>
-                  {department.reportTo}
+                  {employee.teamManager || "N/A"}
                 </TableCell>
                 <TableCell className="w-[136px] py-6 text-start text-sm font-normal text-[#475467]">
-                  {department.CurrentCTC}
+                  {employee.salary
+                    ? formatCurrency(employee.salary.ctc)
+                    : "N/A"}
                 </TableCell>
                 <TableCell className="w-[123px] text-right pr-5">
                   <div className="flex justify-center gap-1">
-                    <Dialog>
-                      <DialogTrigger>
+                    {/* <Dialog open={openDelete} onOpenChange={setOpenDelete}>
+                      <DialogTrigger asChild>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -237,9 +196,11 @@ const ManageTeam = () => {
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
-                        <DeleteDepartment />
+                        <DeleteDepartment
+                          closeDeleteDialog={closeDeleteDialog}
+                        />
                       </DialogContent>
-                    </Dialog>
+                    </Dialog> */}
                     <Dialog>
                       <DialogTrigger>
                         <Button variant="ghost" size="icon">
@@ -248,7 +209,7 @@ const ManageTeam = () => {
                       </DialogTrigger>
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
                         <EditDepartment
-                          departmentCode={department.department}
+                        // departmentCode={department.department}
                         />
                       </DialogContent>
                     </Dialog>

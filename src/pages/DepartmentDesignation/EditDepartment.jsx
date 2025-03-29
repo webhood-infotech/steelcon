@@ -12,7 +12,7 @@ const EditDepartment = ({
 }) => {
   const [designationName, setDesignation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-console.log(departmentCode)
+  console.log(departmentCode)
   const handleEditDepartment = async () => {
     // Validate input
     if (!designationName.trim()) {

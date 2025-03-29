@@ -18,19 +18,20 @@ import DeleteDepartment from "./DeleteDepartment";
 import EditDepartment from "./EditDepartment";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import axios from "axios";
+import DepartmentView from "./DepartmentView";
 
 const ManageDepartment = () => {
   const [departments, setDepartments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
   const [openAddNew, setOpenAddNew] = useState(false);
-
+  const [viewDepartment, setViewDepartment] = useState(false);
+  // const [departmentDetail, setDerpartmentDetail] = useState();
+  const [editingDepartmentId, setEditingDepartmentId] = useState(null);
+  const [deletingDepartmentId, setDeletingDepartmentId] = useState(null);
   useEffect(() => {
     // Fetch all departments when component mounts
     getAllDepartments();
   }, []);
-
   const getAllDepartments = async () => {
     try {
       const response = await axios.get(
@@ -42,7 +43,6 @@ const ManageDepartment = () => {
       setDepartments([]);
     }
   };
-
   const searchDepartments = useCallback(
     async (query) => {
       try {
@@ -102,9 +102,13 @@ const ManageDepartment = () => {
     [searchDepartments]
   );
 
-  const closeDeleteDialog = () => setOpenDelete(false);
-  const closeEditDialog = () => setOpenEdit(false);
+  // Dialog open/close handlers
+  const closeDeleteDialog = () => setDeletingDepartmentId(null);
+  const closeEditDialog = () => setEditingDepartmentId(null);
   const closeAddNewDialog = () => setOpenAddNew(false);
+  if (viewDepartment) {
+    return <DepartmentView setViewDepartment={setViewDepartment} />;
+  }
 
   return (
     <div className="container mx-auto mt-8 px-3">
@@ -178,15 +182,28 @@ const ManageDepartment = () => {
                 </TableCell>
                 <TableCell className="w-[120px] text-right pr-5">
                   <div className="flex justify-end gap-1">
-                    <Button variant="ghost" size="icon">
+                    <Button
+                      onClick={() => setViewDepartment(true)}
+                      variant="ghost"
+                      size="icon"
+                    >
                       <Eye className="h-3 w-3" />
                     </Button>
-                    <Dialog open={openDelete} onOpenChange={setOpenDelete}>
+                    <Dialog
+                      open={deletingDepartmentId === department._id}
+                      onOpenChange={(open) =>
+                        open
+                          ? setDeletingDepartmentId(department._id)
+                          : setDeletingDepartmentId(null)
+                      }
+                    >
                       <DialogTrigger asChild>
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => setOpenDelete(true)}
+                          onClick={() =>
+                            setDeletingDepartmentId(department._id)
+                          }
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
@@ -199,10 +216,17 @@ const ManageDepartment = () => {
                         />
                       </DialogContent>
                     </Dialog>
-                    <Dialog open={openEdit} onOpenChange={setOpenEdit}>
+                    <Dialog
+                      open={editingDepartmentId === department._id}
+                      onOpenChange={(open) =>
+                        open
+                          ? setEditingDepartmentId(department._id)
+                          : setEditingDepartmentId(null)
+                      }
+                    >
                       <DialogTrigger asChild>
                         <Button
-                          onClick={() => setOpenEdit(true)}
+                          onClick={() => setEditingDepartmentId(department._id)}
                           variant="ghost"
                           size="icon"
                         >
