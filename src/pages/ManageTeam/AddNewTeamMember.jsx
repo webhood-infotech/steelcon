@@ -13,6 +13,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { Plus, Upload, User } from "lucide-react";
+import { toast } from "sonner";
 
 const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
   const [formData, setFormData] = useState({
@@ -79,6 +80,8 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
 
   const [profileImage, setProfileImage] = useState("");
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  console.log(formData);
   // Handle input changes
   const handleChange = (e, nestedField = null) => {
     const { name, value } = e.target;
@@ -95,6 +98,89 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
         ...prev,
         [name]: value,
       }));
+    }
+  };
+  // Validation function
+  const validateForm = () => {
+    let tempErrors = {};
+
+    // Personal Info
+    if (!formData.firstName) tempErrors.firstName = "First name is required";
+    if (!formData.lastName) tempErrors.lastName = "Last name is required";
+    if (!formData.personalEmail) tempErrors.personalEmail = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.personalEmail))
+      tempErrors.personalEmail = "Invalid email";
+    if (!formData.personalMobile)
+      tempErrors.personalMobile = "Mobile is required";
+    else if (!/^\d{10}$/.test(formData.personalMobile))
+      tempErrors.personalMobile = "Must be 10 digits";
+    if (!formData.emergencyContact.name)
+      tempErrors.emergencyContactName = "Required";
+    if (!formData.emergencyContact.mobile)
+      tempErrors.emergencyContactMobile = "Required";
+    else if (!/^\d{10}$/.test(formData.emergencyContact.mobile))
+      tempErrors.emergencyContactMobile = "Must be 10 digits";
+    if (!formData.workDays) tempErrors.workDays = "Required";
+    if (!formData.paidLeaves) tempErrors.paidLeaves = "Required";
+    if (!formData.sickLeaves) tempErrors.sickLeaves = "Required";
+    if (!formData.resignDeduction) tempErrors.resignDeduction = "Required";
+
+    // Company Details
+    if (!formData.designation) tempErrors.designation = "Required";
+    if (!formData.department) tempErrors.department = "Required";
+    if (!formData.teamManager) tempErrors.teamManager = "Required";
+    if (!formData.deptEmail) tempErrors.deptEmail = "Required";
+    else if (!/\S+@\S+\.\S+/.test(formData.deptEmail))
+      tempErrors.deptEmail = "Invalid email";
+
+    // Banking Details
+    if (!formData.bank.accName) tempErrors.accName = "Required";
+    if (!formData.bank.bankName) tempErrors.bankName = "Required";
+    if (!formData.bank.accNumber) tempErrors.accNumber = "Required";
+    if (!formData.bank.ifsc) tempErrors.ifsc = "Required";
+    if (!formData.bank.branch) tempErrors.branch = "Required";
+
+    // Salary Details
+    if (!formData.salary.ctc) tempErrors.ctc = "Required";
+    if (!formData.salary.basicDA) tempErrors.basicDA = "Required";
+    if (!formData.salary.hra) tempErrors.hra = "Required";
+    if (!formData.salary.conveyance) tempErrors.conveyance = "Required";
+
+    // Identification Details
+    if (!formData.aadharNo) tempErrors.aadharNo = "Required";
+    else if (!/^\d{12}$/.test(formData.aadharNo))
+      tempErrors.aadharNo = "Must be 12 digits";
+    if (!formData.panNo) tempErrors.panNo = "Required";
+    else if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(formData.panNo))
+      tempErrors.panNo = "Invalid PAN format";
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
+  };
+
+  // Submit handler
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) {
+      toast.error("Please fill all required fields correctly");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "https://steelconbackend.vercel.app/api/admin/managers",
+        formData,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Manager added successfully");
+        setFormData({ ...formData }); // Reset form
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to add manager");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -143,8 +229,11 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
           >
             Cancel
           </Button>
-          <Button className="gap-2 bg-[#305679] py-4 font-semibold text-white text-sm">
-            Submit
+          <Button
+            onClick={handleSubmit}
+            className="gap-2 bg-[#305679] py-4 font-semibold text-white text-sm"
+          >
+            {loading ? "Submitting..." : "Submit"}
           </Button>
         </div>
       </div>
@@ -404,17 +493,21 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label
-                  htmlFor="firstName"
+                  htmlFor="employeeId"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Employee ID No
                 </Label>
                 <Input
-                  id="firstName"
-                  placeholder="Enter your First Name"
-                  defaultValue="Olivia"
+                  id="employeeId"
+                  name="lastName"
+                  onChange={handleChange}
+                  placeholder="Enter"
                   className="border border-[#D0D5 DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.lastName && (
+                  <p className="text-red-500 text-xs">{errors.lastName}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
@@ -433,19 +526,23 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="lastName"
+                  htmlFor="designation"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Designation
                 </Label>
                 <select
                   id="designation"
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleChange}
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
-                  <option value="">Software Engineer</option>
-                  <option value="Engineering"> AI Engineering</option>
-                  <option value="Engineering"> MLA Engineering</option>
-                  <option value="Marketing"> Product Marketing Manager</option>
+                  <option value="">Select Department</option>
+                  <option value="Software Engineer">Software Engineer</option>
+                  <option value="Engineering">AI Engineering</option>
+                  <option value="Engineering">MLA Engineering</option>
+                  <option value="Marketing">Product Marketing Manager</option>
                   <option value="Sales">Technical Project Manager</option>
                   <option value="HR">Data Analytics Manager</option>
                   <option value="Sales">Human Resources Manager</option>
@@ -466,18 +563,26 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                 </Label>
                 <select
                   id="department"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
-                  <option value="">Software Engineer</option>
-                  <option value="Engineering"> Marketing</option>
-                  <option value="Engineering"> Sales</option>
-                  <option value="Marketing">Operations</option>
-                  <option value="Sales">Research & Development </option>
-                  <option value="HR">Customer Service</option>
-                  <option value="Sales">Legal</option>
-                  <option value="Sales">Quality Assurance</option>
-                  <option value="Sales">Business Development</option>
-                  <option value="Sales">Product Management</option>
+                  <option value="">Select Department</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Sales">Sales</option>
+                  <option value="Operations">Operations</option>
+                  <option value="Research & Development">
+                    Research & Development
+                  </option>
+                  <option value="Customer Service">Customer Service</option>
+                  <option value="Legal">Legal</option>
+                  <option value="Quality Assurance">Quality Assurance</option>
+                  <option value="Business Development">
+                    Business Development
+                  </option>
+                  <option value="Product Management">Product Management</option>
                 </select>
                 {errors.department && (
                   <p className="text-red-500 text-xs">{errors.department}</p>
@@ -491,45 +596,55 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                   Report to Manager
                 </Label>
                 <select
-                  id="reportToManager"
+                  id="teamManager"
+                  name="teamManager"
+                  value={formData.teamManager}
+                  onChange={handleChange}
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
-                  <option value="">Ram</option>
-                  <option value="Engineering">Guy Hawkins</option>
-                  <option value="Engineering"> Marvin McKinney</option>
-                  <option value="Marketing">Albert Flores</option>
-                  <option value="Sales">Darlene Robertson</option>
-                  <option value="HR">Darlene Robertson</option>
-                  <option value="Sales">Eleanor Pena</option>
+                  <option value="">Select Name</option>
+                  <option value="Ram">Ram</option>
+                  <option value="Guy Hawkins">Guy Hawkins</option>
+                  <option value="Marvin McKinney">Marvin McKinney</option>
+                  <option value="Albert Flores">Albert Flores</option>
+                  <option value="Darlene Robertson">Darlene Robertson</option>
+                  <option value="Eleanor Pena">Eleanor Pena</option>
                 </select>
                 {errors.teamManager && (
-                  <p className="text-red-500 text-xs">
-                    {errors.reporttomanager}
-                  </p>
+                  <p className="text-red-500 text-xs">{errors.teamManager}</p>
                 )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="mobile"
+                  htmlFor="deptEmail"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Department Email
                 </Label>
                 <Input
-                  id="mobile"
+                  id="deptEmail"
+                  name="deptEmail"
+                  value={formData.deptEmail}
+                  onChange={handleChange}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.deptEmail && (
+                  <p className="text-red-500 text-xs">{errors.deptEmail}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="emergencyNo"
+                  htmlFor="workEmail"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Work Email (If applicable)
                 </Label>
                 <Input
-                  id="emergencyNo"
+                  id="workEmail"
+                  name="workEmail"
+                  value={formData.workEmail}
+                  onChange={handleChange}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
@@ -568,13 +683,19 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                   Auto-TDS
                 </Label>
                 <RadioGroup
-                  defaultValue="yes"
                   className="flex items-center space-x-28 pt-2"
+                  value={formData.salary.autoTDS ? "yes" : "no"}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      salary: { ...prev.salary, autoTDS: value === "yes" },
+                    }))
+                  }
                 >
                   <div className="flex  items-center space-x-2 ">
                     <RadioGroupItem
                       value="yes"
-                      id="hr-yes"
+                      id="autoTDS-yes"
                       className=" border-[#305679] text-[#305679] focus:ring-[#305679]"
                     />
                     <Label
@@ -587,7 +708,7 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem
                       value="no"
-                      id="hr-no"
+                      id="autoTDS-no"
                       className=" border-[#305679] text-[#305679] focus:ring-[#305679]"
                     />
                     <Label
@@ -615,66 +736,86 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="House Rent Allowance"
+                  htmlFor="hra"
                   className="text-sm text-medium text-[#344054]"
                 >
                   House Rent Allowance
                 </Label>
                 <Input
-                  id="House Rent Allowance"
+                  id="hra"
+                  name="hra"
+                  value={formData.salary.hra}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  // defaultValue="Rhye"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.hra && (
+                  <p className="text-red-500 text-xs">{errors.hra}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="TPT / Conveyances"
+                  htmlFor="conveyance"
                   className="text-sm text-medium text-[#344054]"
                 >
                   TPT / Conveyance
                 </Label>
                 <Input
-                  id="TPT / Conveyance"
+                  id="conveyance"
+                  name="conveyance"
+                  value={formData.salary.conveyance}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.conveyance && (
+                  <p className="text-red-500 text-xs">{errors.conveyance}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Other"
+                  htmlFor="other"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Other
                 </Label>
                 <Input
-                  id="Other"
+                  id="other"
+                  name="other"
+                  value={formData.salary.other}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Arrear Salary"
+                  htmlFor="arrears"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Arrear Salary
                 </Label>
                 <Input
-                  id="Arrear Salary"
+                  id="arrears"
+                  name="arrears"
+                  value={formData.salary.arrears}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Professional Tax"
+                  htmlFor="profTax"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Professional Tax
                 </Label>
                 <Input
-                  id="Professional Tax"
+                  id="profTax"
+                  name="profTax"
+                  value={formData.salary.profTax}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
@@ -682,27 +823,50 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
 
               <div className="space-y-2">
                 <Label
-                  htmlFor="Provident Fund"
+                  htmlFor="pf"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Provident Fund
                 </Label>
                 <Input
-                  id="Provident Fund"
+                  id="pf"
+                  name="pf"
+                  value={formData.salary.pf}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="TDS"
+                  htmlFor="tds"
                   className="text-sm text-medium text-[#344054]"
                 >
                   TDS
                 </Label>
                 <div className="flex items-center">
                   <Input
-                    id="TDS"
+                    id="tds"
+                    name="tds"
+                    value={formData.salary.tds}
+                    onChange={(e) => handleChange(e, "salary")}
+                    className=" flex-1 border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="advance"
+                  className="text-sm text-medium text-[#344054]"
+                >
+                  Advance
+                </Label>
+                <div className="flex items-center ">
+                  <Input
+                    id="advance"
+                    name="advance"
+                    value={formData.salary.advance}
+                    onChange={(e) => handleChange(e, "salary")}
                     placeholder="Enter"
                     className=" flex-1 border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                   />
@@ -710,48 +874,38 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Advance"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Advance
-                </Label>
-                <div className="flex items-center ">
-                  <Input
-                    id="Advance"
-                    defaultValue="1.5"
-                    className=" flex-1 border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label
-                  htmlFor="Total Deductions"
+                  htmlFor="totalDeductions"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Total Deductions
                 </Label>
                 <Input
-                  id="Total Deductions"
+                  id="totalDeductions"
+                  name="totalDeductions"
+                  value={formData.salary.totalDeductions}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Net Amount"
+                  htmlFor="netPay"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Net Amount
                 </Label>
                 <Input
-                  id="Net Amount"
-                  placeholder="Enter"
+                  id="netPay"
+                  name="netPay"
+                  value={formData.salary.netPay}
+                  onChange={(e) => handleChange(e, "salary")}
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-3  min-w-[339px] ">
                 <Label
-                  htmlFor="deduction"
+                  htmlFor="resignDeduction"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Enter deduction amount during resignation
@@ -769,35 +923,48 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                     </SelectContent>
                   </Select>
                   <Input
-                    id="deduction"
+                    id="resignDeduction"
+                    name="resignDeduction"
+                    value={formData.resignDeduction}
+                    onChange={handleChange}
                     placeholder="Enter"
                     className="flex-1 border border-[#D0D5DD] border-l-0  py-2.5 px-3.5 rounded-l-none rounded-r-md placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                   />
+                  {errors.resignDeduction && (
+                    <p className="text-red-500 text-xs">
+                      {errors.resignDeduction}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Bonus ( Variable Pay )"
+                  htmlFor="bonus"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Bonus ( Variable Pay )
                 </Label>
                 <Input
-                  id="Bonus ( Variable Pay )"
+                  id="bonus"
+                  name="bonus"
+                  value={formData.salary.bonus}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Gratuity"
+                  htmlFor="gratuity"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Gratuity
                 </Label>
                 <Input
-                  id="Gratuity"
-                  placeholder="Enter"
+                  id="gratuity"
+                  name="gratuity"
+                  value={formData.salary.gratuity}
+                  onChange={(e) => handleChange(e, "salary")}
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
@@ -819,96 +986,125 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label
-                  htmlFor="Account Name"
+                  htmlFor="accName"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Account Name
                 </Label>
                 <Input
-                  type="text"
-                  id="Account Name"
-                  placeholder="Enter your Account Name"
-                  defaultValue="Olivia"
+                  id="accName"
+                  name="accName"
+                  value={formData.bank.accName}
+                  onChange={(e) => handleChange(e, "bank")}
+                  placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.accName && (
+                  <p className="text-red-500 text-xs">{errors.accName}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Bank Name"
+                  htmlFor="bankName"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Bank Name
                 </Label>
                 <Input
-                  id="Bank Name"
-                  placeholder="State Bank of India"
-                  defaultValue="Rhye"
+                  id="bankName"
+                  name="bankName"
+                  value={formData.bank.bankName}
+                  onChange={(e) => handleChange(e, "bank")}
+                  placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.bankName && (
+                  <p className="text-red-500 text-xs">{errors.bankName}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="accountNumber"
+                  htmlFor="accName"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Account Number
                 </Label>
                 <Input
-                  id="accountNumber"
-                  type="number"
-                  placeholder="xxxxxxxxxxxx"
+                  id="accNumber"
+                  name="accNumber"
+                  value={formData.bank.accNumber}
+                  onChange={(e) => handleChange(e, "bank")}
+                  placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal appearance-none"
                 />
+                {errors.accNumber && (
+                  <p className="text-red-500 text-xs">{errors.accNumber}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="IFSC"
+                  htmlFor="ifsc"
                   className="text-sm text-medium text-[#344054]"
                 >
                   IFSC
                 </Label>
                 <Input
-                  id="IFSC"
-                  type="IFSC"
-                  placeholder="xxxxxxxxxxxx"
+                  id="ifsc"
+                  name="ifsc"
+                  value={formData.bank.ifsc}
+                  onChange={(e) => handleChange(e, "bank")}
+                  placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal appearance-none"
                 />
+                {errors.ifsc && (
+                  <p className="text-red-500 text-xs">{errors.ifsc}</p>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label
-                  htmlFor="Branch Name"
+                  htmlFor="branch"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Branch Name
                 </Label>
                 <Input
-                  id="Branch Name"
-                  type="Branch Name"
-                  placeholder="Enter Branch Name"
+                  id="branch"
+                  name="branch"
+                  value={formData.bank.branch}
+                  onChange={(e) => handleChange(e, "bank")}
+                  placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.branch && (
+                  <p className="text-red-500 text-xs">{errors.branch}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Cancelled Cheque"
+                  htmlFor="cancelledCheque"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Cancelled Cheque
                 </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.bank.cancelledCheque ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
-                        alt="Profile"
+                        src={formData.bank.cancelledCheque}
+                        alt="Cheque"
                         className="object-contain w-full h-full"
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            bank: { ...prev.bank, cancelledCheque: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -931,9 +1127,11 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                       </div>
                       <input
                         type="file"
-                        id="profileImage"
+                        id="cancelledCheque"
                         className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
+                        onChange={(e) =>
+                          handleFileUpload(e, "cancelledCheque", "bank")
+                        }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
                     </>
@@ -959,17 +1157,22 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label
-                  htmlFor="Aadhar Card Number"
+                  htmlFor="aadharNo"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Aadhar Card Number
                 </Label>
                 <Input
-                  id="Aadhar Card Number"
                   placeholder="Enter"
-                  // defaultValue="Olivia"
+                  id="aadharNo"
+                  name="aadharNo"
+                  value={formData.aadharNo}
+                  onChange={handleChange}
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.aadharNo && (
+                  <p className="text-red-500 text-xs">{errors.aadharNo}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
@@ -979,51 +1182,61 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                   PAN
                 </Label>
                 <Input
-                  id="PAN"
+                  id="panNo"
+                  name="panNo"
+                  value={formData.panNo}
+                  onChange={handleChange}
                   placeholder="Enter"
-                  // defaultValue="Rhye"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
+                {errors.panNo && (
+                  <p className="text-red-500 text-xs">{errors.panNo}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Provident Fund (UAN)"
+                  htmlFor="uan"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Provident Fund (UAN)
                 </Label>
                 <Input
-                  id="Provident Fund (UAN)"
+                  id="uan"
+                  name="uan"
+                  value={formData.uan}
                   placeholder="Enter"
-                  // defaultValue="Rhye"
+                  onChange={handleChange}
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="ESIC No."
+                  htmlFor="esicNo"
                   className="text-sm text-medium text-[#344054]"
                 >
                   ESIC No.
                 </Label>
                 <Input
-                  id="ESIC No."
+                  id="esicNo"
+                  name="esicNo"
+                  value={formData.esicNo}
+                  onChange={handleChange}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Passport Size Photograph (File Attachment)"
+                  htmlFor="passportPhoto"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Passport Size Photograph (File Attachment)
                 </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.passportPhoto ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
+                        src={formData.documents.passportPhoto}
                         alt="Profile"
                         className="object-contain w-full h-full"
                       />
@@ -1031,7 +1244,12 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, passportPhoto: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1054,9 +1272,11 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                       </div>
                       <input
                         type="file"
-                        id="profileImage"
+                        id="passportPhoto"
                         className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
+                        onChange={(e) =>
+                          handleFileUpload(e, "passportPhoto", "documents")
+                        }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
                     </>
@@ -1065,16 +1285,16 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Proof of Identity – Aadhar (File Attachment)"
+                  htmlFor="aadhar"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Proof of Identity – Aadhar (File Attachment)
                 </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.aadhar ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
+                        src={formData.documents.aadhar}
                         alt="Profile"
                         className="object-contain w-full h-full"
                       />
@@ -1082,7 +1302,12 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, aadhar: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1105,9 +1330,11 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                       </div>
                       <input
                         type="file"
-                        id="profileImage"
+                        id="aadhar"
                         className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
+                        onChange={(e) =>
+                          handleFileUpload(e, "aadhar", "documents")
+                        }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
                     </>
@@ -1116,18 +1343,18 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Proof of Permanent or Current Address – Passport / Driving License / Voter ID / Ration Card / Utility Bill / Rental Agreement Copy"
                   className="text-sm text-medium text-[#344054]"
+                  htmlFor="Proof of Permanent or Current Address – Passport / Driving License / Voter ID / Ration Card / Utility Bill / Rental Agreement Copy"
                 >
                   Proof of Permanent or Current Address – Passport / Driving
                   License / Voter ID / Ration Card / Utility Bill / Rental
                   Agreement Copy
                 </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.addressProof ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
+                        src={formData.documents.addressProof}
                         alt="Profile"
                         className="object-contain w-full h-full"
                       />
@@ -1135,7 +1362,12 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, addressProof: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1158,9 +1390,11 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                       </div>
                       <input
                         type="file"
-                        id="profileImage"
+                        id="addressProof"
                         className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
+                        onChange={(e) =>
+                          handleFileUpload(e, "addressProof", "documents")
+                        }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
                     </>
@@ -1169,16 +1403,16 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="PAN"
+                  htmlFor="panCard"
                   className="text-sm text-medium text-[#344054]"
                 >
                   PAN
                 </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.panCard ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
+                        src={formData.documents.panCard}
                         alt="Profile"
                         className="object-contain w-full h-full"
                       />
@@ -1186,7 +1420,12 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, panCard: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1209,9 +1448,11 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                       </div>
                       <input
                         type="file"
-                        id="profileImage"
+                        id="panCard"
                         className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
+                        onChange={(e) =>
+                          handleFileUpload(e, "panCard", "documents")
+                        }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
                     </>
@@ -1228,10 +1469,10 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                   Diploma
                 </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.qualification ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
+                        src={formData.documents.qualification}
                         alt="Profile"
                         className="object-contain w-full h-full"
                       />
@@ -1239,7 +1480,12 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, qualification: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1262,9 +1508,11 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                       </div>
                       <input
                         type="file"
-                        id="profileImage"
+                        id="qualification"
                         className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
+                        onChange={(e) =>
+                          handleFileUpload(e, "qualification", "documents")
+                        }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
                     </>
@@ -1273,16 +1521,16 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="Copy of Latest CV / Resume"
+                  htmlFor="resume"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Copy of Latest CV / Resume
                 </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.resume ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
+                        src={formData.documents.resume}
                         alt="Profile"
                         className="object-contain w-full h-full"
                       />
@@ -1290,7 +1538,12 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, resume: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1313,9 +1566,11 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                       </div>
                       <input
                         type="file"
-                        id="profileImage"
+                        id="resume"
                         className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
+                        onChange={(e) =>
+                          handleFileUpload(e, "resume", "documents")
+                        }
                         accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
                       />
                     </>
@@ -1330,18 +1585,23 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                   Other Relevant Documents
                 </Label>
                 <div className="border rounded-md flex flex-col items-center justify-center p-6 h-[100px] relative">
-                  {profileImage ? (
+                  {formData.documents.otherDocs ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={profileImage}
-                        alt="Profile"
+                        src={formData.documents.otherDocs}
+                        alt="Docs"
                         className="object-contain w-full h-full"
                       />
                       <Button
                         variant="ghost"
                         size="icon"
                         className="absolute top-0 right-0"
-                        onClick={() => setProfileImage(null)}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            documents: { ...prev.documents, otherDocs: "" },
+                          }))
+                        }
                       >
                         ×
                       </Button>
@@ -1364,10 +1624,11 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                       </div>
                       <input
                         type="file"
-                        id="profileImage"
+                        id="otherDocs"
                         className="absolute inset-0 opacity-0 cursor-pointer"
-                        // onChange={handleImageUpload}
-                        accept=".svg,.png,.jpg,.jpeg,.gif,.heic"
+                        onChange={(e) =>
+                          handleFileUpload(e, "otherDocs", "documents")
+                        }
                       />
                     </>
                   )}
@@ -1390,7 +1651,10 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
           <label className="text-sm font-medium text-[#344054]">Remarks</label>
           <textarea
             className="mt-2 w-full h-38 border rounded-md p-3  text-gray-800"
-            placeholder="Enter"
+            name="remarks"
+            value={formData.remarks}
+            onChange={handleChange}
+            placeholder="Enter your remarks here"
           />
         </div>
       </div>
