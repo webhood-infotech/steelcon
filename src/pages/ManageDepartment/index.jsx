@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,6 +18,7 @@ import DeleteDepartment from "./DeleteDepartment";
 import EditDepartment from "./EditDepartment";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import axios from "axios";
+
 const ManageDepartment = () => {
   const [departments, setDepartments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,29 +27,85 @@ const ManageDepartment = () => {
   const [openAddNew, setOpenAddNew] = useState(false);
 
   useEffect(() => {
+    // Fetch all departments when component mounts
     getAllDepartments();
   }, []);
+
+  const getAllDepartments = async () => {
+    try {
+      const response = await axios.get(
+        "https://steelconbackend.vercel.app/api/admin/departments"
+      );
+      setDepartments(response.data?.data || []);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+      setDepartments([]);
+    }
+  };
+
+  const searchDepartments = useCallback(
+    async (query) => {
+      try {
+        // If query is empty, fetch all departments
+        if (!query.trim()) {
+          await getAllDepartments();
+          return;
+        }
+
+        // Try API search first
+        const response = await axios.get(
+          `https://steelconbackend.vercel.app/api/admin/search-departments?query=${encodeURIComponent(
+            query
+          )}`
+        );
+
+        // If API returns data, update departments
+        if (response.data?.data?.length > 0) {
+          setDepartments(response.data.data);
+        } else {
+          // Fallback to local filtering
+          const filteredDepartments = departments.filter(
+            (department) =>
+              department.name?.toLowerCase().includes(query.toLowerCase()) ||
+              department.code?.toLowerCase().includes(query.toLowerCase())
+          );
+          setDepartments(filteredDepartments);
+        }
+      } catch (err) {
+        console.error("Error searching departments:", err);
+
+        // Fallback to local filtering if API call fails
+        const filteredDepartments = departments.filter(
+          (department) =>
+            department.name?.toLowerCase().includes(query.toLowerCase()) ||
+            department.code?.toLowerCase().includes(query.toLowerCase())
+        );
+        setDepartments(filteredDepartments);
+      }
+    },
+    [departments]
+  );
+
+  const handleSearchChange = useCallback(
+    (e) => {
+      const query = e.target.value;
+      setSearchQuery(query);
+
+      // Use debounce with setTimeout
+      const debounceTimer = setTimeout(() => {
+        searchDepartments(query);
+      }, 300);
+
+      // Cleanup function to clear timeout
+      return () => clearTimeout(debounceTimer);
+    },
+    [searchDepartments]
+  );
+
   const closeDeleteDialog = () => setOpenDelete(false);
   const closeEditDialog = () => setOpenEdit(false);
   const closeAddNewDialog = () => setOpenAddNew(false);
-  const getAllDepartments = async () => {
-    // fetch all departments
-    try {
-      const response = await axios(
-        "https://steelconbackend.vercel.app/api/admin/departments"
-      );
-      setDepartments(response.data?.data);
 
-      console.log(response.data.data);
-    } catch (err) {
-      console.error(err, "=====================");
-    }
-  };
-  const filteredDepartments = departments.filter(
-    (department) =>
-      department.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      department.code?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
@@ -62,7 +119,7 @@ const ManageDepartment = () => {
               placeholder="Search"
               className="w-[320px] pl-10 border border-[#D0D5DD] placeholder:font-normal placeholder:text-base placeholder:text-[#667085] "
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +168,7 @@ const ManageDepartment = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredDepartments.map((department) => (
+            {departments?.map((department) => (
               <TableRow key={department?._id}>
                 <TableCell className=" w-[784px] py-6 pl-5 text-sm font-medium  text-[#101828]">
                   {department.name}
@@ -130,7 +187,6 @@ const ManageDepartment = () => {
                           variant="ghost"
                           size="icon"
                           onClick={() => setOpenDelete(true)}
-                          // onClick={() => handleDelete(department.id)}
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>

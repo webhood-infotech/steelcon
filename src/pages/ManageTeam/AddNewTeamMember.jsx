@@ -6,39 +6,18 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { Plus, Upload, User } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import EditDepartment from "../ManageDepartment/EditDepartment";
-import AddNewDepartament from "../ManageDepartment/AddNewDepartment";
 
 const AddNewTeamMember = () => {
-  const [managers, setManagers] = useState([
-    { id: "1", name: "Maintenance", code: "L8 8HQ" },
-    { id: "2", name: "Human Resources", code: "CM7 5EY" },
-    { id: "3", name: "Manning", code: "CH66 2RD" },
-    { id: "4", name: "IT", code: "LL14 1ER" },
-    { id: "5", name: "Manning", code: "NE39 1JU" },
-    { id: "6", name: "Operations", code: "HG4 2TE" },
-    { id: "7", name: "HSEQ", code: "ME1 1YL" },
-    { id: "8", name: "Human Resources", code: "SN10 2RP" },
-    { id: "9", name: "HSEQ", code: "KT17 9NL" },
-    { id: "10", name: "Engineering", code: "BT78 4RH" },
-  ]);
+  
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const filteredDepartments = managers.filter(
-    (department) =>
-      department.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      department.code.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  
 
   const [profileImage, setProfileImage] = useState("");
 
@@ -59,40 +38,19 @@ const AddNewTeamMember = () => {
           Add New Employee
         </h1>
         <div className="flex items-center gap-4">
-          <div className="relative">
-            <Input
-              type="search"
-              placeholder="Search"
-              className="w-[320px] pl-10 border border-[#D0D5DD] placeholder:font-normal placeholder:text-base placeholder:text-[#667085] "
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
-          <Dialog>
-            <DialogTrigger>
-              <Button className="gap-2 bg-[#305679] py-4 font-semibold  text-white text-sm">
-                <Plus className="w-4" />
-                Add New
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-white  w-[400px] rounded-2xl p-6">
-              <AddNewDepartament />
-            </DialogContent>
-          </Dialog>
+          <Button
+            className="gap-2 bg-white py-4 font-semibold border border-[#D0D5DD] text-[#344054] text-sm hover:text-white"
+            onClick={() => {
+              // setShowAddNewManager(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="gap-2 bg-[#305679] py-4 font-semibold text-white text-sm"
+          >
+            Submit
+          </Button>
         </div>
       </div>
       <div className="w-full flex justify-between mb-5 ">

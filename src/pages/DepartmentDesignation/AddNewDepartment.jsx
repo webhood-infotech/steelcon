@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
   const [designation, setDesignation] = useState("");
@@ -54,7 +55,7 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
         }
       );
       if (!response.ok) {
-        throw new Error(`Failed to add department: ${response.statusText}`);
+        throw new Error(`Failed to add department: ${response}`);
       }
       const data = await response.json(); // Parse the response
       console.log("Department added successfully:", data);
@@ -64,13 +65,15 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
       setCode("");
       setErrors({ designation: "", code: "" });
       closeAddNewDialog();
+      toast.success("Designation has been added sucessfully.");
       getAllDepartments(); // Refresh the department list
     } catch (err) {
-      console.error("Error submitting department:", err);
+      console.error("Error submitting department:");
       setErrors((prev) => ({
         ...prev,
         designation: "Failed to add department. Please try again.",
       }));
+      toast.error(err.message || "An unexpected error occurred");
     } finally {
       setLoading(false); // Ensure loading state is reset
     }

@@ -1,13 +1,12 @@
 import axios from "axios";
 import React from "react";
+import { toast } from "sonner";
 
 const DeleteDepartment = ({
   departmentId,
   getAllDepartments,
   closeDeleteDialog,
 }) => {
-  console.log(departmentId);
-
   const handleDeleteDepartment = async () => {
     // delete department
     try {
@@ -16,6 +15,7 @@ const DeleteDepartment = ({
       );
       getAllDepartments();
       closeDeleteDialog();
+      toast.success(response?.data?.message);
 
       console.log(response.data);
     } catch (err) {
@@ -34,7 +34,10 @@ const DeleteDepartment = ({
               Are you sure you want to delete this department
             </div>
             <div className="flex justify-end gap-3 mt-5">
-              <button className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
+              <button
+                onClick={closeDeleteDialog}
+                className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white"
+              >
                 Cancel
               </button>
               <button

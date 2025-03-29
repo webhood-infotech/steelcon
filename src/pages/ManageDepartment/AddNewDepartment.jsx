@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { DialogClose } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
   const [departmentName, setDepartmentName] = useState("");
@@ -33,7 +34,7 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
 
     try {
       setLoading(true);
-      const response = await axios.post(
+      await axios.post(
         "https://steelconbackend.vercel.app/api/admin/departments",
         {
           name: departmentName,
@@ -46,10 +47,11 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
       setDepartmentCode("");
       setErrors({ name: "", code: "" });
       closeAddNewDialog();
+      toast.success("Department has been created succesfully.");
       getAllDepartments();
       setLoading(false);
-      console.log(response.data);
     } catch (err) {
+      toast.error(err?.response?.data?.err);
       console.error("Error submitting department:", err);
       setLoading(false);
     }
@@ -110,9 +112,10 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
           <button
             onClick={handleSubmit}
             disabled={loading}
+            type="submit"
             className="cursor-pointer py-2.5 px-4 border border-[#305679] rounded-lg font-semibold text-base text-white bg-[#305679]"
           >
-            Submit
+            {loading ? "Submitting..." : "Submit"}
           </button>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import axios from "axios";
 import React, { useState } from "react";
+import { toast } from "sonner";
 const EditDepartment = ({
   departmentCode,
   departmentId,
@@ -9,20 +10,27 @@ const EditDepartment = ({
   closeEditDialog,
 }) => {
   const [departmentName, setDepartmentName] = useState("");
+  const [loading, setLoading] = useState(false);
   const handleEditDeperment = async () => {
     try {
+      setLoading(true);
       const response = await axios.put(
         `https://steelconbackend.vercel.app/api/admin/departments/${departmentId}`,
         {
           name: departmentName,
         }
       );
+      setLoading(false);
       getAllDepartments();
       closeEditDialog();
+      toast.success("Department name has been updated successfully .");
 
       console.log(response.data);
     } catch (err) {
       console.log(err);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -66,15 +74,16 @@ const EditDepartment = ({
             </div>
           </div>
           <div className="flex justify-end gap-3 mt-5">
-            <div className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
+            <button className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
               Cancel
-            </div>
-            <div
+            </button>
+            <button
               onClick={handleEditDeperment}
+              disabled={loading}
               className="cursor-pointer py-2.5 px-4.5 border border-[#305679] rounded-lg font-semibold text-base text-white bg-[#305679]"
             >
-              Submit
-            </div>
+              {loading ? "Submitting..." : "Submit"}
+            </button>
           </div>
         </div>
       </div>

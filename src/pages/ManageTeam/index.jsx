@@ -17,6 +17,7 @@ import AddNewDepartament from "../ManageDepartment/AddNewDepartment";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avatarImg from "../../assets/sidebarImages/Avatar.png";
 import DeleteDepartment from "../ManageDepartment/DeleteDepartment";
+import AddNewTeamMember from "./AddNewTeamMember";
 const ManageTeam = () => {
   const [departments, setDepartments] = useState([
     {
@@ -122,6 +123,7 @@ const ManageTeam = () => {
     },
   ]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [openAddNewTeam, setOpenAddNewTeam] = useState(false);
   const filteredDepartments = departments.filter(
     (department) =>
       department.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -130,6 +132,9 @@ const ManageTeam = () => {
   // const handleDelete = (id) => {
   //   setDepartments(departments.filter((dept) => dept.id !== id));
   // };
+  if (openAddNewTeam) {
+    return <AddNewTeamMember />;
+  }
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
@@ -160,17 +165,13 @@ const ManageTeam = () => {
               />
             </svg>
           </div>
-          <Dialog>
-            <DialogTrigger>
-              <Button className="gap-2 bg-[#305679] py-4 font-semibold  text-white text-sm">
-                <Plus className="w-4" />
-                Add New
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-white  w-[400px] rounded-2xl p-6">
-              <AddNewDepartament />
-            </DialogContent>
-          </Dialog>
+          <Button
+            onClick={() => setOpenAddNewTeam(true)}
+            className="gap-2 bg-[#305679] py-4 font-semibold  text-white text-sm"
+          >
+            <Plus className="w-4" />
+            Add New
+          </Button>
         </div>
       </div>
       <div className="rounded-md  border-b border-[#EAECF0]">
