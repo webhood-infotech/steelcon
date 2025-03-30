@@ -11,13 +11,10 @@ import {
 } from "@/components/ui/table";
 import { Plus, Trash2 } from "lucide-react";
 import { Pencil } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import EditDepartment from "../ManageDepartment/EditDepartment";
-import AddNewDepartament from "../ManageDepartment/AddNewDepartment";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avatarImg from "../../assets/sidebarImages/Avatar.png";
-import DeleteDepartment from "../ManageDepartment/DeleteDepartment";
 import AddNewTeamMember from "./AddNewTeamMember";
+import EditTeamMember from "./EditTeamMember";
 const ManageTeam = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +23,7 @@ const ManageTeam = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const [showAddNewEmployee, setShowAddNewEmployee] = useState(false);
   const [showEditTeamMember, setShowEditTeamMember] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
   const filteredEmployees = employees.filter(
     (employee) =>
       employee.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -44,7 +42,6 @@ const ManageTeam = () => {
         "https://steelconbackend.vercel.app/api/admin/employees"
       );
       const result = await response.json();
-      console.log(result);
 
       if (result.success) {
         setEmployees(result.data);
@@ -77,7 +74,6 @@ const ManageTeam = () => {
       date.getFullYear()
     ).slice(2)}`;
   };
-  console.log(showAddNewEmployee);
 
   if (showAddNewEmployee) {
     return (
@@ -92,6 +88,9 @@ const ManageTeam = () => {
       <EditTeamMember
         setShowEditTeamMember={setShowEditTeamMember}
         fetchEmployees={fetchEmployees}
+        employeeData={employees[editIndex]}
+    
+
       />
     );
   }
@@ -160,7 +159,7 @@ const ManageTeam = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredEmployees.map((employee) => (
+            {filteredEmployees.map((employee, index) => (
               <TableRow key={employee._id}>
                 <TableCell className="flex gap-4 items-center w-[358px] py-6 pl-5 text-sm font-medium  text-[#101828]">
                   <Avatar>
@@ -216,7 +215,14 @@ const ManageTeam = () => {
                       </DialogContent>
                     </Dialog> */}
 
-                    <Button variant="ghost" size="icon">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setEditIndex(index);
+                        setShowEditTeamMember(true);
+                      }}
+                    >
                       <Pencil className="h-3 w-3" />
                     </Button>
                   </div>

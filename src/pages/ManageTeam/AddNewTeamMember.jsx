@@ -30,6 +30,7 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
     sickLeaves: "4",
     isHR: false,
     resignDeduction: "",
+    employeeId:"",
     joiningDate: "",
     designation: "",
     department: "",
@@ -502,14 +503,15 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
                   id="employeeId"
                   name="employeeId"
                   type="text"
-                  onChange={handleChange}
-                  value={formData.employeeId}
+                  // onChange={handleChange}
+                  // value={formData.employeeId}
+                  disabled={true}
                   placeholder="Enter"
                   className="border border-[#D0D5 DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
-                {errors.lastName && (
+                {/* {errors.lastName && (
                   <p className="text-red-500 text-xs">{errors.lastName}</p>
-                )}
+                )} */}
               </div>
               <div className="space-y-2">
                 <Label
