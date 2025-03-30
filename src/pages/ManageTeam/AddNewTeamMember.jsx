@@ -78,7 +78,6 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
     remarks: "",
   });
 
-  const [profileImage, setProfileImage] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   console.log(formData);

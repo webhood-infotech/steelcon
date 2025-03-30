@@ -104,11 +104,9 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
           </div>
         </div>
         <div className="flex justify-end gap-3 mt-5">
-          <DialogClose asChild>
-            <button className="cursor-pointer py-2.5 px-4 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
+            <button onClick={closeAddNewDialog} className="cursor-pointer py-2.5 px-4 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
               Cancel
             </button>
-          </DialogClose>
           <button
             onClick={handleSubmit}
             disabled={loading}
