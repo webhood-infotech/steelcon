@@ -15,7 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Upload } from "lucide-react";
 import { toast } from "sonner";
 
-const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
+const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -33,6 +33,7 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
     designation: "",
     department: "",
     teamManager: "",
+    employeeId: "",
     reportTo: "",
     deptEmail: "",
     workEmail: "",
@@ -204,6 +205,9 @@ const AddNewManagers = ({ showAddNewManager, setShowAddNewManager }) => {
         { headers: { "Content-Type": "application/json" } }
       );
       if (response.status === 200 || response.status === 201) {
+        setShowAddNewManager(false);
+        fetchManagers();
+
         toast.success("Manager added successfully");
         setFormData({ ...formData }); // Reset form
       }

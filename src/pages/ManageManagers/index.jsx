@@ -66,6 +66,7 @@ const ManageManagers = () => {
       <AddNewManagers
         showAddNewManager={showAddNewManager}
         setShowAddNewManager={setShowAddNewManager}
+        fetchManagers={fetchManagers}
       />
     );
   }

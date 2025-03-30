@@ -79,7 +79,7 @@ const ManageTeam = () => {
   console.log(showAddNewEmployee);
 
   if (showAddNewEmployee) {
-    return <AddNewTeamMember setShowAddNewEmployee={setShowAddNewEmployee} />;
+    return <AddNewTeamMember setShowAddNewEmployee={setShowAddNewEmployee} fetchEmployees={fetchEmployees} />;
   }
   return (
     <div className="container mx-auto mt-8 px-3">

@@ -14,8 +14,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { Plus, Upload, User } from "lucide-react";
 import { toast } from "sonner";
+import axios from "axios";
 
-const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
+const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -24,16 +25,16 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
     personalEmail: "",
     personalMobile: "",
     emergencyContact: { name: "", mobile: "" },
-    workDays: "",
-    paidLeaves: "",
-    sickLeaves: "",
+    workDays: "5",
+    paidLeaves: "4",
+    sickLeaves: "4",
     isHR: false,
     resignDeduction: "",
     joiningDate: "",
     designation: "",
     department: "",
     teamManager: "",
-    reportTo: "",
+    reportTo: "kkkkk",
     deptEmail: "",
     workEmail: "",
     password: "Temp@1234",
@@ -168,12 +169,14 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://steelconbackend.vercel.app/api/admin/managers",
+        "https://steelconbackend.vercel.app/api/admin/employees",
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
       if (response.status === 200 || response.status === 201) {
-        toast.success("Manager added successfully");
+        setShowAddNewEmployee(false);
+        fetchEmployees();
+        toast.success("Employee added successfully.");
         setFormData({ ...formData }); // Reset form
       }
     } catch (error) {
@@ -211,6 +214,7 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
       reader.readAsDataURL(file);
     }
   };
+  console.log(formData);
 
   return (
     <div className="container mx-auto mt-8 px-3">
@@ -255,8 +259,7 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                 </Label>
                 <Input
                   id="firstName"
-                  placeholder="Enter your First Name"
-                  // defaultValue=""
+                  name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
@@ -375,17 +378,15 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
               <div className="space-y-2">
                 <Label
                   htmlFor="personalMobile"
-                  id="personalMobile"
-                  name="personalMobile"
-                  value={formData.personalMobile}
-                  onChange={handleChange}
-                  placeholder="Enter"
                   className="text-sm text-medium text-[#344054]"
                 >
                   Personal Mobile No.
                 </Label>
                 <Input
-                  id="mobile"
+                  id="personalMobile"
+                  name="personalMobile"
+                  value={formData.personalMobile}
+                  onChange={handleChange}
                   placeholder="Enter"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
@@ -443,7 +444,7 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                 </Label>
                 <RadioGroup
                   defaultValue="yes"
-                  className="flex items-center space-x-18 pt-2"
+                  className="flex items-center space-x-15 pt-2"
                 >
                   <div className="flex  items-center space-x-2 ">
                     <RadioGroupItem
@@ -499,8 +500,10 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                 </Label>
                 <Input
                   id="employeeId"
-                  name="lastName"
+                  name="employeeId"
+                  type="text"
                   onChange={handleChange}
+                  value={formData.employeeId}
                   placeholder="Enter"
                   className="border border-[#D0D5 DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
@@ -671,9 +674,11 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                   Total CTC
                 </Label>
                 <Input
-                  id="Total CTC"
+                  id="ctc"
+                  name="ctc"
+                  value={formData.salary.ctc}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  // defaultValue="Olivia"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
@@ -727,9 +732,11 @@ const AddNewTeamMember = ({ setShowAddNewEmployee }) => {
                   Basic+DA
                 </Label>
                 <Input
-                  id="Basic+DA"
+                  htmlFor="basicDA"
+                  name="basicDA"
+                  value={formData.salary.basicDA}
+                  onChange={(e) => handleChange(e, "salary")}
                   placeholder="Enter"
-                  // defaultValue="Rhye"
                   className="border border-[#D0D5DD] py-2.5 px-3.5  placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
                 />
               </div>
