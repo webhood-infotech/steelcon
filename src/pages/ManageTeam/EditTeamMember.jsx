@@ -18,7 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avatarImg from "../../assets/sidebarImages/Avatar.png";
 import DeleteDepartment from "../ManageDepartment/DeleteDepartment";
 import AddNewTeamMember from "./AddNewTeamMember";
-const ManageTeam = () => {
+const EditTeamMember = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -79,22 +79,6 @@ const ManageTeam = () => {
   };
   console.log(showAddNewEmployee);
 
-  if (showAddNewEmployee) {
-    return (
-      <AddNewTeamMember
-        setShowAddNewEmployee={setShowAddNewEmployee}
-        fetchEmployees={fetchEmployees}
-      />
-    );
-  }
-  if (showEditTeamMember) {
-    return (
-      <EditTeamMember
-        setShowEditTeamMember={setShowEditTeamMember}
-        fetchEmployees={fetchEmployees}
-      />
-    );
-  }
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
@@ -230,4 +214,4 @@ const ManageTeam = () => {
   );
 };
 
-export default ManageTeam;
+export default EditTeamMember;

@@ -12,7 +12,6 @@ import {
 import { Plus } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import EditDepartment from "../ManageDepartment/EditDepartment";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
 import AddNewManagers from "./AddNewManagers";
@@ -23,22 +22,21 @@ const ManageManagers = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddNewManager, setShowAddNewManager] = useState(false);
-
+  const fetchManagers = async () => {
+    try {
+      const response = await axios.get(
+        "https://steelconbackend.vercel.app/api/admin/managers"
+      );
+      setManagers(response.data?.data || []);
+      console.log(response.data.data);
+      setIsLoading(false);
+    } catch (err) {
+      console.error("Error fetching managers:", err);
+      setError(err.message);
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchManagers = async () => {
-      try {
-        const response = await axios.get(
-          "https://steelconbackend.vercel.app/api/admin/managers"
-        );
-        setManagers(response.data?.data || []);
-        console.log(response.data.data);
-        setIsLoading(false);
-      } catch (err) {
-        console.error("Error fetching managers:", err);
-        setError(err.message);
-        setIsLoading(false);
-      }
-    };
     fetchManagers();
   }, []);
   const getAvatarFallback = (firstName, lastName) => {

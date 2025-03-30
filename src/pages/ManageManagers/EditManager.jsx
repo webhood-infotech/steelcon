@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import React from "react";
 
-const EditDepartment = ({ departmentCode }) => {
+const EditManager = ({ departmentCode }) => {
   console.log(departmentCode);
   return (
     <>
@@ -56,4 +56,4 @@ const EditDepartment = ({ departmentCode }) => {
   );
 };
 
-export default EditDepartment;
+export default EditManager;
