@@ -80,7 +80,6 @@ const ManageTeam = () => {
       <AddNewTeamMember
         setShowAddNewEmployee={setShowAddNewEmployee}
         fetchEmployees={fetchEmployees}
-    
       />
     );
   }
@@ -90,8 +89,6 @@ const ManageTeam = () => {
         fetchEmployees={fetchEmployees}
         employeeData={employees[editIndex]}
         setShowEditTeamMember={setShowEditTeamMember}
-    
-
       />
     );
   }

@@ -18,7 +18,7 @@ import AddNewDepartament from "@/pages/ManageDepartment/AddNewDepartment";
 import AddNewManagers from "@/pages/ManageManagers/AddNewManagers";
 import AddNewTeamMember from "@/pages/ManageTeam/AddNewTeamMember";
 import DepartmentDesignation from "@/pages/DepartmentDesignation";
-import ManageAttendence from "@/pages/Attendence/ManagerAttendence";
+import ManageAttendence from "@/pages/Attendence";
 const router = createBrowserRouter([
   {
     path: "/",

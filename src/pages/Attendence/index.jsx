@@ -86,27 +86,28 @@ export default function ManageAttendence() {
     },
   ];
   return (
-    <div className="w-full mx-auto p-6 bg-white rounded-lg">
-      <h1 className="text-2xl font-bold mb-6">Manage Attendance</h1>
-      <Tabs defaultValue="manager" className="w-full">
-        <TabsList className="w-full max-w-[200px] grid grid-cols-2 mb-6 border-b rounded-none h-auto p-0">
+    <div className="w-full mx-auto px-3 mt-8">
+      <h1 className="text-3xl font-semibold mb-6 text-[#101828]">
+        Manage Attendance
+      </h1>
+      <Tabs defaultValue="manager" className="w-full ">
+        <TabsList className=" w-full max-w-[280px] grid grid-cols-2 mb-6 rounded-none h-auto p-0 ">
           <TabsTrigger
             value="manager"
-            className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:shadow-none py-2"
+            className="rounded-none data-[state=active]:border-b-blue-600 data-[state=active]:shadow-none py-2 data-[state=active]:text-sm font-semibold text-[#213B54]"
           >
             Manager
           </TabsTrigger>
           <TabsTrigger
             value="employee"
-            className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:shadow-none py-2"
+            className="rounded-none  data-[state=active]:border-b-blue-600 data-[state=active]:shadow-none py-2"
           >
             Employee
           </TabsTrigger>
         </TabsList>
-
         <TabsContent value="manager" className="mt-0">
           <div className="w-full">
-            <div className="grid grid-cols-4 gap-4 py-4 px-4 bg-gray-50 rounded-t-lg text-sm font-medium text-gray-500">
+            <div className="grid grid-cols-4 gap-4 py-4 px-4 border-b-amber-700 bg-gray-50 rounded-t-lg text-sm font-medium text-gray-500">
               <div>Name</div>
               <div className="col-span-2">
                 Attendance ( Present days / Working days)
