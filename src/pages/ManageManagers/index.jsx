@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
 import { Pencil } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
 import AddNewManagers from "./AddNewManagers";
+import EditManager from "./EditManager";
 
 const ManageManagers = () => {
   const [managers, setManagers] = useState([]);
@@ -22,6 +22,8 @@ const ManageManagers = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddNewManager, setShowAddNewManager] = useState(false);
+  const [showEditManager, setShowEditManager] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
   const fetchManagers = async () => {
     try {
       const response = await axios.get(
@@ -67,6 +69,18 @@ const ManageManagers = () => {
       />
     );
   }
+  if (showEditManager) {
+    return (
+      <EditManager
+        managerData={managers[editIndex]}
+        fetchManagers={fetchManagers}
+        setShowEditManager={setShowEditManager}
+      />
+    );
+  }
+  console.log(editIndex)
+  
+  // console.log(managers[editIndex],"mng",managers,editIndex)
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
@@ -132,7 +146,7 @@ const ManageManagers = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredManagers.map((manager) => (
+            {filteredManagers.map((manager, index) => (
               <TableRow key={manager._id}>
                 <TableCell className="flex gap-4 items-center w-[300px] py-6 pl-5 text-sm font-medium  text-[#101828]">
                   <Avatar>
@@ -163,7 +177,10 @@ const ManageManagers = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => setShowAddNewManager(true)}
+                    onClick={() => {
+                      setShowEditManager(true);
+                      setEditIndex(index);
+                    }}
                   >
                     <Pencil className="h-3 w-3" />
                   </Button>
