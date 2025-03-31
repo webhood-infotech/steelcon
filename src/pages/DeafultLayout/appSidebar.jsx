@@ -38,7 +38,7 @@ const data = {
     {
       title: "Dashboard",
       url: "/",
-      image: "/src/assets/images/dashboardicon.png",
+      image: dashboardIcon,
       isActive: true,
     },
 
