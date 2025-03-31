@@ -24,14 +24,26 @@ import { NavMain } from "./navMain";
 import { NavUser } from "./navUser";
 import { NavSupportSetting } from "./navSupportSetting";
 import { Link } from "react-router-dom";
-import dashboardIcon from "../../../src/assets/images/dashboardicon.png"
-
-// This is sample data.
+import avatar from "../../assets/sidebarImages/Avatar.png";
+import dashboardIcon from "../../../src/assets/sidebarImages/dashboardicon.png";
+import Department from "../../assets/sidebarImages/manageDepartment.png";
+import magaer from "../../assets/sidebarImages/manageManager.png";
+import manageTeam from "../../assets/sidebarImages/ManageTeam.png";
+import Attendence from "../../assets/sidebarImages/manageAttendence.png";
+import Application from "../../assets/sidebarImages/LeaveApplication.png";
+import payout from "../../assets/sidebarImages/PayoutDeatail.png";
+import Action from "../../assets/sidebarImages/DisciplineAction.png";
+import offer from "../../assets/sidebarImages/offerletter.png";
+import trainning from "../../assets/sidebarImages/TrainingModule.png";
+import Announcement from "../../assets/sidebarImages/Announcement.png";
+import companyPolicie from "../../assets/sidebarImages/CompanyPolicies.png";
+import support from "../../assets/sidebarImages/supportRequest.png";
+import setting from "../../assets/sidebarImages/setting.png";
 const data = {
   user: {
     name: "Olivia Rhye",
     email: "olivia@untitledui.com",
-    image: dashboardIcon,
+    image: avatar,
     // avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
@@ -41,65 +53,64 @@ const data = {
       image: dashboardIcon,
       isActive: true,
     },
-
     {
       title: "Manage Department",
       url: "/manage-department",
-      image: "/src/assets/sidebarImages/Icon(2).png",
+      image: Department,
     },
     {
       title: " Department Designation",
       url: "/department-designation",
-      image: "/src/assets/sidebarImages/Icon(2).png",
+      image: Department,
     },
     {
       title: "Manage Managers",
       url: "/manage-managers",
-      image: "/src/assets/sidebarImages/layers-three-01(3).png",
+      image: magaer,
     },
     {
       title: "Manage Team",
       url: "/manage-team",
-      image: "/src/assets/sidebarImages/Icon(3).png",
+      image: manageTeam,
     },
     {
       title: "Attendance",
       url: "/manage-attendance",
-      image: "/src/assets/sidebarImages/Icon(4).png",
+      image: Attendence,
     },
     {
       title: "Leave Application",
       url: "#",
-      image: "/src/assets/sidebarImages/Icon(9).png",
+      image: Application,
     },
     {
       title: "Payout Details",
       url: "#",
-      image: "/src/assets/sidebarImages/Icon(5).png",
+      image: payout,
     },
     {
       title: "Discipline Action",
       url: "#",
-      image: "/src/assets/sidebarImages/Icon(10).png",
+      image: Action,
       icon: Settings2,
     },
     {
       title: "Offer Letter",
-      image: "/src/assets/sidebarImages/Icon(8).png",
+      image: offer,
     },
     {
       title: "Announcement",
-      image: "/src/assets/sidebarImages/Icon(11).png",
+      image: Announcement,
       icon: Settings2,
     },
     {
       title: "Training Module",
-      image: "/src/assets/sidebarImages/Icon(12).png",
+      image: trainning,
       icon: Settings2,
     },
     {
       title: "Company Policies",
-      image: "/src/assets/sidebarImages/Icon(7).png",
+      image: companyPolicie,
       icon: Settings2,
     },
   ],
@@ -107,13 +118,13 @@ const data = {
     {
       title: "Support Request",
       url: "#",
-      image: "/src/assets/sidebarImages/life-buoy-01.png",
+      image: support,
       isActive: true,
     },
     {
       title: "Settings",
       url: "#",
-      image: "/src/assets/sidebarImages/settings-01 (1).png",
+      image: setting,
       isActive: true,
     },
   ],
