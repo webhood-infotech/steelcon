@@ -6,7 +6,6 @@ const DeleteDepartment = ({
   getAllDepartments,
   closeDeleteDialog,
 }) => {
-  console.log(departmentId);
   const handleDeleteDepartment = async () => {
     try {
       const response = await axios.delete(
@@ -16,7 +15,6 @@ const DeleteDepartment = ({
       closeDeleteDialog();
       toast.success("Department has been deleted sucessfully");
 
-      console.log(response.data);
     } catch (err) {
       console.log(err);
     }

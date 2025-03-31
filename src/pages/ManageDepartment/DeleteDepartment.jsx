@@ -17,7 +17,6 @@ const DeleteDepartment = ({
       closeDeleteDialog();
       toast.success(response?.data?.message);
 
-      console.log(response.data);
     } catch (err) {
       console.log(err);
     }

@@ -80,15 +80,16 @@ const ManageTeam = () => {
       <AddNewTeamMember
         setShowAddNewEmployee={setShowAddNewEmployee}
         fetchEmployees={fetchEmployees}
+    
       />
     );
   }
   if (showEditTeamMember) {
     return (
       <EditTeamMember
-        setShowEditTeamMember={setShowEditTeamMember}
         fetchEmployees={fetchEmployees}
         employeeData={employees[editIndex]}
+        setShowEditTeamMember={setShowEditTeamMember}
     
 
       />

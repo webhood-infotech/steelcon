@@ -65,7 +65,6 @@ const DepartmentDesignation = () => {
         .includes(searchQuery.toLowerCase()) ||
         department.code.toLowerCase().includes(searchQuery.toLowerCase()))
   );
-  console.log(filteredDepartments);
 
   return (
     <div className="container mx-auto mt-8 px-3">

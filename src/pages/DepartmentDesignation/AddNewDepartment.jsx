@@ -58,7 +58,6 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
         throw new Error(`Failed to add department: ${response}`);
       }
       const data = await response.json(); // Parse the response
-      console.log("Department added successfully:", data);
 
       // Reset state and close dialog only on success
       setDesignation("");

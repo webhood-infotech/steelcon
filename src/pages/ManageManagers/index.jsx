@@ -28,7 +28,6 @@ const ManageManagers = () => {
         "https://steelconbackend.vercel.app/api/admin/managers"
       );
       setManagers(response.data?.data || []);
-      console.log(response.data.data);
       setIsLoading(false);
     } catch (err) {
       console.error("Error fetching managers:", err);

@@ -10,7 +10,6 @@ const CheckEmail = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  console.log(email, "errfer");
   const handleClick = async () => {
     try {
       setLoading(true);

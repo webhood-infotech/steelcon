@@ -215,7 +215,6 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
       reader.readAsDataURL(file);
     }
   };
-  console.log(formData);
 
   return (
     <div className="container mx-auto mt-8 px-3">

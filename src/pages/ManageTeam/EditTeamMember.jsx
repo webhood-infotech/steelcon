@@ -17,9 +17,9 @@ import { toast } from "sonner";
 import axios from "axios";
 
 const EditTeamMember = ({
-  setShowAddNewEmployee,
   fetchEmployees,
   employeeData,
+  setShowEditTeamMember,
 }) => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -85,10 +85,9 @@ const EditTeamMember = ({
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  console.log(formData);
 
   useEffect(() => {
-    const { empId, ...filteredData } = employeeData; 
+    const { empId, ...filteredData } = employeeData;
     if (filteredData) {
       setFormData((prev) => ({
         ...prev,
@@ -205,10 +204,10 @@ const EditTeamMember = ({
         { headers: { "Content-Type": "application/json" } }
       );
       if (response.status === 200 || response.status === 201) {
-        setShowAddNewEmployee(false);
         fetchEmployees();
         toast.success("Employee added successfully.");
         setFormData({ ...formData }); // Reset form
+        setShowEditTeamMember(false);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to add manager");
@@ -246,7 +245,6 @@ const EditTeamMember = ({
     }
   };
 
-  console.log(formData);
 
   return (
     <div className="container mx-auto mt-8 px-3">
@@ -259,7 +257,7 @@ const EditTeamMember = ({
             className="gap-2 bg-white py-4 font-semibold border border-[#D0D5DD] text-[#344054] text-sm hover:bg-[#344054] hover:text-white"
             onClick={() => {
               setFormData({ ...formData });
-              setShowAddNewEmployee(false);
+              setShowEditTeamMember(false);
             }}
           >
             Cancel

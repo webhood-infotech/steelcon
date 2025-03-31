@@ -52,7 +52,6 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
       setLoading(false);
     } catch (err) {
       toast.error(err?.response?.data?.err);
-      console.error("Error submitting department:", err);
       setLoading(false);
     }
   };

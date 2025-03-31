@@ -120,7 +120,6 @@ const CreatePassword = () => {
         throw new Error(data.message || "Registration failed");
       }
       // Handle successful registration
-      console.log("Registration successful:", data);
       navigate("/");
       // You might want to redirect or show a success message here
     } catch (err) {

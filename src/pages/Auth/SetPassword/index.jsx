@@ -24,7 +24,6 @@ const SetPassword = () => {
       setToken(tokenFromUrl);
     }
   }, [location]);
-  console.log(token, "hbhu");
 
   const validatePassword = (pass) => {
     return pass.length >= 8;

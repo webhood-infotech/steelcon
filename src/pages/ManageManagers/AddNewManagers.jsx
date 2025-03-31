@@ -129,7 +129,6 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
       reader.readAsDataURL(file);
     }
   };
-  console.log(formData);
 
   // Validation function
   const validateForm = () => {
@@ -217,7 +216,6 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
       setLoading(false);
     }
   };
-  console.log(formData);
 
   return (
     <div className="container mx-auto mt-8 px-3">

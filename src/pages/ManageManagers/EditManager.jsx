@@ -3,7 +3,6 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import React from "react";
 
 const EditManager = ({ departmentCode }) => {
-  console.log(departmentCode);
   return (
     <>
       <div className="">
