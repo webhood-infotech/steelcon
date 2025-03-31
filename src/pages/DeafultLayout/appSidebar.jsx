@@ -24,13 +24,14 @@ import { NavMain } from "./navMain";
 import { NavUser } from "./navUser";
 import { NavSupportSetting } from "./navSupportSetting";
 import { Link } from "react-router-dom";
+import dashboardIcon from "../../../src/assets/images/dashboardicon.png"
 
 // This is sample data.
 const data = {
   user: {
     name: "Olivia Rhye",
     email: "olivia@untitledui.com",
-    image: "/src/assets/sidebarImages/Avatar.png",
+    image: dashboardIcon,
     // avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
