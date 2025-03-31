@@ -229,7 +229,7 @@ const EditManager = ({ managerData, setShowEditManager, fetchManagers }) => {
       if (response.status === 200 || response.status === 201) {
         setShowEditManager(false);
         fetchManagers();
-        setShowEditManager(true);
+        setShowEditManager(fal);
 
         toast.success("Manager added successfully");
         setFormData({ ...formData }); // Reset form
