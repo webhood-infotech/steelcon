@@ -1,5 +1,8 @@
 import * as React from "react";
 import logo from "../../assets/images/logo.png";
+import avatar from "../../assets/sidebarImages/Avatar.png";
+import icon1 from "../../assets/sidebarImages/Icon(1).png";
+// Import other images similarly
 import {
   AudioWaveform,
   BookOpen,
@@ -29,14 +32,14 @@ const data = {
   user: {
     name: "Olivia Rhye",
     email: "olivia@untitledui.com",
-    image: "/src/assets/sidebarImages/Avatar.png",
+    image: avatar,
     // avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
     {
       title: "Dashboard",
       url: "/",
-      image: "/src/assets/sidebarImages/Icon(1).png",
+      image: icon1,
       isActive: true,
     },
 
