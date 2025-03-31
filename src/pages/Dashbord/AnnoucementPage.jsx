@@ -97,7 +97,6 @@ export default function AnnouncementsPage() {
       category: "Design",
     });
   };
-
   return (
     <div className="container mx-auto py-6">
       <Card className="border-0 shadow-sm">

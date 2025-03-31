@@ -113,7 +113,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/manager-attendance",
+    path: "/manage-attendance",
     element: (
       <DeafultLayout>
         <ManageAttendence />
@@ -121,5 +121,4 @@ const router = createBrowserRouter([
     ),
   },
 ]);
-
 export default router;

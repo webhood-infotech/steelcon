@@ -36,7 +36,7 @@ const data = {
     {
       title: "Dashboard",
       url: "/",
-      image: "/src/assets/sidebarImages/Icon (1).png",
+      image: "/src/assets/sidebarImages/Icon(1).png",
       isActive: true,
     },
 
@@ -62,7 +62,7 @@ const data = {
     },
     {
       title: "Attendance",
-      url: "#",
+      url: "/manage-attendance",
       image: "/src/assets/sidebarImages/Icon (4).png",
     },
     {
