@@ -1,7 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Eye } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 export default function ManageAttendence() {
   const employees = [
     {
@@ -109,9 +108,7 @@ export default function ManageAttendence() {
           <div className="w-full">
             <div className="grid grid-cols-4 gap-4 py-4 px-4 border-b-amber-700 bg-gray-50 rounded-t-lg text-sm font-medium text-gray-500">
               <div className="col-span-2">Name</div>
-              <div className="">
-                Attendance ( Present days / Working days)
-              </div>
+              <div className="">Attendance ( Present days / Working days)</div>
               <div className="flex justify-between">
                 <span>Department</span>
                 <span>Action Items</span>
@@ -143,12 +140,6 @@ export default function ManageAttendence() {
                         }}
                       />
                     </div>
-
-                    {/* {employee.name === "Arlene McCoy" && (
-                      <Badge className="bg-blue-600 text-white rounded-full h-6 w-6 flex items-center justify-center p-0 text-xs">
-                        6/6
-                      </Badge>
-                    )} */}
 
                     <span className="text-sm text-gray-600">
                       {employee.presentDays}/{employee.workingDays}
