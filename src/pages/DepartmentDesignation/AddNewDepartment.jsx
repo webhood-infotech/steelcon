@@ -102,7 +102,13 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
               <option value="Engineering">Engineering</option>
               <option value="Marketing">Marketing</option>
               <option value="Sales">Sales</option>
+              <option value="Sales">IT</option>
+              <option value="Sales">Developer</option>
               <option value="HR">HR</option>
+              <option value="HR">Testing</option>
+              <option value="HR">Manitence</option>
+              <option value="HR">Ai</option>
+              <option value="HR">Opertional</option>
             </select>
             {errors.designation && (
               <p className="text-red-500 text-sm">{errors.designation}</p>
