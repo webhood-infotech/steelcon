@@ -19,6 +19,8 @@ import EditDepartment from "./EditDepartment";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import axios from "axios";
 import DepartmentView from "./DepartmentView";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/loadingSlice";
 
 const ManageDepartment = () => {
   const [departments, setDepartments] = useState([]);
@@ -28,12 +30,15 @@ const ManageDepartment = () => {
   // const [departmentDetail, setDerpartmentDetail] = useState();
   const [editingDepartmentId, setEditingDepartmentId] = useState(null);
   const [deletingDepartmentId, setDeletingDepartmentId] = useState(null);
+  const dispatch = useDispatch();
   useEffect(() => {
     // Fetch all departments when component mounts
+
     getAllDepartments();
   }, []);
   const getAllDepartments = async () => {
     try {
+      dispatch(setLoading(true));
       const response = await axios.get(
         "https://steelconbackend.vercel.app/api/admin/departments"
       );
@@ -41,6 +46,8 @@ const ManageDepartment = () => {
     } catch (err) {
       console.error("Error fetching departments:", err);
       setDepartments([]);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
   const searchDepartments = useCallback(
@@ -51,6 +58,7 @@ const ManageDepartment = () => {
           await getAllDepartments();
           return;
         }
+        dispatch(setLoading(true));
 
         // Try API search first
         const response = await axios.get(
@@ -58,7 +66,7 @@ const ManageDepartment = () => {
             query
           )}`
         );
-       
+
         // If API returns data, update departments
         if (response.data?.data?.length > 0) {
           setDepartments(response.data.data);
@@ -81,6 +89,8 @@ const ManageDepartment = () => {
             department.code?.toLowerCase().includes(query.toLowerCase())
         );
         setDepartments(filteredDepartments);
+      } finally {
+        dispatch(setLoading(false));
       }
     },
     [departments]
