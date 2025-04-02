@@ -8,9 +8,9 @@ const initialState = {
     resetPasswordToken: null,
     isFirstUser: true,
     username: null,
-    isAuthenticated: !!localStorage.getItem("token"),
   },
   token: localStorage.getItem("token") || null,
+  isAuthenticated: !!localStorage.getItem("token"),
 };
 
 const authSlice = createSlice({
@@ -28,11 +28,11 @@ const authSlice = createSlice({
         isFirstUser,
         resetPasswordToken,
       };
-      state.isAuthenticated = true;
     },
     setToken: (state, action) => {
       state.token = action.payload;
       localStorage.setItem("token", action.payload);
+      state.isAuthenticated = !!action.payload;
     },
     clearAuth: (state) => {
       state.user = {
@@ -41,9 +41,9 @@ const authSlice = createSlice({
         email: null,
         resetPasswordToken: null,
         isFirstUser: false,
-        isAuthenticated: false,
       };
       state.token = null;
+      state.isAuthenticated = false;
       localStorage.removeItem("token");
     },
   },

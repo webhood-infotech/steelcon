@@ -20,6 +20,7 @@ import AddNewTeamMember from "@/pages/ManageTeam/AddNewTeamMember";
 import DepartmentDesignation from "@/pages/DepartmentDesignation";
 import ManageAttendence from "@/pages/Attendence";
 import AttendanceReport from "@/pages/Report";
+import LeaveApplication from "@/pages/LeaveApplication";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -126,6 +127,14 @@ const router = createBrowserRouter([
     element: (
       <DeafultLayout>
         <AttendanceReport />
+      </DeafultLayout>
+    ),
+  },
+  {
+    path: "/leave-application",
+    element: (
+      <DeafultLayout>
+        <LeaveApplication />
       </DeafultLayout>
     ),
   },

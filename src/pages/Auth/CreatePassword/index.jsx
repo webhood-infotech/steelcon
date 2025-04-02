@@ -120,7 +120,7 @@ const CreatePassword = () => {
         throw new Error(data.message || "Registration failed");
       }
       // Handle successful registration
-      navigate("/");
+      navigate("/login");
       // You might want to redirect or show a success message here
     } catch (err) {
       setErrors((prev) => ({

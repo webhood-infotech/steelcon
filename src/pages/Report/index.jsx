@@ -87,9 +87,11 @@ const AttendanceReport = () => {
   };
 
   return (
-    <Card className="w-full  mx-auto">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-xl font-bold">Attendance Report</CardTitle>
+    <Card className="w-full mx-auto !border-0 shadow-none ">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 !border-b border-[#EAECF0]">
+        <CardTitle className="text-lg font-semibold">
+          Attendance Report
+        </CardTitle>
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-1.5">
@@ -133,7 +135,6 @@ const AttendanceReport = () => {
               ))}
             </div>
           </div>
-
           {months.map((month) => (
             <div key={month} className="contents">
               <div className="h-8 flex items-center text-sm">{month}</div>
@@ -142,7 +143,6 @@ const AttendanceReport = () => {
                   const status = attendanceData[month]?.[index] || "";
                   const isSelected =
                     selected.month === month && selected.day === day;
-
                   return (
                     <button
                       key={`${month}-${day}`}
@@ -162,7 +162,6 @@ const AttendanceReport = () => {
               </div>
             </div>
           ))}
-
           <div className="text-sm font-medium text-muted-foreground pt-4">
             Days
           </div>

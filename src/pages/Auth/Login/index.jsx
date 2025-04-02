@@ -4,7 +4,7 @@ import { Star, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/redux/authSlice";
+import { setToken, setUser } from "@/redux/authSlice";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -82,7 +82,7 @@ const Login = () => {
       dispatch(setUser(response?.data?.loggedInUser));
       if (response.data) {
         if (response.data.token) {
-          localStorage.setItem("token", response.data.token);
+          dispatch(setToken(response.data.token));
 
           // if (formData.rememberMe) {
           //   localStorage.setItem("userEmail", formData.email);
@@ -90,6 +90,7 @@ const Login = () => {
           //   localStorage.removeItem("userEmail");
           // }
         }
+        // Handle navigation based on user status
         if (response.data?.loggedInUser?.isFirstUser === true) {
           navigate("/createpassword");
         } else {
