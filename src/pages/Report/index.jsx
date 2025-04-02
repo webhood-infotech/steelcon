@@ -87,7 +87,7 @@ const AttendanceReport = () => {
   };
 
   return (
-    <Card className="w-full max-w-[1000px] mx-auto">
+    <Card className="w-full  mx-auto">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-xl font-bold">Attendance Report</CardTitle>
         <div className="flex items-center gap-6">
