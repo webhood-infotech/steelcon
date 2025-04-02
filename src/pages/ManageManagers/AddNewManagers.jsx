@@ -100,16 +100,15 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
       }));
     }
   };
-
   // Handle file uploads
   const handleFileUpload = (e, fieldName, nestedField = null) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        // const fileData = event.target.result;
-        const fileData =
-          "https://gratisography.com/wp-content/uploads/2025/03/gratisography-cruising-cat-800x525.jpg";
+        const fileData = event.target.result;
+        // const fileData =
+        // "https://gratisography.com/wp-content/uploads/2025/03/gratisography-cruising-cat-800x525.jpg";
 
         if (nestedField) {
           setFormData((prev) => ({
@@ -129,7 +128,6 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
       reader.readAsDataURL(file);
     }
   };
-
   // Validation function
   const validateForm = () => {
     let tempErrors = {};
@@ -197,6 +195,7 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
     }
 
     setLoading(true);
+    console.log(formData, "formdata");
     try {
       const response = await axios.post(
         "https://steelconbackend.vercel.app/api/admin/managers",
@@ -216,12 +215,11 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
       setLoading(false);
     }
   };
-
   return (
-    <div className="container mx-auto mt-8 px-3">
+    <div className="container mx-auto  mt-8 px-3">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-semibold text-[#101828] tracking-tight">
-          Add New Manager
+          Add New Managers
         </h1>
         <div className="flex items-center gap-4">
           <Button
@@ -675,20 +673,24 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
                   <option value="">Select Department</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Engineering">Engineering</option>
-                  <option value="Sales">Sales</option>
-                  <option value="Operations">Operations</option>
+                  <option value="Human Resources  ">Human Resources</option>
+                  <option value=" Software Engineering">
+                    Software Engineering
+                  </option>
+                  <option value="Marketing ">Marketing</option>
+                  <option value="Operations ">Operations</option>
                   <option value="Research & Development">
                     Research & Development
                   </option>
                   <option value="Customer Service">Customer Service</option>
-                  <option value="Legal">Legal</option>
                   <option value="Quality Assurance">Quality Assurance</option>
                   <option value="Business Development">
                     Business Development
                   </option>
-                  <option value="Product Management">Product Management</option>
+                  <option value="Facilities Management">
+                    Facilities Management
+                  </option>
+                  <option value="Production">Production</option>
                 </select>
                 {errors.department && (
                   <p className="text-red-500 text-xs">{errors.department}</p>

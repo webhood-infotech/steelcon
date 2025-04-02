@@ -166,7 +166,7 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
       toast.error("Please fill all required fields correctly");
       return;
     }
-
+console.log(formData,"grdtdtrytr")
     setLoading(true);
     try {
       const response = await axios.post(
