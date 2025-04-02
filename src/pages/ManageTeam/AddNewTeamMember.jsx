@@ -30,7 +30,7 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
     sickLeaves: "4",
     isHR: false,
     resignDeduction: "",
-    employeeId:"",
+    employeeId: "",
     joiningDate: "",
     designation: "",
     department: "",

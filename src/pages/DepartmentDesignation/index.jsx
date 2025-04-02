@@ -10,7 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Plus, Trash2, Pencil } from "lucide-react";
-
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import DeleteDepartment from "./DeleteDepartament";
 import EditDepartment from "./EditDepartment";
@@ -54,7 +53,6 @@ const DepartmentDesignation = () => {
       // setError("Failed to load departments");
     }
   };
-
   const filteredDepartments = departments.filter(
     (department) =>
       department && // Add null check for the entire department object
@@ -65,7 +63,6 @@ const DepartmentDesignation = () => {
         .includes(searchQuery.toLowerCase()) ||
         department.code.toLowerCase().includes(searchQuery.toLowerCase()))
   );
-
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">

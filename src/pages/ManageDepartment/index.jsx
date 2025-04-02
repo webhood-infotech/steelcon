@@ -58,7 +58,7 @@ const ManageDepartment = () => {
             query
           )}`
         );
-
+       
         // If API returns data, update departments
         if (response.data?.data?.length > 0) {
           setDepartments(response.data.data);
