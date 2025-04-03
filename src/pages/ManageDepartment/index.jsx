@@ -21,7 +21,6 @@ import axios from "axios";
 import DepartmentView from "./DepartmentView";
 import { useDispatch } from "react-redux";
 import { setLoading } from "@/redux/loadingSlice";
-
 const ManageDepartment = () => {
   const [departments, setDepartments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,7 +32,6 @@ const ManageDepartment = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     // Fetch all departments when component mounts
-
     getAllDepartments();
   }, []);
   const getAllDepartments = async () => {

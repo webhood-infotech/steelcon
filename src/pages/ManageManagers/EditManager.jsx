@@ -125,31 +125,45 @@ const EditManager = ({ managerData, setShowEditManager, fetchManagers }) => {
     }
   };
   // Handle file uploads
-  const handleFileUpload = (e, fieldName, nestedField = null) => {
+  const handleFileUpload = async (e, fieldName, nestedField = null) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        // const fileData = event.target.result;
-        const fileData =
-          "https://gratisography.com/wp-content/uploads/2025/03/gratisography-cruising-cat-800x525.jpg";
+    if (!file) return;
+    const formData = new FormData();
 
+    formData.append("file", file);
+    formData.append("upload_preset", import.meta.env.VITE_Preset_Name);
+    formData.append("cloud_name", import.meta.env.VITE_Cloud_Name);
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${
+          import.meta.env.VITE_Cloud_Name
+        }/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      const fileData = data.secure_url;
+      console.log(data, "ddwd", fileData);
+      setFormData((prev) => {
         if (nestedField) {
-          setFormData((prev) => ({
+          return {
             ...prev,
             [nestedField]: {
               ...prev[nestedField],
               [fieldName]: fileData,
             },
-          }));
+          };
         } else {
-          setFormData((prev) => ({
+          return {
             ...prev,
             [fieldName]: fileData,
-          }));
+          };
         }
-      };
-      reader.readAsDataURL(file);
+      });
+    } catch (error) {
+      console.error("Upload failed", error);
     }
   };
 
@@ -229,7 +243,7 @@ const EditManager = ({ managerData, setShowEditManager, fetchManagers }) => {
       if (response.status === 200 || response.status === 201) {
         setShowEditManager(false);
         fetchManagers();
-        setShowEditManager(fal);
+        setShowEditManager(false);
 
         toast.success("Manager added successfully");
         setFormData({ ...formData }); // Reset form
@@ -254,7 +268,7 @@ const EditManager = ({ managerData, setShowEditManager, fetchManagers }) => {
               setShowEditManager(false);
             }}
           >
-            Cancel
+            Back
           </Button>
           <Button
             className="gap-2 bg-[#305679] py-4 font-semibold text-white text-sm"
@@ -655,36 +669,6 @@ const EditManager = ({ managerData, setShowEditManager, fetchManagers }) => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="designation"
-                  className="text-[#344054] font-medium font-sm"
-                >
-                  Designation
-                </Label>
-                <select
-                  id="designation"
-                  name="designation"
-                  value={formData.designation}
-                  onChange={handleChange}
-                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
-                >
-                  <option value="">Select Department</option>
-                  <option value="Software Engineer">Software Engineer</option>
-                  <option value="Engineering">AI Engineering</option>
-                  <option value="Engineering">MLA Engineering</option>
-                  <option value="Marketing">Product Marketing Manager</option>
-                  <option value="Sales">Technical Project Manager</option>
-                  <option value="HR">Data Analytics Manager</option>
-                  <option value="Sales">Human Resources Manager</option>
-                  <option value="Sales">Quality Assurance Supervisor</option>
-                  <option value="Sales">Research Associate</option>
-                  <option value="Sales">Financial Analyst</option>
-                </select>
-                {errors.designation && (
-                  <p className="text-red-500 text-xs">{errors.designation}</p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label
                   htmlFor="department"
                   className="text-[#344054] font-medium font-sm"
                 >
@@ -717,6 +701,37 @@ const EditManager = ({ managerData, setShowEditManager, fetchManagers }) => {
                   <p className="text-red-500 text-xs">{errors.department}</p>
                 )}
               </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="designation"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Designation
+                </Label>
+                <select
+                  id="designation"
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleChange}
+                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                >
+                  <option value="">Select Department</option>
+                  <option value="Software Engineer">Software Engineer</option>
+                  <option value="Engineering">AI Engineering</option>
+                  <option value="Engineering">MLA Engineering</option>
+                  <option value="Marketing">Product Marketing Manager</option>
+                  <option value="Sales">Technical Project Manager</option>
+                  <option value="HR">Data Analytics Manager</option>
+                  <option value="Sales">Human Resources Manager</option>
+                  <option value="Sales">Quality Assurance Supervisor</option>
+                  <option value="Sales">Research Associate</option>
+                  <option value="Sales">Financial Analyst</option>
+                </select>
+                {errors.designation && (
+                  <p className="text-red-500 text-xs">{errors.designation}</p>
+                )}
+              </div>
+
               <div className="space-y-2">
                 <Label
                   htmlFor="teamManager"

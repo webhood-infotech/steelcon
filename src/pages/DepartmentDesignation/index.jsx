@@ -9,30 +9,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Trash2, Pencil } from "lucide-react";
+import { Plus, Trash2, Pencil, Eye } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import DeleteDepartment from "./DeleteDepartament";
 import EditDepartment from "./EditDepartment";
 import AddNewDepartment from "./AddNewDepartment";
 import axios from "axios";
-
-// interface Department {
-//   _id: string;
-//   designation: string;
-//   code: string;
-// }
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/loadingSlice";
 
 const DepartmentDesignation = () => {
+  const [designations, setDesignations] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [editingDepartmentId, setEditingDepartmentId] = useState(null);
   // Added state for dialog open/close
   const [deletingDepartmentId, setDeletingDepartmentId] = useState(null);
   const [openAddNew, setOpenAddNew] = useState(false);
-
-  useEffect(() => {
-    getAllDepartments();
-  }, []);
+  const dispatch = useDispatch();
 
   const closeAddNewDialog = () => setOpenAddNew(false);
   const openEditDialog = (departmentId) => setEditingDepartmentId(departmentId);
@@ -41,28 +35,52 @@ const DepartmentDesignation = () => {
     setDeletingDepartmentId(departmentId);
   const closeDeleteDialog = () => setDeletingDepartmentId(null);
 
+  const getAllDesignations = async () => {
+    try {
+      dispatch(setLoading(true));
+      const response = await axios.get(
+        `https://steelconbackend.vercel.app/api/admin/designations`
+      );
+      console.log(response.data.data);
+      setDesignations(response.data.data);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
   const getAllDepartments = async () => {
     try {
+      dispatch(setLoading(true));
       const response = await axios.get(
-        `https://steelconbackend.vercel.app/api/admin/designations/`
+        "https://steelconbackend.vercel.app/api/admin/departments"
       );
+      console.log(response);
       setDepartments(response.data?.data || []);
     } catch (err) {
       console.error("Error fetching departments:", err);
-      // Optionally, set an error state to show user-friendly message
-      // setError("Failed to load departments");
+      setDepartments([]);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
-  const filteredDepartments = departments.filter(
-    (department) =>
-      department && // Add null check for the entire department object
-      department.designation && // Ensure name exists
-      department.code && // Ensure code exists
-      (department.designation
+
+  useEffect(() => {
+    getAllDesignations();
+    getAllDepartments();
+  }, []);
+  const filteredDepartments = designations.filter(
+    (designation) =>
+      designation && // Add null check for the entire department object
+      designation.designation && // Ensure name exists
+      designation.departmentCode && // Ensure code exists
+      (designation.designation
         .toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
-        department.code.toLowerCase().includes(searchQuery.toLowerCase()))
+        designation.code.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+  console.log(filteredDepartments, "dptddsgg");
+
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
@@ -102,8 +120,9 @@ const DepartmentDesignation = () => {
             </DialogTrigger>
             <DialogContent className="bg-white  w-[400px] rounded-2xl p-6">
               <AddNewDepartment
-                getAllDepartments={getAllDepartments}
+                getAllDesignations={getAllDesignations}
                 closeAddNewDialog={closeAddNewDialog}
+                departments={departments}
               />
             </DialogContent>
           </Dialog>
@@ -131,7 +150,7 @@ const DepartmentDesignation = () => {
                   {department.designation}
                 </TableCell>
                 <TableCell className="w-[120px] py-6 text-start text-sm font-normal text-[#475467]">
-                  {department.code}
+                  {department.departmentCode}
                 </TableCell>
                 <TableCell className="w-[120px] text-right pr-5">
                   <div className="flex justify-center gap-1">
@@ -143,6 +162,13 @@ const DepartmentDesignation = () => {
                           : closeDeleteDialog()
                       }
                     >
+                      <Button
+                        // onClick={() => setViewDepartment(true)}
+                        variant="ghost"
+                        size="icon"
+                      >
+                        <Eye className="h-3 w-3" />
+                      </Button>
                       <DialogTrigger>
                         <Button
                           // onClick={() => setOpenDelete(true)}
@@ -156,7 +182,9 @@ const DepartmentDesignation = () => {
                         <DeleteDepartment
                           departmentId={department?._id}
                           closeDeleteDialog={closeDeleteDialog}
-                          getAllDepartments={getAllDepartments}
+                          getAllDesignations={getAllDesignations}
+                          departmentCode={department?.departmentCode}
+                          designationCode={department?.designationCode}
                         />
                       </DialogContent>
                     </Dialog>
@@ -176,7 +204,7 @@ const DepartmentDesignation = () => {
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
                         <EditDepartment
                           departmentCode={department.code}
-                          getAllDepartments={getAllDepartments}
+                          getAllDesignations={getAllDesignations}
                           closeEditDialog={closeEditDialog}
                           departmentId={department?._id}
                         />

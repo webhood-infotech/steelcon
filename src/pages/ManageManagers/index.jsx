@@ -15,26 +15,32 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
 import AddNewManagers from "./AddNewManagers";
 import EditManager from "./EditManager";
+import { setLoading } from "@/redux/loadingSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const ManageManagers = () => {
   const [managers, setManagers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddNewManager, setShowAddNewManager] = useState(false);
   const [showEditManager, setShowEditManager] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
+  const isLoading = useSelector((state) => state.loading.isLoading);
+  const dispatch = useDispatch();
+
   const fetchManagers = async () => {
     try {
+      dispatch(setLoading(true));
       const response = await axios.get(
         "https://steelconbackend.vercel.app/api/admin/managers"
       );
       setManagers(response.data?.data || []);
-      setIsLoading(false);
+      dispatch(setLoading(false));
     } catch (err) {
       console.error("Error fetching managers:", err);
       setError(err.message);
-      setIsLoading(false);
+      dispatch(setLoading(false));
     }
   };
   useEffect(() => {
@@ -78,8 +84,7 @@ const ManageManagers = () => {
       />
     );
   }
-  console.log(editIndex)
-  
+  console.log(editIndex);
   // console.log(managers[editIndex],"mng",managers,editIndex)
   return (
     <div className="container mx-auto mt-8 px-3">

@@ -15,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Plus, Upload, User } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 
 const EditTeamMember = ({
   fetchEmployees,
@@ -85,7 +86,7 @@ const EditTeamMember = ({
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     const { empId, ...filteredData } = employeeData;
     if (filteredData) {
@@ -111,6 +112,7 @@ const EditTeamMember = ({
       }));
     }
   }, [employeeData]);
+  console.log(formData);
 
   // Handle input changes
   const handleChange = (e, nestedField = null) => {
@@ -217,40 +219,74 @@ const EditTeamMember = ({
   };
 
   // Handle file uploads
-  const handleFileUpload = (e, fieldName, nestedField = null) => {
+  const handleFileUpload = async (e, fieldName, nestedField = null) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        // const fileData = event.target.result;
-        const fileData =
-          "https://gratisography.com/wp-content/uploads/2025/03/gratisography-cruising-cat-800x525.jpg";
+    if (!file) return;
+    const formData = new FormData();
 
+    formData.append("file", file);
+    formData.append("upload_preset", import.meta.env.VITE_Preset_Name);
+    formData.append("cloud_name", import.meta.env.VITE_Cloud_Name);
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${
+          import.meta.env.VITE_Cloud_Name
+        }/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      const fileData = data.secure_url;
+      console.log(data, "ddwd", fileData);
+      setFormData((prev) => {
         if (nestedField) {
-          setFormData((prev) => ({
+          return {
             ...prev,
             [nestedField]: {
               ...prev[nestedField],
               [fieldName]: fileData,
             },
-          }));
+          };
         } else {
-          setFormData((prev) => ({
+          return {
             ...prev,
             [fieldName]: fileData,
-          }));
+          };
         }
-      };
-      reader.readAsDataURL(file);
+      });
+    } catch (error) {
+      console.error("Upload failed", error);
     }
-  };
 
+    // const fileData = event.target.result;
+    //   const fileData =
+    //     "https://gratisography.com/wp-content/uploads/2025/03/gratisography-cruising-cat-800x525.jpg";
+
+    //   if (nestedField) {
+    //     setFormData((prev) => ({
+    //       ...prev,
+    //       [nestedField]: {
+    //         ...prev[nestedField],
+    //         [fieldName]: fileData,
+    //       },
+    //     }));
+    //   } else {
+    //     setFormData((prev) => ({
+    //       ...prev,
+    //       [fieldName]: fileData,
+    //     }));
+    //   }
+    // };
+    // reader.readAsDataURL(file);
+  };
 
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-semibold text-[#101828] tracking-tight">
-          Add New Employee
+          Edit Employee
         </h1>
         <div className="flex items-center gap-4">
           <Button
@@ -260,7 +296,7 @@ const EditTeamMember = ({
               setShowEditTeamMember(false);
             }}
           >
-            Cancel
+            Back
           </Button>
           <Button
             onClick={handleSubmit}
@@ -559,36 +595,6 @@ const EditTeamMember = ({
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="designation"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Designation
-                </Label>
-                <select
-                  id="designation"
-                  name="designation"
-                  value={formData.designation}
-                  onChange={handleChange}
-                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
-                >
-                  <option value="">Select Department</option>
-                  <option value="Software Engineer">Software Engineer</option>
-                  <option value="Engineering">AI Engineering</option>
-                  <option value="Engineering">MLA Engineering</option>
-                  <option value="Marketing">Product Marketing Manager</option>
-                  <option value="Sales">Technical Project Manager</option>
-                  <option value="HR">Data Analytics Manager</option>
-                  <option value="Sales">Human Resources Manager</option>
-                  <option value="Sales">Quality Assurance Supervisor</option>
-                  <option value="Sales">Research Associate</option>
-                  <option value="Sales">Financial Analyst</option>
-                </select>
-                {errors.designation && (
-                  <p className="text-red-500 text-xs">{errors.designation}</p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label
                   htmlFor="profileImage"
                   className="text-sm text-medium text-[#344054]"
                 >
@@ -621,6 +627,37 @@ const EditTeamMember = ({
                   <p className="text-red-500 text-xs">{errors.department}</p>
                 )}
               </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="designation"
+                  className="text-sm text-medium text-[#344054]"
+                >
+                  Designation
+                </Label>
+                <select
+                  id="designation"
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleChange}
+                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                >
+                  <option value="">Select Department</option>
+                  <option value="Software Engineer">Software Engineer</option>
+                  <option value="Engineering">AI Engineering</option>
+                  <option value="Engineering">MLA Engineering</option>
+                  <option value="Marketing">Product Marketing Manager</option>
+                  <option value="Sales">Technical Project Manager</option>
+                  <option value="HR">Data Analytics Manager</option>
+                  <option value="Sales">Human Resources Manager</option>
+                  <option value="Sales">Quality Assurance Supervisor</option>
+                  <option value="Sales">Research Associate</option>
+                  <option value="Sales">Financial Analyst</option>
+                </select>
+                {errors.designation && (
+                  <p className="text-red-500 text-xs">{errors.designation}</p>
+                )}
+              </div>
+
               <div className="space-y-2">
                 <Label
                   htmlFor="reportToManager"

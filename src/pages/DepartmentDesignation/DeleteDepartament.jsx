@@ -5,16 +5,23 @@ const DeleteDepartment = ({
   departmentId,
   getAllDepartments,
   closeDeleteDialog,
+  departmentCode,
+  designationCode,
 }) => {
-  const handleDeleteDepartment = async () => {
+  const handleDeleteDesignation = async () => {
     try {
-      const response = await axios.delete(
-        `https://steelconbackend.vercel.app/api/admin/designations/${departmentId}`
+      await axios.delete(
+        `https://steelconbackend.vercel.app/api/admin/designations`,
+        {
+          data: {
+            departmentCode: departmentCode,
+            designationCode: designationCode,
+          },
+        }
       );
       getAllDepartments();
       closeDeleteDialog();
-      toast.success("Department has been deleted sucessfully");
-
+      toast.success("Department has been deleted successfully");
     } catch (err) {
       console.log(err);
     }
@@ -25,7 +32,7 @@ const DeleteDepartment = ({
         <div className="">
           <div className="flex flex-col gap-5 ">
             <div className="text-lg font-semibold text-[#101828]">
-              Delete Department
+              Delete Designation
             </div>
             <div className="text-[#344054]">
               Are you sure you want to delete this department
@@ -38,7 +45,7 @@ const DeleteDepartment = ({
                 Cancel
               </button>
               <button
-                onClick={handleDeleteDepartment}
+                onClick={handleDeleteDesignation}
                 className="cursor-pointer py-2.5 px-4.5 border border-[#DC2626] rounded-lg font-semibold text-base text-white bg-[#DC2626]"
               >
                 Delete

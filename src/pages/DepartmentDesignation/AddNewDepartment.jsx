@@ -1,14 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-
-const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { colorSpace } from "@cloudinary/url-gen/actions/delivery";
+const AddNewDepartment = ({
+  getAllDesignations,
+  closeAddNewDialog,
+  departments,
+}) => {
   const [designation, setDesignation] = useState("");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ designation: "", code: "" });
+  const [department, setDepartment] = useState("");
+  const [departmentCode, setDepartmentCode] = useState("");
 
+  const dispatch = useDispatch();
   const validateInputs = () => {
     let newErrors = { designation: "", code: "" };
     let isValid = true;
@@ -51,6 +60,7 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
           body: JSON.stringify({
             designation: designation,
             code: code,
+            departmentCode: departmentCode,
           }),
         }
       );
@@ -65,7 +75,7 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
       setErrors({ designation: "", code: "" });
       closeAddNewDialog();
       toast.success("Designation has been added sucessfully.");
-      getAllDepartments(); // Refresh the department list
+      getAllDesignations(); // Refresh the department list
     } catch (err) {
       console.error("Error submitting department:");
       setErrors((prev) => ({
@@ -77,14 +87,53 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
       setLoading(false); // Ensure loading state is reset
     }
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex flex-col gap-5">
         <div className="text-lg font-semibold text-[#101828]">
-          Add New Department
+          Add New Designation
         </div>
 
         <div className="flex flex-col gap-[16px]">
+          <div className="grid w-full max-w-sm items-center gap-2">
+            <Label
+              htmlFor="department"
+              className="text-sm text-medium text-[#344054]"
+            >
+              Deparment
+            </Label>
+            <select
+              id="department"
+              value={department}
+              onChange={(e) => {
+                const selectedIndex = e.target.selectedIndex;
+                const selectedDepartment = departments[selectedIndex - 1]; // -1 to account for the "Select Department" option
+                
+                setDepartment(e.target.value);
+                if (selectedDepartment) {
+                  setDepartmentCode(selectedDepartment.code);
+                }
+              }}
+              className="border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+            >
+              <option value="">Select Department</option>
+              {departments?.map((item, index) => {
+                console.log(item);
+                return (
+                  <option
+                    key={index}
+                    value={item.code}
+                  >
+                    {item.name}
+                  </option>
+                );
+              })}
+            </select>
+            {errors.designation && (
+              <p className="text-red-500 text-sm">{errors.designation}</p>
+            )}
+          </div>
           <div className="grid w-full max-w-sm items-center gap-2">
             <Label
               htmlFor="Designation"
@@ -92,29 +141,16 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
             >
               Designation
             </Label>
-            <select
+            <Input
+              type="text"
               id="Designation"
+              placeholder="Designation"
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
-              className="border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
-            >
-              <option value="">Select Designation</option>
-              <option value="Software Engineer">Software Engineer</option>
-              <option value="AI Engineer">AI Engineer</option>
-              <option value="ML Engineer">ML Engineer</option>
-              <option value="ProducMarketing">Product Marketing Manager</option>
-              <option value="HR">HR</option>
-              <option value="Data Analytics Manager">
-                Data Analytics Manager
-              </option>
-              <option value="Quality Assurance Supervisor">
-                Quality Assurance Supervisor
-              </option>
-              <option value="Research Associate">Research Associate</option>
-              <option value="Financial Analyst">Financial Analyst</option>
-            </select>
-            {errors.designation && (
-              <p className="text-red-500 text-sm">{errors.designation}</p>
+              className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal"
+            />
+            {errors.code && (
+              <p className="text-red-500 text-sm">{errors.code}</p>
             )}
           </div>
           <div className="grid w-full max-w-sm items-center gap-2">

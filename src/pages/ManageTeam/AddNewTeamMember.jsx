@@ -102,16 +102,17 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
   };
   const getAllDepartments = async () => {
     try {
-      dispatch(setLoading(true));
+      // dispatch(setLoading(true));
       const response = await axios.get(
         "https://steelconbackend.vercel.app/api/admin/departments"
       );
       setAllDepartments(response.data?.data || []);
     } catch (err) {
       console.error("Error fetching departments:", err);
-    } finally {
-      dispatch(setLoading(false));
     }
+    //  finally {
+    //   dispatch(setLoading(false));
+    // }
   };
   useEffect(() => {
     getAllDesignations();
@@ -235,7 +236,7 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
     formData.append("upload_preset", import.meta.env.VITE_Preset_Name);
     formData.append("cloud_name", import.meta.env.VITE_Cloud_Name);
     try {
-      dispatch(setLoading(true))
+      dispatch(setLoading(true));
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${
           import.meta.env.VITE_Cloud_Name
@@ -266,30 +267,9 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
       });
     } catch (error) {
       console.error("Upload failed", error);
-    }finally{
-      dispatch(setLoading(false))
+    } finally {
+      dispatch(setLoading(false));
     }
-
-    // const fileData = event.target.result;
-    //   const fileData =
-    //     "https://gratisography.com/wp-content/uploads/2025/03/gratisography-cruising-cat-800x525.jpg";
-
-    //   if (nestedField) {
-    //     setFormData((prev) => ({
-    //       ...prev,
-    //       [nestedField]: {
-    //         ...prev[nestedField],
-    //         [fieldName]: fileData,
-    //       },
-    //     }));
-    //   } else {
-    //     setFormData((prev) => ({
-    //       ...prev,
-    //       [fieldName]: fileData,
-    //     }));
-    //   }
-    // };
-    // reader.readAsDataURL(file);
   };
   return (
     <div className="container mx-auto mt-8 px-3">
@@ -305,7 +285,7 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
               setShowAddNewEmployee(false);
             }}
           >
-            Cancel
+            Back
           </Button>
           <Button
             onClick={handleSubmit}
@@ -604,33 +584,6 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="designation"
-                  className="text-sm text-medium text-[#344054]"
-                >
-                  Designation
-                </Label>
-                <select
-                  id="designation"
-                  name="designation"
-                  value={formData.designation}
-                  onChange={handleChange}
-                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
-                >
-                  <option value="">Select Department</option>
-                  {designations?.map((item, index) => {
-                    return (
-                      <option key={index} value={item?.code}>
-                        {item?.designation}
-                      </option>
-                    );
-                  })}
-                </select>
-                {errors.designation && (
-                  <p className="text-red-500 text-xs">{errors.designation}</p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label
                   htmlFor="profileImage"
                   className="text-sm text-medium text-[#344054]"
                 >
@@ -654,6 +607,33 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
                 </select>
                 {errors.department && (
                   <p className="text-red-500 text-xs">{errors.department}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="designation"
+                  className="text-sm text-medium text-[#344054]"
+                >
+                  Designation
+                </Label>
+                <select
+                  id="designation"
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleChange}
+                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                >
+                  <option value="">Select Department</option>
+                  {designations?.map((item, index) => {
+                    return (
+                      <option key={index} value={item?.code}>
+                        {item?.designation}
+                      </option>
+                    );
+                  })}
+                </select>
+                {errors.designation && (
+                  <p className="text-red-500 text-xs">{errors.designation}</p>
                 )}
               </div>
               <div className="space-y-2">

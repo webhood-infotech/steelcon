@@ -24,7 +24,6 @@ const EditDepartment = ({
       getAllDepartments();
       closeEditDialog();
       toast.success("Department name has been updated successfully .");
-
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -37,7 +36,7 @@ const EditDepartment = ({
       <div className="">
         <div className="flex flex-col gap-5">
           <div className="text-lg font-semibold text-[#101828]">
-            Add New Department
+            Edit Department
           </div>
           <div className="flex flex-col gap-[16px]">
             <div className="grid w-full max-w-sm items-center gap-2">
@@ -73,7 +72,10 @@ const EditDepartment = ({
             </div>
           </div>
           <div className="flex justify-end gap-3 mt-5">
-            <button onClick={closeEditDialog} className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white">
+            <button
+              onClick={closeEditDialog}
+              className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD] rounded-lg font-semibold text-base text-[#344054] bg-white"
+            >
               Cancel
             </button>
             <button

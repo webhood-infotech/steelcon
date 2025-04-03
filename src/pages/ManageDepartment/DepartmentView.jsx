@@ -15,25 +15,27 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import EditDepartment from "../ManageDepartment/EditDepartment";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
-
+import { setLoading } from "@/redux/loadingSlice";
+import { useDispatch, useSelector } from "react-redux";
 const DepartmentView = ({ setViewDepartment }) => {
   const [managers, setManagers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const dispatch = useDispatch();
+  const isLoading = useSelector((state) => state.loading.isLoading);
   useEffect(() => {
     const fetchManagers = async () => {
       try {
+        dispatch(setLoading(true));
         const response = await axios.get(
           "https://steelconbackend.vercel.app/api/admin/managers"
         );
         setManagers(response.data?.data || []);
-        setIsLoading(false);
+        dispatch(setLoading(false));
       } catch (err) {
         console.error("Error fetching managers:", err);
         setError(err.message);
-        setIsLoading(false);
+        dispatch(setLoading(false));
       }
     };
     fetchManagers();
@@ -95,7 +97,7 @@ const DepartmentView = ({ setViewDepartment }) => {
             className="cursor-pointer py-2.5 px-4.5 border border-[#D0D5DD]
             rounded-lg font-semibold text-base text-[#344054] bg-white hover:text-white hover:bg-[#344054]"
           >
-            Cancel
+            Back
           </Button>
         </div>
       </div>

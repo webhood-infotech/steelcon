@@ -1,5 +1,5 @@
-import { useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import axios, { all } from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +14,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Upload } from "lucide-react";
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
 
 const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
   const [formData, setFormData] = useState({
@@ -81,6 +82,40 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [designations, setDesignations] = useState([]);
+  // const [allDepartments, setAllDepartments] = useState([]);
+  const dispatch = useDispatch();
+  const getAllDesignations = async () => {
+    try {
+      const response = await axios.get(
+        `https://steelconbackend.vercel.app/api/admin/designations`
+      );
+      setDesignations(response?.data?.data);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+      // Optionally, set an error state to show user-friendly message
+      // setError("Failed to load departments");
+    }
+  };
+  useEffect(() => {
+    getAllDesignations();
+  }, []);
+  // const getAllDepartments = async () => {
+  //   try {
+  //     dispatch(setLoading(true));
+  //     const response = await axios.get(
+  //       "https://steelconbackend.vercel.app/api/admin/departments"
+  //     );
+  //     setAllDepartments(response.data?.data || []);
+  //   } catch (err) {
+  //     console.error("Error fetching departments:", err);
+  //   } finally {
+  //     dispatch(setLoading(false));
+  //   }
+  // };
+  // useEffect(() => {
+  //   getAllDepartments();
+  // }, []);
 
   // Handle input changes
   const handleChange = (e, nestedField = null) => {
@@ -101,31 +136,45 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
     }
   };
   // Handle file uploads
-  const handleFileUpload = (e, fieldName, nestedField = null) => {
+  const handleFileUpload = async (e, fieldName, nestedField = null) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const fileData = event.target.result;
-        // const fileData =
-        // "https://gratisography.com/wp-content/uploads/2025/03/gratisography-cruising-cat-800x525.jpg";
+    if (!file) return;
+    const formData = new FormData();
 
+    formData.append("file", file);
+    formData.append("upload_preset", import.meta.env.VITE_Preset_Name);
+    formData.append("cloud_name", import.meta.env.VITE_Cloud_Name);
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${
+          import.meta.env.VITE_Cloud_Name
+        }/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      const fileData = data.secure_url;
+      console.log(data, "ddwd", fileData);
+      setFormData((prev) => {
         if (nestedField) {
-          setFormData((prev) => ({
+          return {
             ...prev,
             [nestedField]: {
               ...prev[nestedField],
               [fieldName]: fileData,
             },
-          }));
+          };
         } else {
-          setFormData((prev) => ({
+          return {
             ...prev,
             [fieldName]: fileData,
-          }));
+          };
         }
-      };
-      reader.readAsDataURL(file);
+      });
+    } catch (error) {
+      console.error("Upload failed", error);
     }
   };
   // Validation function
@@ -194,7 +243,7 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
       return;
     }
 
-    setLoading(true);
+    dispatch(setLoading(true));
     console.log(formData, "formdata");
     try {
       const response = await axios.post(
@@ -212,7 +261,7 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to add manager");
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
   return (
@@ -229,7 +278,7 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
               setShowAddNewManager(false);
             }}
           >
-            Cancel
+            BACK
           </Button>
           <Button
             className="gap-2 bg-[#305679] py-4 font-semibold text-white text-sm"
@@ -630,36 +679,6 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="designation"
-                  className="text-[#344054] font-medium font-sm"
-                >
-                  Designation
-                </Label>
-                <select
-                  id="designation"
-                  name="designation"
-                  value={formData.designation}
-                  onChange={handleChange}
-                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
-                >
-                  <option value="">Select Department</option>
-                  <option value="Software Engineer">Software Engineer</option>
-                  <option value="Engineering">AI Engineering</option>
-                  <option value="Engineering">MLA Engineering</option>
-                  <option value="Marketing">Product Marketing Manager</option>
-                  <option value="Sales">Technical Project Manager</option>
-                  <option value="HR">Data Analytics Manager</option>
-                  <option value="Sales">Human Resources Manager</option>
-                  <option value="Sales">Quality Assurance Supervisor</option>
-                  <option value="Sales">Research Associate</option>
-                  <option value="Sales">Financial Analyst</option>
-                </select>
-                {errors.designation && (
-                  <p className="text-red-500 text-xs">{errors.designation}</p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label
                   htmlFor="department"
                   className="text-[#344054] font-medium font-sm"
                 >
@@ -673,6 +692,14 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
                   <option value="">Select Department</option>
+                  {/* {allDepartments?.map((item, index) => {
+                    return (
+                      <option key={index} value={item?.code}>
+                        {item?.name}
+                      </option>
+                    );
+                  })} */}
+
                   <option value="Human Resources  ">Human Resources</option>
                   <option value=" Software Engineering">
                     Software Engineering
@@ -696,6 +723,44 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
                   <p className="text-red-500 text-xs">{errors.department}</p>
                 )}
               </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="designation"
+                  className="text-[#344054] font-medium font-sm"
+                >
+                  Designation
+                </Label>
+                <select
+                  id="designation"
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleChange}
+                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                >
+                  <option value="">Select Department</option>
+                  {designations?.map((item, index) => {
+                    return (
+                      <option key={index} value={item?.code}>
+                        {item?.designation}
+                      </option>
+                    );
+                  })}
+
+                  {/* <option value="Engineering">AI Engineering</option>
+                  <option value="Engineering">MLA Engineering</option>
+                  <option value="Marketing">Product Marketing Manager</option>
+                  <option value="Sales">Technical Project Manager</option>
+                  <option value="HR">Data Analytics Manager</option>
+                  <option value="Sales">Human Resources Manager</option>
+                  <option value="Sales">Quality Assurance Supervisor</option>
+                  <option value="Sales">Research Associate</option>
+                  <option value="Sales">Financial Analyst</option> */}
+                </select>
+                {errors.designation && (
+                  <p className="text-red-500 text-xs">{errors.designation}</p>
+                )}
+              </div>
+
               <div className="space-y-2">
                 <Label
                   htmlFor="teamManager"

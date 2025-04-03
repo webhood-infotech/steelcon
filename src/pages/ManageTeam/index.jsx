@@ -15,15 +15,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avatarImg from "../../assets/sidebarImages/Avatar.png";
 import AddNewTeamMember from "./AddNewTeamMember";
 import EditTeamMember from "./EditTeamMember";
+import { setLoading } from "@/redux/loadingSlice";
+import { useDispatch } from "react-redux";
 const ManageTeam = () => {
   const [employees, setEmployees] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
   const [showAddNewEmployee, setShowAddNewEmployee] = useState(false);
   const [showEditTeamMember, setShowEditTeamMember] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
+  const dispatch = useDispatch();
   const filteredEmployees = employees.filter(
     (employee) =>
       employee.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -37,12 +40,11 @@ const ManageTeam = () => {
   // Fetch employees from API
   const fetchEmployees = async () => {
     try {
-      setLoading(true);
+      dispatch(setLoading(true));
       const response = await fetch(
         "https://steelconbackend.vercel.app/api/admin/employees"
       );
       const result = await response.json();
-
       if (result.success) {
         setEmployees(result.data);
       } else {
@@ -51,15 +53,16 @@ const ManageTeam = () => {
     } catch (err) {
       setError("Error connecting to the server");
       console.error("Error fetching employees:", err);
+      dispatch(setLoading(false));
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
   useEffect(() => {
     fetchEmployees();
   }, []);
 
-  const closeDeleteDialog = () => setOpenDelete(false);
+  // const closeDeleteDialog = () => setOpenDelete(false);
 
   // Format currency
   const formatCurrency = (amount) => {
@@ -196,23 +199,6 @@ const ManageTeam = () => {
                 </TableCell>
                 <TableCell className="w-[123px] text-right pr-5">
                   <div className="flex justify-center gap-1">
-                    {/* <Dialog open={openDelete} onOpenChange={setOpenDelete}>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          // onClick={() => handleDelete(department.id)}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
-                        <DeleteDepartment
-                          closeDeleteDialog={closeDeleteDialog}
-                        />
-                      </DialogContent>
-                    </Dialog> */}
-
                     <Button
                       variant="ghost"
                       size="icon"
