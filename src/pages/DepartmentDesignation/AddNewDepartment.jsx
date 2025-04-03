@@ -99,16 +99,19 @@ const AddNewDepartment = ({ getAllDepartments, closeAddNewDialog }) => {
               className="border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
             >
               <option value="">Select Designation</option>
-              <option value="Engineering">Engineering</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Sales">Sales</option>
-              <option value="Sales">IT</option>
-              <option value="Sales">Developer</option>
+              <option value="Software Engineer">Software Engineer</option>
+              <option value="AI Engineer">AI Engineer</option>
+              <option value="ML Engineer">ML Engineer</option>
+              <option value="ProducMarketing">Product Marketing Manager</option>
               <option value="HR">HR</option>
-              <option value="HR">Testing</option>
-              <option value="HR">Manitence</option>
-              <option value="HR">Ai</option>
-              <option value="HR">Opertional</option>
+              <option value="Data Analytics Manager">
+                Data Analytics Manager
+              </option>
+              <option value="Quality Assurance Supervisor">
+                Quality Assurance Supervisor
+              </option>
+              <option value="Research Associate">Research Associate</option>
+              <option value="Financial Analyst">Financial Analyst</option>
             </select>
             {errors.designation && (
               <p className="text-red-500 text-sm">{errors.designation}</p>

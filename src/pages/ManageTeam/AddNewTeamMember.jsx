@@ -81,8 +81,43 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
   });
 
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
-  console.log(formData);
+  const [designations, setDesignations] = useState([]);
+  const [allDepartments, setAllDepartments] = useState([]);
+  const [loader, setLoader] = useState(false);
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.loading.loading);
+  const getAllDesignations = async () => {
+    try {
+      const response = await axios.get(
+        `https://steelconbackend.vercel.app/api/admin/designations`
+      );
+      setDesignations(response?.data?.data);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+      // Optionally, set an error state to show user-friendly message
+      // setError("Failed to load departments");
+    }
+  };
+  const getAllDepartments = async () => {
+    try {
+      dispatch(setLoading(true));
+      const response = await axios.get(
+        "https://steelconbackend.vercel.app/api/admin/departments"
+      );
+      setAllDepartments(response.data?.data || []);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+  useEffect(() => {
+    getAllDesignations();
+  }, []);
+  useEffect(() => {
+    getAllDepartments();
+  }, []);
+
   // Handle input changes
   const handleChange = (e, nestedField = null) => {
     const { name, value } = e.target;
@@ -542,16 +577,13 @@ console.log(formData,"grdtdtrytr")
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
                   <option value="">Select Department</option>
-                  <option value="Software Engineer">Software Engineer</option>
-                  <option value="Engineering">AI Engineering</option>
-                  <option value="Engineering">MLA Engineering</option>
-                  <option value="Marketing">Product Marketing Manager</option>
-                  <option value="Sales">Technical Project Manager</option>
-                  <option value="HR">Data Analytics Manager</option>
-                  <option value="Sales">Human Resources Manager</option>
-                  <option value="Sales">Quality Assurance Supervisor</option>
-                  <option value="Sales">Research Associate</option>
-                  <option value="Sales">Financial Analyst</option>
+                  {designations?.map((item, index) => {
+                    return (
+                      <option key={index} value={item?.code}>
+                        {item?.designation}
+                      </option>
+                    );
+                  })}
                 </select>
                 {errors.designation && (
                   <p className="text-red-500 text-xs">{errors.designation}</p>
@@ -572,20 +604,13 @@ console.log(formData,"grdtdtrytr")
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
                   <option value="">Select Department</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Engineering">Engineering</option>
-                  <option value="Sales">Sales</option>
-                  <option value="Operations">Operations</option>
-                  <option value="Research & Development">
-                    Research & Development
-                  </option>
-                  <option value="Customer Service">Customer Service</option>
-                  <option value="Legal">Legal</option>
-                  <option value="Quality Assurance">Quality Assurance</option>
-                  <option value="Business Development">
-                    Business Development
-                  </option>
-                  <option value="Product Management">Product Management</option>
+                  {allDepartments.map((item, index) => {
+                    return (
+                      <option key={index} value={item?.code}>
+                        {item?.name}
+                      </option>
+                    );
+                  })}
                 </select>
                 {errors.department && (
                   <p className="text-red-500 text-xs">{errors.department}</p>
