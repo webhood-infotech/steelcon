@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,6 +15,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Plus, Upload, User } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/redux/loadingSlice";
 
 const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
   const [formData, setFormData] = useState({
@@ -201,8 +203,8 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
       toast.error("Please fill all required fields correctly");
       return;
     }
-console.log(formData,"grdtdtrytr")
-    setLoading(true);
+    dispatch(setLoading(true));
+    setLoader(true);
     try {
       const response = await axios.post(
         "https://steelconbackend.vercel.app/api/admin/employees",
@@ -218,39 +220,77 @@ console.log(formData,"grdtdtrytr")
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to add manager");
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
+      setLoader(false);
     }
   };
 
   // Handle file uploads
-  const handleFileUpload = (e, fieldName, nestedField = null) => {
+  const handleFileUpload = async (e, fieldName, nestedField = null) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        // const fileData = event.target.result;
-        const fileData =
-          "https://gratisography.com/wp-content/uploads/2025/03/gratisography-cruising-cat-800x525.jpg";
+    if (!file) return;
+    const formData = new FormData();
 
+    formData.append("file", file);
+    formData.append("upload_preset", import.meta.env.VITE_Preset_Name);
+    formData.append("cloud_name", import.meta.env.VITE_Cloud_Name);
+    try {
+      dispatch(setLoading(true))
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${
+          import.meta.env.VITE_Cloud_Name
+        }/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      const fileData = data.secure_url;
+      console.log(data, "ddwd", fileData);
+      setFormData((prev) => {
         if (nestedField) {
-          setFormData((prev) => ({
+          return {
             ...prev,
             [nestedField]: {
               ...prev[nestedField],
               [fieldName]: fileData,
             },
-          }));
+          };
         } else {
-          setFormData((prev) => ({
+          return {
             ...prev,
             [fieldName]: fileData,
-          }));
+          };
         }
-      };
-      reader.readAsDataURL(file);
+      });
+    } catch (error) {
+      console.error("Upload failed", error);
+    }finally{
+      dispatch(setLoading(false))
     }
-  };
 
+    // const fileData = event.target.result;
+    //   const fileData =
+    //     "https://gratisography.com/wp-content/uploads/2025/03/gratisography-cruising-cat-800x525.jpg";
+
+    //   if (nestedField) {
+    //     setFormData((prev) => ({
+    //       ...prev,
+    //       [nestedField]: {
+    //         ...prev[nestedField],
+    //         [fieldName]: fileData,
+    //       },
+    //     }));
+    //   } else {
+    //     setFormData((prev) => ({
+    //       ...prev,
+    //       [fieldName]: fileData,
+    //     }));
+    //   }
+    // };
+    // reader.readAsDataURL(file);
+  };
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-8">
@@ -271,7 +311,7 @@ console.log(formData,"grdtdtrytr")
             onClick={handleSubmit}
             className="gap-2 bg-[#305679] py-4 font-semibold text-white text-sm"
           >
-            {loading ? "Submitting..." : "Submit"}
+            {loader ? "Submitting..." : "Submit"}
           </Button>
         </div>
       </div>
