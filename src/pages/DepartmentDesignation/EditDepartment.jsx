@@ -1,17 +1,22 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner"; // Assuming you're using sonner for notifications
 
 const EditDepartment = ({
   departmentCode,
-  departmentId,
-  getAllDepartments,
+  getAllDesignations,
   closeEditDialog,
+  designationCode,
+  designation,
 }) => {
-  const [designationName, setDesignation] = useState("");
+  const [designationName, setDesignation] = useState(designation || "");
   const [isLoading, setIsLoading] = useState(false);
+  console.log(designationCode, designation,"dqw");
+  useEffect(() => {
+    setDesignation(designation);
+  }, [designation]);
   const handleEditDepartment = async () => {
     // Validate input
     if (!designationName.trim()) {
@@ -22,15 +27,19 @@ const EditDepartment = ({
     setIsLoading(true);
     try {
       const response = await axios.put(
-        `https://steelconbackend.vercel.app/api/admin/designations/${departmentId}`,
+        "https://steelconbackend.vercel.app/api/admin/designations",
         {
-          designation: designationName.trim(), // Use the actual input value
+          
+          designationCode: designationCode,
+          designation: designationName,
+          departmentCode: departmentCode,
         }
       );
+      console.log(response, "response data");
 
       if (response.data.success) {
         toast.success("Designation updated successfully");
-        getAllDepartments(); // Refresh the list
+        getAllDesignations(); // Refresh the list
         closeEditDialog(); // Close the dialog
       } else {
         // Handle server-side validation or other errors
@@ -39,8 +48,7 @@ const EditDepartment = ({
     } catch (err) {
       console.error(err);
       toast.error(
-        err.response?.data?.message ||
-          "An error occurred while updating the designation"
+        err.response?.data?.message 
       );
     } finally {
       setIsLoading(false);
@@ -80,7 +88,7 @@ const EditDepartment = ({
             <Input
               type="text"
               id="code"
-              value={departmentCode}
+              value={designationCode}
               // placeholder={departmentCode}
               className="border border-[#D0D5DD] py-2.5 px-3.5 placeholder:text-[#667085] placeholder:text-base placeholder:font-normal bg-gray-100"
               disabled

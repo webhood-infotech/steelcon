@@ -29,10 +29,10 @@ const DepartmentDesignation = () => {
   const dispatch = useDispatch();
 
   const closeAddNewDialog = () => setOpenAddNew(false);
-  const openEditDialog = (departmentId) => setEditingDepartmentId(departmentId);
+  const openEditDialog = (departmentCode) => setEditingDepartmentId(departmentCode);
   const closeEditDialog = () => setEditingDepartmentId(null);
-  const openDeleteDialog = (departmentId) =>
-    setDeletingDepartmentId(departmentId);
+  const openDeleteDialog = (designationCode) =>
+    setDeletingDepartmentId(designationCode);
   const closeDeleteDialog = () => setDeletingDepartmentId(null);
 
   const getAllDesignations = async () => {
@@ -41,7 +41,6 @@ const DepartmentDesignation = () => {
       const response = await axios.get(
         `https://steelconbackend.vercel.app/api/admin/designations`
       );
-      console.log(response.data.data);
       setDesignations(response.data.data);
     } catch (err) {
       console.error("Error fetching departments:", err);
@@ -71,15 +70,14 @@ const DepartmentDesignation = () => {
   }, []);
   const filteredDepartments = designations.filter(
     (designation) =>
-      designation && // Add null check for the entire department object
-      designation.designation && // Ensure name exists
-      designation.departmentCode && // Ensure code exists
+      designation?.designation && // Ensure name exists
+      designation?.departmentCode && // Ensure code exists
       (designation.designation
         .toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
         designation.code.toLowerCase().includes(searchQuery.toLowerCase()))
   );
-  console.log(filteredDepartments, "dptddsgg");
+  console.log(filteredDepartments);
 
   return (
     <div className="container mx-auto mt-8 px-3">
@@ -147,18 +145,18 @@ const DepartmentDesignation = () => {
             {filteredDepartments.map((department, index) => (
               <TableRow key={index}>
                 <TableCell className=" w-[784px] py-6 pl-5 text-sm font-medium  text-[#101828]">
-                  {department.designation}
+                  {department?.designation}
                 </TableCell>
                 <TableCell className="w-[120px] py-6 text-start text-sm font-normal text-[#475467]">
-                  {department.departmentCode}
+                  {department?.designationCode}
                 </TableCell>
                 <TableCell className="w-[120px] text-right pr-5">
                   <div className="flex justify-center gap-1">
                     <Dialog
-                      open={deletingDepartmentId === department._id}
+                      open={deletingDepartmentId === department?.designationCode}
                       onOpenChange={(open) =>
                         open
-                          ? openDeleteDialog(department._id)
+                          ? openDeleteDialog(department?.designationCode)
                           : closeDeleteDialog()
                       }
                     >
@@ -180,7 +178,6 @@ const DepartmentDesignation = () => {
                       </DialogTrigger>
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
                         <DeleteDepartment
-                          departmentId={department?._id}
                           closeDeleteDialog={closeDeleteDialog}
                           getAllDesignations={getAllDesignations}
                           departmentCode={department?.departmentCode}
@@ -189,10 +186,10 @@ const DepartmentDesignation = () => {
                       </DialogContent>
                     </Dialog>
                     <Dialog
-                      open={editingDepartmentId === department._id}
+                      open={editingDepartmentId === department.designationCode}
                       onOpenChange={(open) =>
                         open
-                          ? openEditDialog(department._id)
+                          ? openEditDialog(department.designationCode)
                           : closeEditDialog()
                       }
                     >
@@ -203,10 +200,12 @@ const DepartmentDesignation = () => {
                       </DialogTrigger>
                       <DialogContent className="bg-white w-[400px] rounded-2xl p-6">
                         <EditDepartment
-                          departmentCode={department.code}
+                          departmentCode={department?.departmentCode}
                           getAllDesignations={getAllDesignations}
                           closeEditDialog={closeEditDialog}
-                          departmentId={department?._id}
+                          designationCode={department?.designationCode}
+                          designation={department?.designation}
+
                         />
                       </DialogContent>
                     </Dialog>

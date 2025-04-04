@@ -2,8 +2,7 @@ import axios from "axios";
 import React from "react";
 import { toast } from "sonner";
 const DeleteDepartment = ({
-  departmentId,
-  getAllDepartments,
+  getAllDesignations,
   closeDeleteDialog,
   departmentCode,
   designationCode,
@@ -19,7 +18,7 @@ const DeleteDepartment = ({
           },
         }
       );
-      getAllDepartments();
+      getAllDesignations();
       closeDeleteDialog();
       toast.success("Department has been deleted successfully");
     } catch (err) {
