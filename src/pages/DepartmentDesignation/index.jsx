@@ -29,7 +29,8 @@ const DepartmentDesignation = () => {
   const dispatch = useDispatch();
 
   const closeAddNewDialog = () => setOpenAddNew(false);
-  const openEditDialog = (departmentCode) => setEditingDepartmentId(departmentCode);
+  const openEditDialog = (departmentCode) =>
+    setEditingDepartmentId(departmentCode);
   const closeEditDialog = () => setEditingDepartmentId(null);
   const openDeleteDialog = (designationCode) =>
     setDeletingDepartmentId(designationCode);
@@ -39,7 +40,7 @@ const DepartmentDesignation = () => {
     try {
       dispatch(setLoading(true));
       const response = await axios.get(
-        `https://steelconbackend.vercel.app/api/admin/designations`
+        "https://steelconbackend.vercel.app/api/admin/designations"
       );
       setDesignations(response.data.data);
     } catch (err) {
@@ -70,15 +71,15 @@ const DepartmentDesignation = () => {
   }, []);
   const filteredDepartments = designations.filter(
     (designation) =>
-      designation?.designation && // Ensure name exists
-      designation?.departmentCode && // Ensure code exists
-      (designation.designation
+      designation?.designation &&
+      designation?.departmentCode &&
+      ((designation?.designation ?? "")
         .toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
-        designation.code.toLowerCase().includes(searchQuery.toLowerCase()))
+        (designation?.designationCode ?? "")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()))
   );
-  console.log(filteredDepartments);
-
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-11">
@@ -153,20 +154,22 @@ const DepartmentDesignation = () => {
                 <TableCell className="w-[120px] text-right pr-5">
                   <div className="flex justify-center gap-1">
                     <Dialog
-                      open={deletingDepartmentId === department?.designationCode}
+                      open={
+                        deletingDepartmentId === department?.designationCode
+                      }
                       onOpenChange={(open) =>
                         open
                           ? openDeleteDialog(department?.designationCode)
                           : closeDeleteDialog()
                       }
                     >
-                      <Button
-                        // onClick={() => setViewDepartment(true)}
+                      {/* <Button
+                        onClick={() => setViewDepartment(true)}
                         variant="ghost"
                         size="icon"
                       >
                         <Eye className="h-3 w-3" />
-                      </Button>
+                      </Button> */}
                       <DialogTrigger>
                         <Button
                           // onClick={() => setOpenDelete(true)}
@@ -205,7 +208,6 @@ const DepartmentDesignation = () => {
                           closeEditDialog={closeEditDialog}
                           designationCode={department?.designationCode}
                           designation={department?.designation}
-
                         />
                       </DialogContent>
                     </Dialog>

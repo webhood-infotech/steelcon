@@ -17,6 +17,7 @@ import AddNewTeamMember from "./AddNewTeamMember";
 import EditTeamMember from "./EditTeamMember";
 import { setLoading } from "@/redux/loadingSlice";
 import { useDispatch } from "react-redux";
+import axios from "axios";
 const ManageTeam = () => {
   const [employees, setEmployees] = useState([]);
   // const [loading, setLoading] = useState(true);
@@ -25,7 +26,10 @@ const ManageTeam = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const [showAddNewEmployee, setShowAddNewEmployee] = useState(false);
   const [showEditTeamMember, setShowEditTeamMember] = useState(false);
+  const [allDepartments, setAllDepartments] = useState([]);
+  const [designations, setDesignations] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
+  const [managers, setManagers] = useState([]);
   const dispatch = useDispatch();
   const filteredEmployees = employees.filter(
     (employee) =>
@@ -38,6 +42,33 @@ const ManageTeam = () => {
   //   setDepartments(departments.filter((dept) => dept.id !== id));
   // };
   // Fetch employees from API
+  const getAllDesignations = async () => {
+    try {
+      const response = await axios.get(
+        `https://steelconbackend.vercel.app/api/admin/designations`
+      );
+      setDesignations(response?.data?.data);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+      // Optionally, set an error state to show user-friendly message
+      // setError("Failed to load departments");
+    }
+  };
+
+  const getAllDepartments = async () => {
+    try {
+      // dispatch(setLoading(true));
+      const response = await axios.get(
+        "https://steelconbackend.vercel.app/api/admin/departments"
+      );
+      setAllDepartments(response.data?.data || []);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+    }
+    //  finally {
+    //   dispatch(setLoading(false));
+    // }
+  };
   const fetchEmployees = async () => {
     try {
       dispatch(setLoading(true));
@@ -58,8 +89,25 @@ const ManageTeam = () => {
       dispatch(setLoading(false));
     }
   };
+  const fetchManagers = async () => {
+    try {
+      dispatch(setLoading(true));
+      const response = await axios.get(
+        "https://steelconbackend.vercel.app/api/admin/managers?department=ENGINEERING "
+      );
+      setManagers(response.data?.data || []);
+      dispatch(setLoading(false));
+    } catch (err) {
+      console.error("Error fetching managers:", err);
+      setError(err.message);
+      dispatch(setLoading(false));
+    }
+  };
   useEffect(() => {
     fetchEmployees();
+    fetchManagers();
+    getAllDepartments();
+    getAllDesignations();
   }, []);
 
   // const closeDeleteDialog = () => setOpenDelete(false);
@@ -83,6 +131,9 @@ const ManageTeam = () => {
       <AddNewTeamMember
         setShowAddNewEmployee={setShowAddNewEmployee}
         fetchEmployees={fetchEmployees}
+        managers={managers}
+        allDepartments={allDepartments}
+        designations={designations}
       />
     );
   }
@@ -92,6 +143,9 @@ const ManageTeam = () => {
         fetchEmployees={fetchEmployees}
         employeeData={employees[editIndex]}
         setShowEditTeamMember={setShowEditTeamMember}
+        managers={managers}
+        allDepartments={allDepartments}
+        designations={designations}
       />
     );
   }

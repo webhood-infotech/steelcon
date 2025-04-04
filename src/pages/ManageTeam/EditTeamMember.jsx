@@ -21,6 +21,9 @@ const EditTeamMember = ({
   fetchEmployees,
   employeeData,
   setShowEditTeamMember,
+  managers,
+  allDepartments,
+  designations,
 }) => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -608,6 +611,14 @@ const EditTeamMember = ({
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
                   <option value="">Select Department</option>
+                  {allDepartments.map((item, index) => {
+                    return (
+                      <option key={index} value={item?.code}>
+                        {item?.name}
+                      </option>
+                    );
+                  })}
+                  {/* <option value="">Select Department</option>
                   <option value="Marketing">Marketing</option>
                   <option value="Engineering">Engineering</option>
                   <option value="Sales">Sales</option>
@@ -621,7 +632,7 @@ const EditTeamMember = ({
                   <option value="Business Development">
                     Business Development
                   </option>
-                  <option value="Product Management">Product Management</option>
+                  <option value="Product Management">Product Management</option> */}
                 </select>
                 {errors.department && (
                   <p className="text-red-500 text-xs">{errors.department}</p>
@@ -641,17 +652,14 @@ const EditTeamMember = ({
                   onChange={handleChange}
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
-                  <option value="">Select Department</option>
-                  <option value="Software Engineer">Software Engineer</option>
-                  <option value="Engineering">AI Engineering</option>
-                  <option value="Engineering">MLA Engineering</option>
-                  <option value="Marketing">Product Marketing Manager</option>
-                  <option value="Sales">Technical Project Manager</option>
-                  <option value="HR">Data Analytics Manager</option>
-                  <option value="Sales">Human Resources Manager</option>
-                  <option value="Sales">Quality Assurance Supervisor</option>
-                  <option value="Sales">Research Associate</option>
-                  <option value="Sales">Financial Analyst</option>
+                  <option value="">Select Designation</option>
+                  {designations?.map((item, index) => {
+                    return (
+                      <option key={index} value={item?.code}>
+                        {item?.designation}
+                      </option>
+                    );
+                  })}
                 </select>
                 {errors.designation && (
                   <p className="text-red-500 text-xs">{errors.designation}</p>
@@ -672,13 +680,14 @@ const EditTeamMember = ({
                   onChange={handleChange}
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
-                  <option value="">Select Name</option>
-                  <option value="Ram">Ram</option>
-                  <option value="Guy Hawkins">Guy Hawkins</option>
-                  <option value="Marvin McKinney">Marvin McKinney</option>
-                  <option value="Albert Flores">Albert Flores</option>
-                  <option value="Darlene Robertson">Darlene Robertson</option>
-                  <option value="Eleanor Pena">Eleanor Pena</option>
+                  <option value="">Select Managers Name</option>
+                  {managers?.map((item, index) => {
+                    return (
+                      <option key={index} value={item?.name}>
+                        {item?.firstName} {item?.lastName}
+                      </option>
+                    );
+                  })}
                 </select>
                 {errors.teamManager && (
                   <p className="text-red-500 text-xs">{errors.teamManager}</p>

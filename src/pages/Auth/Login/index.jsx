@@ -80,6 +80,7 @@ const Login = () => {
       );
       setIsLoading(false);
       dispatch(setUser(response?.data?.loggedInUser));
+      console.log(response?.data?.loggedInUser)
       if (response.data) {
         if (response.data.token) {
           dispatch(setToken(response.data.token));

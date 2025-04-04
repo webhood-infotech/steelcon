@@ -16,7 +16,12 @@ import { Upload } from "lucide-react";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 
-const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
+const AddNewManagers = ({
+  setShowAddNewManager,
+  fetchManagers,
+  allDepartments,
+  designations,
+}) => {
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -79,43 +84,9 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
     },
     remarks: "",
   });
-
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [designations, setDesignations] = useState([]);
-  // const [allDepartments, setAllDepartments] = useState([]);
   const dispatch = useDispatch();
-  const getAllDesignations = async () => {
-    try {
-      const response = await axios.get(
-        `https://steelconbackend.vercel.app/api/admin/designations`
-      );
-      setDesignations(response?.data?.data);
-    } catch (err) {
-      console.error("Error fetching departments:", err);
-      // Optionally, set an error state to show user-friendly message
-      // setError("Failed to load departments");
-    }
-  };
-  useEffect(() => {
-    getAllDesignations();
-  }, []);
-  // const getAllDepartments = async () => {
-  //   try {
-  //     dispatch(setLoading(true));
-  //     const response = await axios.get(
-  //       "https://steelconbackend.vercel.app/api/admin/departments"
-  //     );
-  //     setAllDepartments(response.data?.data || []);
-  //   } catch (err) {
-  //     console.error("Error fetching departments:", err);
-  //   } finally {
-  //     dispatch(setLoading(false));
-  //   }
-  // };
-  // useEffect(() => {
-  //   getAllDepartments();
-  // }, []);
 
   // Handle input changes
   const handleChange = (e, nestedField = null) => {
@@ -653,6 +624,7 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
                 <Input
                   id="employeeId"
                   name="lastName"
+                  disabled={true}
                   // value={formData.lastName}
                   onChange={handleChange}
                   placeholder="Enter"
@@ -692,32 +664,13 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
                   <option value="">Select Department</option>
-                  {/* {allDepartments?.map((item, index) => {
+                  {allDepartments?.map((department, index) => {
                     return (
-                      <option key={index} value={item?.code}>
-                        {item?.name}
+                      <option key={index} value={department?.code}>
+                        {department?.name}
                       </option>
                     );
-                  })} */}
-
-                  <option value="Human Resources  ">Human Resources</option>
-                  <option value=" Software Engineering">
-                    Software Engineering
-                  </option>
-                  <option value="Marketing ">Marketing</option>
-                  <option value="Operations ">Operations</option>
-                  <option value="Research & Development">
-                    Research & Development
-                  </option>
-                  <option value="Customer Service">Customer Service</option>
-                  <option value="Quality Assurance">Quality Assurance</option>
-                  <option value="Business Development">
-                    Business Development
-                  </option>
-                  <option value="Facilities Management">
-                    Facilities Management
-                  </option>
-                  <option value="Production">Production</option>
+                  })}
                 </select>
                 {errors.department && (
                   <p className="text-red-500 text-xs">{errors.department}</p>
@@ -737,7 +690,7 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
                   onChange={handleChange}
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
-                  <option value="">Select Department</option>
+                  <option value="">Select Designation</option>
                   {designations?.map((item, index) => {
                     return (
                       <option key={index} value={item?.code}>
@@ -745,22 +698,11 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
                       </option>
                     );
                   })}
-
-                  {/* <option value="Engineering">AI Engineering</option>
-                  <option value="Engineering">MLA Engineering</option>
-                  <option value="Marketing">Product Marketing Manager</option>
-                  <option value="Sales">Technical Project Manager</option>
-                  <option value="HR">Data Analytics Manager</option>
-                  <option value="Sales">Human Resources Manager</option>
-                  <option value="Sales">Quality Assurance Supervisor</option>
-                  <option value="Sales">Research Associate</option>
-                  <option value="Sales">Financial Analyst</option> */}
                 </select>
                 {errors.designation && (
                   <p className="text-red-500 text-xs">{errors.designation}</p>
                 )}
               </div>
-
               <div className="space-y-2">
                 <Label
                   htmlFor="teamManager"
@@ -794,13 +736,25 @@ const AddNewManagers = ({ setShowAddNewManager, fetchManagers }) => {
                 >
                   Report to (If applicable)
                 </Label>
-                <Input
+                <select
                   id="reportTo"
                   name="reportTo"
                   value={formData.reportTo}
                   onChange={handleChange}
                   placeholder="Enter"
-                />
+                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                >
+                  <option value="">Select Name</option>
+                  <option value="Ram">Ram</option>
+                  <option value="Guy Hawkins">Guy Hawkins</option>
+                  <option value="Marvin McKinney">Marvin McKinney</option>
+                  <option value="Albert Flores">Albert Flores</option>
+                  <option value="Darlene Robertson">Darlene Robertson</option>
+                  <option value="Eleanor Pena">Eleanor Pena</option>
+                </select>
+                {errors.reportTo && (
+                  <p className="text-red-500 text-xs">{errors.teamManager}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label

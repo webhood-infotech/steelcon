@@ -26,6 +26,9 @@ const ManageManagers = () => {
   const [showAddNewManager, setShowAddNewManager] = useState(false);
   const [showEditManager, setShowEditManager] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
+  const [allDepartments, setAllDepartments] = useState([]);
+  const [designations, setDesignations] = useState([]);
+
   const isLoading = useSelector((state) => state.loading.isLoading);
   const dispatch = useDispatch();
 
@@ -43,9 +46,38 @@ const ManageManagers = () => {
       dispatch(setLoading(false));
     }
   };
+  const getAllDesignations = async () => {
+    try {
+      const response = await axios.get(
+        `https://steelconbackend.vercel.app/api/admin/designations`
+      );
+      setDesignations(response?.data?.data);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+      // Optionally, set an error state to show user-friendly message
+      // setError("Failed to load departments");
+    }
+  };
+
+  const getAllDepartments = async () => {
+    try {
+      dispatch(setLoading(true));
+      const response = await axios.get(
+        "https://steelconbackend.vercel.app/api/admin/departments"
+      );
+      setAllDepartments(response.data?.data || []);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
   useEffect(() => {
     fetchManagers();
+    getAllDepartments();
+    getAllDesignations();
   }, []);
+
   const getAvatarFallback = (firstName, lastName) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   };
@@ -72,6 +104,8 @@ const ManageManagers = () => {
         showAddNewManager={showAddNewManager}
         setShowAddNewManager={setShowAddNewManager}
         fetchManagers={fetchManagers}
+        allDepartments={allDepartments}
+        designations={designations}
       />
     );
   }
@@ -81,10 +115,12 @@ const ManageManagers = () => {
         managerData={managers[editIndex]}
         fetchManagers={fetchManagers}
         setShowEditManager={setShowEditManager}
+        allDepartments={allDepartments}
+        designations={designations}
       />
     );
   }
-  console.log(editIndex);
+  console.log(allDepartments, "all");
   // console.log(managers[editIndex],"mng",managers,editIndex)
   return (
     <div className="container mx-auto mt-8 px-3">

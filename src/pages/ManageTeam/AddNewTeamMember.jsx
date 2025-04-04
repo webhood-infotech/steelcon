@@ -11,14 +11,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
 import { Plus, Upload, User } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "@/redux/loadingSlice";
-
-const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
+const AddNewTeamMember = ({
+  setShowAddNewEmployee,
+  fetchEmployees,
+  managers,
+  allDepartments,
+  designations,
+}) => {
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -81,45 +85,13 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
     },
     remarks: "",
   });
+  console.log(managers, "hth");
 
   const [errors, setErrors] = useState({});
-  const [designations, setDesignations] = useState([]);
-  const [allDepartments, setAllDepartments] = useState([]);
+
   const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.loading.loading);
-  const getAllDesignations = async () => {
-    try {
-      const response = await axios.get(
-        `https://steelconbackend.vercel.app/api/admin/designations`
-      );
-      setDesignations(response?.data?.data);
-    } catch (err) {
-      console.error("Error fetching departments:", err);
-      // Optionally, set an error state to show user-friendly message
-      // setError("Failed to load departments");
-    }
-  };
-  const getAllDepartments = async () => {
-    try {
-      // dispatch(setLoading(true));
-      const response = await axios.get(
-        "https://steelconbackend.vercel.app/api/admin/departments"
-      );
-      setAllDepartments(response.data?.data || []);
-    } catch (err) {
-      console.error("Error fetching departments:", err);
-    }
-    //  finally {
-    //   dispatch(setLoading(false));
-    // }
-  };
-  useEffect(() => {
-    getAllDesignations();
-  }, []);
-  useEffect(() => {
-    getAllDepartments();
-  }, []);
 
   // Handle input changes
   const handleChange = (e, nestedField = null) => {
@@ -271,6 +243,7 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
       dispatch(setLoading(false));
     }
   };
+  console.log(managers, "gjgjl");
   return (
     <div className="container mx-auto mt-8 px-3">
       <div className="flex items-center justify-between mb-8">
@@ -623,7 +596,7 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
                   onChange={handleChange}
                   className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
-                  <option value="">Select Department</option>
+                  <option value="">Select Designation</option>
                   {designations?.map((item, index) => {
                     return (
                       <option key={index} value={item?.code}>
@@ -638,7 +611,9 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
               </div>
               <div className="space-y-2">
                 <Label
-                  htmlFor="reportToManager"
+                  id="teamManager"
+                  name="teamManager"
+                  value={formData.teamManager}
                   className="text-sm text-medium text-[#344054]"
                 >
                   Report to Manager
@@ -648,15 +623,16 @@ const AddNewTeamMember = ({ setShowAddNewEmployee, fetchEmployees }) => {
                   name="teamManager"
                   value={formData.teamManager}
                   onChange={handleChange}
-                  className="w-full border border-[#D0D5DD] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
+                  className="w-full border border-[#0f0f0f] py-2.5 px-3.5  text-[#667085] text-base font-normal shadow focus:shadow rounded-md "
                 >
-                  <option value="">Select Name</option>
-                  <option value="Ram">Ram</option>
-                  <option value="Guy Hawkins">Guy Hawkins</option>
-                  <option value="Marvin McKinney">Marvin McKinney</option>
-                  <option value="Albert Flores">Albert Flores</option>
-                  <option value="Darlene Robertson">Darlene Robertson</option>
-                  <option value="Eleanor Pena">Eleanor Pena</option>
+                  <option value="">Select Managers Name</option>
+                  {managers?.map((item, index) => {
+                    return (
+                      <option key={index} value={item?.name}>
+                        {item?.firstName} {item?.lastName}
+                      </option>
+                    );
+                  })}
                 </select>
                 {errors.teamManager && (
                   <p className="text-red-500 text-xs">{errors.teamManager}</p>
